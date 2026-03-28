@@ -1,0 +1,77 @@
+{
+  "name": "@phcdevworks/spectre-signals",
+  "version": "1.0.0",
+  "description": "Minimal, framework-agnostic reactive primitives for local UI state in the Spectre suite.",
+  "keywords": [
+    "phcdevworks",
+    "spectre",
+    "signals",
+    "reactivity",
+    "typescript",
+    "framework-agnostic",
+    "local-state",
+    "computed",
+    "effect"
+  ],
+  "author": "PHCDevworks",
+  "license": "MIT",
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/phcdevworks"
+    },
+    {
+      "type": "buymeacoffee",
+      "url": "https://buymeacoffee.com/phcdevworks"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phcdevworks/spectre-signals.git"
+  },
+  "bugs": {
+    "url": "https://github.com/phcdevworks/spectre-signals/issues"
+  },
+  "homepage": "https://github.com/phcdevworks/spectre-signals#readme",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup --config tsup.config.ts",
+    "clean": "rm -rf dist",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "vitest run"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
+    "eslint": "^10.1.0",
+    "prettier": "^3.8.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.2",
+    "vitest": "^4.1.2"
+  },
+  "cSpell.words": [
+    "phcdevworks"
+  ]
+}
