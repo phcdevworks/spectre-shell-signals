@@ -1,11 +1,11 @@
-# @phcdevworks/spectre-signals
+# @phcdevworks/spectre-shell-signals
 
-[![GitHub issues](https://img.shields.io/github/issues/phcdevworks/spectre-signals)](https://github.com/phcdevworks/spectre-signals/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/phcdevworks/spectre-signals)](https://github.com/phcdevworks/spectre-signals/pulls)
-[![License](https://img.shields.io/github/license/phcdevworks/spectre-signals)](LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/phcdevworks/spectre-shell-signals)](https://github.com/phcdevworks/spectre-shell-signals/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/phcdevworks/spectre-shell-signals)](https://github.com/phcdevworks/spectre-shell-signals/pulls)
+[![License](https://img.shields.io/github/license/phcdevworks/spectre-shell-signals)](LICENSE)
 
-`@phcdevworks/spectre-signals` is the reactive primitives layer for local UI
-state in the Spectre suite.
+`@phcdevworks/spectre-shell-signals` is the reactive primitives layer for local
+UI state in Spectre shells.
 
 Maintained by PHCDevworks, it provides a tiny, framework-agnostic set of
 building blocks for signal-based reactivity: writable signals, lazy computed
@@ -29,13 +29,13 @@ growing a broader state-management surface.
 ## Installation
 
 ```bash
-npm install @phcdevworks/spectre-signals
+npm install @phcdevworks/spectre-shell-signals
 ```
 
 ## Quick start
 
 ```ts
-import { computed, effect, signal } from '@phcdevworks/spectre-signals'
+import { computed, effect, signal } from '@phcdevworks/spectre-shell-signals'
 
 const count = signal(0)
 const doubled = computed(() => count.value * 2)
@@ -52,7 +52,7 @@ Effects can register cleanup for subscriptions, timers, or other disposable
 work tied to the latest run:
 
 ```ts
-import { effect, signal } from '@phcdevworks/spectre-signals'
+import { effect, signal } from '@phcdevworks/spectre-shell-signals'
 
 const enabled = signal(true)
 
@@ -98,7 +98,7 @@ If a proposed feature is not directly required to support
 
 ## Package exports / API surface
 
-`@phcdevworks/spectre-signals` exports:
+`@phcdevworks/spectre-shell-signals` exports:
 
 - `signal`
 - `computed`
@@ -132,7 +132,7 @@ Spectre keeps responsibilities narrow:
   defines design tokens and semantic contracts
 - [`@phcdevworks/spectre-ui`](https://github.com/phcdevworks/spectre-ui)
   turns those contracts into reusable CSS, Tailwind helpers, and class recipes
-- `@phcdevworks/spectre-signals` provides framework-agnostic reactive
+- `@phcdevworks/spectre-shell-signals` provides framework-agnostic reactive
   primitives for local state and derived state
 - Downstream shells and adapters compose these packages instead of asking one
   package to own every concern
