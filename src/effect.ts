@@ -1,19 +1,19 @@
 import {
-  clearDependencies,
-  Dependency,
   type CleanupRegistrar,
-  type DependencyObserver,
-  withObserver,
-} from './internals/graph';
+  clearTracking,
+  type TrackingObserver,
+  withTracking,
+} from './internals/tracking';
+import { Node } from './internals/node';
 
 export type EffectCleanup = () => void;
 export type EffectCallback = (onCleanup: CleanupRegistrar) => void;
 export type StopEffect = () => void;
 
-class EffectRunner implements DependencyObserver {
-  readonly dependencies = new Set<Dependency>();
+class EffectRunner implements TrackingObserver {
+  readonly nodes = new Set<Node>();
 
-  private cleanup: EffectCleanup | undefined;
+  private cleanups: EffectCleanup[] = [];
   private active = true;
   private running = false;
 
@@ -35,8 +35,8 @@ class EffectRunner implements DependencyObserver {
     }
 
     this.active = false;
+    clearTracking(this);
     this.runCleanup();
-    clearDependencies(this);
   }
 
   private run(): void {
@@ -50,12 +50,12 @@ class EffectRunner implements DependencyObserver {
 
     this.running = true;
     this.runCleanup();
-    clearDependencies(this);
+    clearTracking(this);
 
     try {
-      withObserver(this, () =>
+      withTracking(this, () =>
         this.callback((cleanup) => {
-          this.cleanup = cleanup;
+          this.cleanups.push(cleanup);
         }),
       );
     } finally {
@@ -64,9 +64,12 @@ class EffectRunner implements DependencyObserver {
   }
 
   private runCleanup(): void {
-    const cleanup = this.cleanup;
-    this.cleanup = undefined;
-    cleanup?.();
+    const cleanups = this.cleanups;
+    this.cleanups = [];
+
+    for (let index = cleanups.length - 1; index >= 0; index -= 1) {
+      cleanups[index]?.();
+    }
   }
 }
 

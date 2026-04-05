@@ -1,11 +1,10 @@
 {
-  "name": "@phcdevworks/spectre-shell-signals",
+  "name": "@phcdevworks/spectre-signals",
   "version": "1.0.0",
-  "description": "Minimal, framework-agnostic reactive primitives for local UI state in Spectre shells.",
+  "description": "Minimal, framework-agnostic reactive primitives for local state in the Spectre system.",
   "keywords": [
     "phcdevworks",
     "spectre",
-    "spectre-shell",
     "signals",
     "reactivity",
     "typescript",
@@ -28,12 +27,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/phcdevworks/spectre-shell-signals.git"
+    "url": "https://github.com/phcdevworks/spectre-signals.git"
   },
   "bugs": {
-    "url": "https://github.com/phcdevworks/spectre-shell-signals/issues"
+    "url": "https://github.com/phcdevworks/spectre-signals/issues"
   },
-  "homepage": "https://github.com/phcdevworks/spectre-shell-signals#readme",
+  "homepage": "https://github.com/phcdevworks/spectre-signals#readme",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -54,6 +53,7 @@
   "scripts": {
     "build": "tsup --config tsup.config.ts",
     "clean": "rm -rf dist",
+    "check": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run"

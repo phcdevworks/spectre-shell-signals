@@ -1,4 +1,4 @@
-import { Dependency } from './internals/graph';
+import { Node } from './internals/node';
 
 export interface Signal<T> {
   get value(): T;
@@ -6,12 +6,12 @@ export interface Signal<T> {
 }
 
 class SignalImpl<T> implements Signal<T> {
-  readonly dependency = new Dependency();
+  readonly node = new Node();
 
   constructor(private currentValue: T) {}
 
   get value(): T {
-    this.dependency.track();
+    this.node.track();
     return this.currentValue;
   }
 
@@ -21,7 +21,7 @@ class SignalImpl<T> implements Signal<T> {
     }
 
     this.currentValue = nextValue;
-    this.dependency.trigger();
+    this.node.trigger();
   }
 }
 

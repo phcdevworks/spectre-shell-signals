@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { computed, effect, signal } from '../src';
 
-describe('@phcdevworks/spectre-shell-signals', () => {
+describe('@phcdevworks/spectre-signals', () => {
   it('reads and writes signal values through .value', () => {
     const count = signal(0);
 
@@ -95,6 +95,25 @@ describe('@phcdevworks/spectre-shell-signals', () => {
     expect(events).toEqual(['run:0', 'cleanup:0', 'run:1', 'cleanup:1']);
   });
 
+  it('runs multiple cleanup callbacks in reverse registration order', () => {
+    const count = signal(0);
+    const events: string[] = [];
+    const stop = effect((onCleanup) => {
+      count.value;
+      onCleanup(() => {
+        events.push('first');
+      });
+      onCleanup(() => {
+        events.push('second');
+      });
+    });
+
+    count.value = 1;
+    stop();
+
+    expect(events).toEqual(['second', 'first', 'second', 'first']);
+  });
+
   it('stops effects from responding after disposal', () => {
     const count = signal(0);
     const runs = vi.fn(() => {
@@ -118,6 +137,28 @@ describe('@phcdevworks/spectre-shell-signals', () => {
     count.value = 3;
 
     expect(label.value).toBe('value:6');
+  });
+
+  it('propagates invalidation through computed chains lazily', () => {
+    const count = signal(1);
+    const doubled = vi.fn(() => count.value * 2);
+    const tripled = vi.fn(() => count.value * 3);
+    const doubledSignal = computed(doubled);
+    const tripledSignal = computed(tripled);
+    const summary = computed(() => doubledSignal.value + tripledSignal.value);
+
+    expect(summary.value).toBe(5);
+    expect(summary.value).toBe(5);
+    expect(doubled).toHaveBeenCalledTimes(1);
+    expect(tripled).toHaveBeenCalledTimes(1);
+
+    count.value = 2;
+
+    expect(doubled).toHaveBeenCalledTimes(1);
+    expect(tripled).toHaveBeenCalledTimes(1);
+    expect(summary.value).toBe(10);
+    expect(doubled).toHaveBeenCalledTimes(2);
+    expect(tripled).toHaveBeenCalledTimes(2);
   });
 
   it('supports multiple subscribers on the same dependency', () => {
@@ -173,5 +214,30 @@ describe('@phcdevworks/spectre-shell-signals', () => {
     right.value = 11;
 
     expect(picked.value).toBe(11);
+  });
+
+  it('allows effects to depend on computed values', () => {
+    const count = signal(2);
+    const doubled = computed(() => count.value * 2);
+    const seen: number[] = [];
+
+    const stop = effect(() => {
+      seen.push(doubled.value);
+    });
+
+    count.value = 3;
+    stop();
+
+    expect(seen).toEqual([4, 6]);
+  });
+
+  it('throws for self-referential computed reads', () => {
+    let loop: { readonly value: number };
+
+    loop = computed(() => loop.value + 1);
+
+    expect(() => loop.value).toThrowError(
+      'Circular computed dependencies are not supported.',
+    );
   });
 });

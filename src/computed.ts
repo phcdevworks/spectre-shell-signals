@@ -1,17 +1,17 @@
 import {
-  clearDependencies,
-  Dependency,
-  type DependencyObserver,
-  withObserver,
-} from './internals/graph';
+  clearTracking,
+  type TrackingObserver,
+  withTracking,
+} from './internals/tracking';
+import { Node } from './internals/node';
 
 export interface Computed<T> {
   readonly value: T;
 }
 
-class ComputedImpl<T> implements Computed<T>, DependencyObserver {
-  readonly dependencies = new Set<Dependency>();
-  readonly dependency = new Dependency();
+class ComputedImpl<T> implements Computed<T>, TrackingObserver {
+  readonly nodes = new Set<Node>();
+  readonly node = new Node();
 
   private cachedValue!: T;
   private dirty = true;
@@ -20,7 +20,7 @@ class ComputedImpl<T> implements Computed<T>, DependencyObserver {
   constructor(private readonly computeValue: () => T) {}
 
   get value(): T {
-    this.dependency.track();
+    this.node.track();
 
     if (this.dirty) {
       this.recompute();
@@ -35,7 +35,7 @@ class ComputedImpl<T> implements Computed<T>, DependencyObserver {
     }
 
     this.dirty = true;
-    this.dependency.trigger();
+    this.node.trigger();
   }
 
   private recompute(): void {
@@ -44,10 +44,10 @@ class ComputedImpl<T> implements Computed<T>, DependencyObserver {
     }
 
     this.evaluating = true;
-    clearDependencies(this);
+    clearTracking(this);
 
     try {
-      this.cachedValue = withObserver(this, this.computeValue);
+      this.cachedValue = withTracking(this, this.computeValue);
       this.dirty = false;
     } finally {
       this.evaluating = false;
