@@ -1,12 +1,13 @@
 {
-  "name": "@phcdevworks/spectre-shell-signals",
+  "name": "@phcdevworks/spectre-signals",
   "version": "1.0.0",
-  "description": "Minimal, framework-agnostic reactive primitives package for Spectre shell applications.",
+  "description": "Minimal, framework-agnostic reactive primitives package for Spectre applications.",
   "keywords": [
     "phcdevworks",
     "spectre",
     "spectre-shell",
     "spectre-shell-signals",
+    "spectre-signals",
     "signals",
     "reactivity",
     "typescript",

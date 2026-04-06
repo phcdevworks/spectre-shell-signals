@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { computed, effect, signal } from '../src';
 
-describe('@phcdevworks/spectre-shell-signals', () => {
+describe('@phcdevworks/spectre-signals', () => {
   it('reads and writes signal values through .value', () => {
     const count = signal(0);
 
