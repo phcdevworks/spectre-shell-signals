@@ -1,17 +1,20 @@
 {
-  "name": "@phcdevworks/spectre-signals",
+  "name": "@phcdevworks/spectre-shell-signals",
   "version": "1.0.0",
-  "description": "Minimal, framework-agnostic reactive primitives for local state in the Spectre system.",
+  "description": "Minimal, framework-agnostic reactive primitives package for Spectre shell applications.",
   "keywords": [
     "phcdevworks",
     "spectre",
+    "spectre-shell",
+    "spectre-shell-signals",
     "signals",
     "reactivity",
     "typescript",
     "framework-agnostic",
-    "local-state",
+    "reactive-primitives",
     "computed",
-    "effect"
+    "effect",
+    "signal"
   ],
   "author": "PHCDevworks",
   "license": "MIT",
@@ -27,12 +30,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/phcdevworks/spectre-signals.git"
+    "url": "https://github.com/phcdevworks/spectre-shell-signals.git"
   },
   "bugs": {
-    "url": "https://github.com/phcdevworks/spectre-signals/issues"
+    "url": "https://github.com/phcdevworks/spectre-shell-signals/issues"
   },
-  "homepage": "https://github.com/phcdevworks/spectre-signals#readme",
+  "homepage": "https://github.com/phcdevworks/spectre-shell-signals#readme",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
