@@ -4,9 +4,14 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/phcdevworks/spectre-shell-signals)](https://github.com/phcdevworks/spectre-shell-signals/pulls)
 [![License](https://img.shields.io/github/license/phcdevworks/spectre-shell-signals)](LICENSE)
 
-`@phcdevworks/spectre-shell-signals` is the minimal reactive primitives package for Spectre shell applications.
+`@phcdevworks/spectre-shell-signals` is the minimal reactive-primitives package
+for Spectre applications.
 
-It provides a small, framework-agnostic foundation for local reactive state, derived values, and reactive effects. The package is intentionally narrow: it owns primitive reactivity only and exists so other Spectre packages can build on predictable synchronous semantics without inheriting a broader state-management framework.
+Maintained by PHCDevworks as part of the Spectre suite, it provides a small,
+framework-agnostic foundation for writable signals, derived values, and
+reactive effects. The package is intentionally narrow: it owns primitive
+reactivity only so sibling packages can build on predictable synchronous
+semantics without inheriting a broader state-management framework.
 
 ## Key capabilities
 
@@ -107,7 +112,7 @@ Behavior summary:
 
 ## Relationship to the rest of Spectre
 
-Spectre keeps package ownership narrow:
+Spectre keeps responsibilities separate:
 
 - `@phcdevworks/spectre-tokens` owns visual language, semantic roles, and token contracts
 - `@phcdevworks/spectre-ui` owns token-driven styling, Tailwind helpers, and class recipes
@@ -115,11 +120,12 @@ Spectre keeps package ownership narrow:
 - `@phcdevworks/spectre-shell-router` owns URL resolution and navigation primitives
 - `@phcdevworks/spectre-shell-signals` owns reactive primitives only
 
-That separation keeps the reactivity layer portable and prevents it from becoming a general-purpose runtime or state framework.
+That separation keeps the reactivity layer portable and prevents it from
+becoming a general-purpose runtime or state framework.
 
 ## Development
 
-Install dependencies, then run:
+Install dependencies, then run the package checks:
 
 ```bash
 npm run build
@@ -138,15 +144,14 @@ Key source areas:
 
 ## Contributing
 
-PHCDevworks maintains this package as part of the Spectre suite.
-
 When contributing:
 
 - keep the API tiny and explicit
 - prefer implementation clarity over abstraction-heavy design
 - avoid adding framework concepts or store-like helpers
 - add tests before changing reactive semantics
-- run `npm run build`, `npm test`, and `npm run check` before opening a pull request
+- run `npm run build`, `npm test`, and `npm run check` before opening a pull
+  request
 
 Scope discipline is part of the package contract.
 
