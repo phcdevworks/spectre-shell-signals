@@ -1,8 +1,121 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": ".",
+    },
+  ],
+  "settings": {
+    "workbench.colorTheme": "Solarized Dark",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.startupEditor": "none",
+    "workbench.editor.enablePreview": false,
+    "breadcrumbs.enabled": true,
+    "editor.fontFamily": "'Fira Code', 'Cascadia Code', 'JetBrains Mono', Consolas, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 14,
+    "editor.lineHeight": 1.6,
+    "editor.cursorBlinking": "smooth",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.smoothScrolling": true,
+    "editor.minimap.enabled": false,
+    "editor.renderWhitespace": "boundary",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "editor.inlineSuggest.enabled": true,
+    "editor.linkedEditing": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true,
+    "editor.trimAutoWhitespace": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.eol": "\n",
+    "files.exclude": {
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/dist": true,
+      "**/node_modules": true,
+    },
+    "files.watcherExclude": {
+      "**/dist/**": true,
+      "**/node_modules/**": true,
+    },
+    "search.smartCase": true,
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "npm.packageManager": "npm",
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+    "scm.defaultViewMode": "tree",
+    "[typescript]": {
+      "editor.defaultFormatter": "vscode.typescript-language-features",
+      "editor.wordWrap": "off",
+    },
+    "[markdown]": {
+      "editor.wordWrap": "on",
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.quickSuggestions": {
+        "comments": "off",
+        "strings": "off",
+        "other": "off",
+      },
+    },
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Build Signals",
+        "type": "node-terminal",
+        "request": "launch",
+        "command": "npm run build",
+      },
+    ],
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "editorconfig.editorconfig",
+      "esbenp.prettier-vscode",
+      "ms-vscode-remote.remote-wsl",
+      "pkief.material-icon-theme",
+      "yzhang.markdown-all-in-one",
+    ],
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build",
+        "command": "npm run build",
+        "type": "shell",
+        "group": {
+          "kind": "build",
+          "isDefault": true,
+        },
+      },
+      {
+        "label": "test",
+        "command": "npm test",
+        "type": "shell",
+      },
+      {
+        "label": "lint",
+        "command": "npm run lint",
+        "type": "shell",
+      },
+      {
+        "label": "format",
+        "command": "npm run format",
+        "type": "shell",
+      },
+    ],
+  },
 }

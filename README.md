@@ -34,40 +34,40 @@ npm install @phcdevworks/spectre-signals
 ## Quick start
 
 ```ts
-import { computed, effect, signal } from '@phcdevworks/spectre-signals'
+import { computed, effect, signal } from "@phcdevworks/spectre-signals";
 
-const count = signal(0)
-const doubled = computed(() => count.value * 2)
+const count = signal(0);
+const doubled = computed(() => count.value * 2);
 
 const stop = effect(() => {
-  console.log(doubled.value)
-})
+  console.log(doubled.value);
+});
 
-count.value = 1
-stop()
+count.value = 1;
+stop();
 ```
 
 Effects can also register cleanup work that runs before the next execution and when the effect is disposed:
 
 ```ts
-import { effect, signal } from '@phcdevworks/spectre-signals'
+import { effect, signal } from "@phcdevworks/spectre-signals";
 
-const enabled = signal(true)
+const enabled = signal(true);
 
 const stop = effect((onCleanup) => {
   if (!enabled.value) {
-    return
+    return;
   }
 
   const id = setInterval(() => {
-    console.log('tick')
-  }, 1000)
+    console.log("tick");
+  }, 1000);
 
-  onCleanup(() => clearInterval(id))
-})
+  onCleanup(() => clearInterval(id));
+});
 
-enabled.value = false
-stop()
+enabled.value = false;
+stop();
 ```
 
 ## What this package owns

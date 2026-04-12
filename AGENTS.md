@@ -1,5 +1,3 @@
-# AGENTS.md
-
 # @phcdevworks/spectre-signals
 
 ## Mission
@@ -222,12 +220,14 @@ If the repository name, package name, and docs are misaligned, fix that as part 
 Prefer small, controlled changes.
 
 Good:
+
 - one semantic fix
 - one documentation alignment pass
 - one validation/CI improvement
 - one metadata consistency fix
 
 Avoid large mixed changes that combine:
+
 - runtime redesign
 - docs rewrite
 - packaging changes
