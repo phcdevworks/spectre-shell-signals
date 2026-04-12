@@ -62,15 +62,15 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/node": "^25.5.2",
-    "@typescript-eslint/eslint-plugin": "^8.58.0",
-    "@typescript-eslint/parser": "^8.58.0",
+    "@types/node": "^25.6.0",
+    "@typescript-eslint/eslint-plugin": "^8.58.1",
+    "@typescript-eslint/parser": "^8.58.1",
     "eslint": "^10.2.0",
-    "prettier": "^3.8.1",
+    "prettier": "^3.8.2",
     "tsup": "^8.5.1",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.0",
-    "vitest": "^4.1.2"
+    "typescript-eslint": "^8.58.1",
+    "vitest": "^4.1.4"
   },
   "cSpell.words": [
     "phcdevworks"
