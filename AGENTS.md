@@ -1,8 +1,8 @@
-# @phcdevworks/spectre-signals
+# @phcdevworks/spectre-shell-signals
 
 ## Mission
 
-`@phcdevworks/spectre-signals` is the minimal reactive primitives package for the Spectre system.
+`@phcdevworks/spectre-shell-signals` is the minimal reactive primitives package for the Spectre system.
 
 It provides a small, framework-agnostic foundation for local reactive state, derived values, and reactive effects. Its job is to expose a tiny, predictable reactivity layer that other Spectre packages and compatible applications can build on without inheriting a full state-management framework.
 
@@ -156,7 +156,7 @@ This package should remain aligned with the broader Spectre split of responsibil
 - `@phcdevworks/spectre-ui` owns token-driven styling and class recipes
 - `@phcdevworks/spectre-shell` owns thin shell composition/runtime surface
 - `@phcdevworks/spectre-shell-router` owns routing primitives
-- `@phcdevworks/spectre-signals` owns reactive primitives only
+- `@phcdevworks/spectre-shell-signals` owns reactive primitives only
 
 Do not pull responsibilities across those lines.
 

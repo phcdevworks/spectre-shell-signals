@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { computed, effect, signal } from '../src';
 
-describe('@phcdevworks/spectre-signals', () => {
+describe('@phcdevworks/spectre-shell-signals', () => {
   it('reads and writes signal values through .value', () => {
     const count = signal(0);
 
@@ -99,7 +99,7 @@ describe('@phcdevworks/spectre-signals', () => {
     const count = signal(0);
     const events: string[] = [];
     const stop = effect((onCleanup) => {
-      count.value;
+      void count.value;
       onCleanup(() => {
         events.push('first');
       });
@@ -117,7 +117,7 @@ describe('@phcdevworks/spectre-signals', () => {
   it('stops effects from responding after disposal', () => {
     const count = signal(0);
     const runs = vi.fn(() => {
-      count.value;
+      void count.value;
     });
     const stop = effect(runs);
 
@@ -232,9 +232,7 @@ describe('@phcdevworks/spectre-signals', () => {
   });
 
   it('throws for self-referential computed reads', () => {
-    let loop: { readonly value: number };
-
-    loop = computed(() => loop.value + 1);
+    const loop: { readonly value: number } = computed(() => loop.value + 1);
 
     expect(() => loop.value).toThrowError(
       'Circular computed dependencies are not supported.',
