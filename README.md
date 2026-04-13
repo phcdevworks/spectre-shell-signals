@@ -1,10 +1,10 @@
-# @phcdevworks/spectre-signals
+# @phcdevworks/spectre-shell-signals
 
 [![GitHub issues](https://img.shields.io/github/issues/phcdevworks/spectre-shell-signals)](https://github.com/phcdevworks/spectre-shell-signals/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/phcdevworks/spectre-shell-signals)](https://github.com/phcdevworks/spectre-shell-signals/pulls)
 [![License](https://img.shields.io/github/license/phcdevworks/spectre-shell-signals)](LICENSE)
 
-`@phcdevworks/spectre-signals` is the minimal reactive-primitives package for
+`@phcdevworks/spectre-shell-signals` is the minimal reactive-primitives package for
 Spectre applications.
 
 Maintained by PHCDevworks as part of the Spectre suite, it provides a small,
@@ -13,7 +13,7 @@ reactive effects. The package is intentionally narrow: it owns primitive
 reactivity only so sibling packages can build on predictable synchronous
 semantics without inheriting a broader state-management framework.
 
-This package is published as `@phcdevworks/spectre-signals`. Its source
+This package is published as `@phcdevworks/spectre-shell-signals`. Its source
 repository is hosted at
 [`phcdevworks/spectre-shell-signals`](https://github.com/phcdevworks/spectre-shell-signals).
 
@@ -28,13 +28,13 @@ repository is hosted at
 ## Installation
 
 ```bash
-npm install @phcdevworks/spectre-signals
+npm install @phcdevworks/spectre-shell-signals
 ```
 
 ## Quick start
 
 ```ts
-import { computed, effect, signal } from "@phcdevworks/spectre-signals";
+import { computed, effect, signal } from "@phcdevworks/spectre-shell-signals";
 
 const count = signal(0);
 const doubled = computed(() => count.value * 2);
@@ -50,7 +50,7 @@ stop();
 Effects can also register cleanup work that runs before the next execution and when the effect is disposed:
 
 ```ts
-import { effect, signal } from "@phcdevworks/spectre-signals";
+import { effect, signal } from "@phcdevworks/spectre-shell-signals";
 
 const enabled = signal(true);
 
@@ -122,7 +122,7 @@ Spectre keeps responsibilities separate:
 - `@phcdevworks/spectre-ui` owns token-driven styling, Tailwind helpers, and class recipes
 - `@phcdevworks/spectre-shell` owns thin shell composition and runtime surface
 - `@phcdevworks/spectre-shell-router` owns URL resolution and navigation primitives
-- `@phcdevworks/spectre-signals` owns reactive primitives only
+- `@phcdevworks/spectre-shell-signals` owns reactive primitives only
 
 That separation keeps the reactivity layer portable and prevents it from
 becoming a general-purpose runtime or state framework.
