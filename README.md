@@ -132,8 +132,6 @@ becoming a general-purpose runtime or state framework.
 Install dependencies, then run the package checks:
 
 ```bash
-npm run build
-npm test
 npm run check
 ```
 
@@ -154,8 +152,7 @@ When contributing:
 - prefer implementation clarity over abstraction-heavy design
 - avoid adding framework concepts or store-like helpers
 - add tests before changing reactive semantics
-- run `npm run build`, `npm test`, and `npm run check` before opening a pull
-  request
+- run npm run check before opening a pull request
 
 Scope discipline is part of the package contract.
 
