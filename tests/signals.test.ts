@@ -127,6 +127,23 @@ describe('@phcdevworks/spectre-shell-signals', () => {
     expect(runs).toHaveBeenCalledTimes(1);
   });
 
+  it('throws when an effect synchronously triggers itself', () => {
+    const count = signal(0);
+    let runs = 0;
+
+    expect(() =>
+      effect(() => {
+        runs += 1;
+
+        if (count.value === 0) {
+          count.value = 1;
+        }
+      }),
+    ).toThrowError('Effects cannot synchronously trigger themselves.');
+
+    expect(runs).toBe(1);
+  });
+
   it('supports nested computed values', () => {
     const count = signal(2);
     const doubled = computed(() => count.value * 2);
