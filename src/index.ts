@@ -1,6 +1,7 @@
 export { computed, type Computed } from './computed';
 export {
   effect,
+  type CleanupRegistrar,
   type EffectCallback,
   type EffectCleanup,
   type StopEffect,

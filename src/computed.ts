@@ -7,6 +7,7 @@ import { Node } from './internals/node';
 
 export interface Computed<T> {
   readonly value: T;
+  dispose(): void;
 }
 
 class ComputedImpl<T> implements Computed<T>, TrackingObserver {
@@ -36,6 +37,10 @@ class ComputedImpl<T> implements Computed<T>, TrackingObserver {
 
     this.dirty = true;
     this.node.trigger();
+  }
+
+  dispose(): void {
+    clearTracking(this);
   }
 
   private recompute(): void {

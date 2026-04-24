@@ -4,6 +4,8 @@ import {
   type TrackingObserver,
   withTracking,
 } from './internals/tracking';
+
+export type { CleanupRegistrar };
 import { Node } from './internals/node';
 
 export type EffectCleanup = () => void;

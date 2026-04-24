@@ -63,6 +63,9 @@ var ComputedImpl = class {
     this.dirty = true;
     this.node.trigger();
   }
+  dispose() {
+    clearTracking(this);
+  }
   recompute() {
     if (this.evaluating) {
       throw new Error("Circular computed dependencies are not supported.");

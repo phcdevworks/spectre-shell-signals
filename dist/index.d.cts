@@ -1,5 +1,6 @@
 interface Computed<T> {
     readonly value: T;
+    dispose(): void;
 }
 declare function computed<T>(fn: () => T): Computed<T>;
 
@@ -18,4 +19,4 @@ interface Signal<T> {
 }
 declare function signal<T>(initialValue: T): Signal<T>;
 
-export { type Computed, type EffectCallback, type EffectCleanup, type Signal, type StopEffect, computed, effect, signal };
+export { type CleanupRegistrar, type Computed, type EffectCallback, type EffectCleanup, type Signal, type StopEffect, computed, effect, signal };

@@ -255,4 +255,35 @@ describe('@phcdevworks/spectre-shell-signals', () => {
       'Circular computed dependencies are not supported.',
     );
   });
+
+  it('stops computed from responding to dependency changes after disposal', () => {
+    const count = signal(0);
+    const spy = vi.fn(() => count.value * 2);
+    const doubled = computed(spy);
+
+    expect(doubled.value).toBe(0);
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    doubled.dispose();
+
+    count.value = 1;
+
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('stops effects from receiving computed updates after computed disposal', () => {
+    const count = signal(0);
+    const doubled = computed(() => count.value * 2);
+    const seen: number[] = [];
+
+    const stop = effect(() => {
+      seen.push(doubled.value);
+    });
+
+    doubled.dispose();
+    count.value = 1;
+    stop();
+
+    expect(seen).toEqual([0]);
+  });
 });
