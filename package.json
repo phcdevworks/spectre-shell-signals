@@ -1,6 +1,6 @@
 {
   "name": "@phcdevworks/spectre-shell-signals",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Minimal, framework-agnostic reactive primitives package for Spectre applications.",
   "keywords": [
     "phcdevworks",
