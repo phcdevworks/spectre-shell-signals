@@ -151,13 +151,6 @@ spectre-shell-signals/
    - Testing notes (reactive edge cases covered)
 6. **Respond to feedback** and make requested changes
 
-## Known Gaps (Not Done Yet)
-
-- `onCleanup` API stabilization and documentation
-- Batched updates / transaction semantics (if needed for correctness)
-- Additional edge-case coverage for nested computed values
-- CI pipeline for automated build and test validation
-
 ## Questions or Issues?
 
 Please open an issue or discussion on GitHub if you're unsure about the best approach for a change. Coordinating early avoids scope creep and conflicts with:
