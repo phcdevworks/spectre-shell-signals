@@ -1,161 +1,71 @@
 # @phcdevworks/spectre-shell-signals
 
-[![GitHub issues](https://img.shields.io/github/issues/phcdevworks/spectre-shell-signals)](https://github.com/phcdevworks/spectre-shell-signals/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/phcdevworks/spectre-shell-signals)](https://github.com/phcdevworks/spectre-shell-signals/pulls)
-[![License](https://img.shields.io/github/license/phcdevworks/spectre-shell-signals)](LICENSE)
+Small synchronous reactive primitives for Spectre packages. The package provides `signal`, `computed`, and `effect` without tying Spectre runtime code to a UI framework.
 
-`@phcdevworks/spectre-shell-signals` is the minimal reactive-primitives package for
-Spectre applications.
+[Issues](https://github.com/phcdevworks/spectre-shell-signals/issues) | [Pull requests](https://github.com/phcdevworks/spectre-shell-signals/pulls) | [Security](./SECURITY.md) | [Contributing](./CONTRIBUTING.md)
 
-Maintained by PHCDevworks as part of the Spectre suite, it provides a small,
-framework-agnostic foundation for writable signals, derived values, and
-reactive effects. The package is intentionally narrow: it owns primitive
-reactivity only so sibling packages can build on predictable synchronous
-semantics without inheriting a broader state-management framework.
+## Capabilities
 
-This package is published as `@phcdevworks/spectre-shell-signals`. Its source
-repository is hosted at
-[`phcdevworks/spectre-shell-signals`](https://github.com/phcdevworks/spectre-shell-signals).
+- Mutable signals through a `.value` getter and setter.
+- Lazily evaluated computed values with dependency tracking.
+- Synchronous effects with cleanup registration.
+- Explicit disposal for computed values and effects.
+- A deliberately small public API for shared Spectre runtime state.
 
-## Key capabilities
-
-- Writable signals with explicit `.value` reads and writes
-- Lazy computed values with dependency tracking and cached recomputation
-- Reactive effects with cleanup before re-run and on disposal
-- Synchronous, readable behavior that is portable across runtimes
-- Small public API surface designed to resist scope drift
-
-## Installation
+## Install
 
 ```bash
 npm install @phcdevworks/spectre-shell-signals
 ```
 
-## Quick start
+## Quick Start
 
 ```ts
-import { computed, effect, signal } from "@phcdevworks/spectre-shell-signals";
+import { computed, effect, signal } from '@phcdevworks/spectre-shell-signals'
 
-const count = signal(0);
-const doubled = computed(() => count.value * 2);
-
-const stop = effect(() => {
-  console.log(doubled.value);
-});
-
-count.value = 1;
-stop();
-```
-
-Effects can also register cleanup work that runs before the next execution and when the effect is disposed:
-
-```ts
-import { effect, signal } from "@phcdevworks/spectre-shell-signals";
-
-const enabled = signal(true);
+const count = signal(0)
+const doubled = computed(() => count.value * 2)
 
 const stop = effect((onCleanup) => {
-  if (!enabled.value) {
-    return;
-  }
+  console.log(`count=${count.value}; doubled=${doubled.value}`)
+  onCleanup(() => console.log('effect cleanup'))
+})
 
-  const id = setInterval(() => {
-    console.log("tick");
-  }, 1000);
-
-  onCleanup(() => clearInterval(id));
-});
-
-enabled.value = false;
-stop();
+count.value = 2
+stop()
+doubled.dispose()
 ```
 
-## What this package owns
+## API
 
-- `signal<T>(initialValue)` for writable reactive values
-- `computed<T>(fn)` for lazy derived values
-- `effect(fn)` for reactive side effects
-- Dependency tracking, invalidation, and cleanup/disposal behavior
-- Minimal TypeScript types for the public API
+- `signal(initialValue)` returns a mutable signal.
+- `computed(fn)` returns a cached computed value with `dispose()`.
+- `effect(fn)` runs immediately, reruns when tracked dependencies change, and returns a stop function.
+- Types include `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`, `CleanupRegistrar`, and `StopEffect`.
 
-This package should stay at the primitive reactivity layer.
+## Boundaries
 
-## What this package does not own
-
-- Global stores, app-wide state containers, or business logic state layers
-- Routers, navigation state, URL params, or shell orchestration
-- DOM bindings, renderer integrations, or framework lifecycle adapters
-- Async cache/query behavior, persistence, streams, or event buses
-- Devtools, inspectors, dashboards, or plugin systems
-
-If a feature is not directly required for `signal`, `computed`, `effect`, tracking, invalidation, or disposal, it does not belong here.
-
-## Package exports / API surface
-
-Runtime exports:
-
-- `signal`
-- `computed`
-- `effect`
-
-Type exports:
-
-- `Signal<T>`
-- `Computed<T>`
-- `EffectCallback`
-- `EffectCleanup`
-- `StopEffect`
-
-Behavior summary:
-
-- `signal(initialValue)` returns an object with a tracked `.value` getter and invalidating setter
-- `computed(fn)` is lazy, cached, and recomputes only when read after invalidation
-- `effect(fn)` runs immediately, tracks reads during execution, and returns a stop function
-- `onCleanup` handlers run before the next effect execution and when the effect is stopped
-- Signal writes use `Object.is` to skip unchanged updates
-
-## Relationship to the rest of Spectre
-
-Spectre keeps responsibilities separate:
-
-- `@phcdevworks/spectre-tokens` owns visual language, semantic roles, and token contracts
-- `@phcdevworks/spectre-ui` owns token-driven styling, Tailwind helpers, and class recipes
-- `@phcdevworks/spectre-shell` owns thin shell composition and runtime surface
-- `@phcdevworks/spectre-shell-router` owns URL resolution and navigation primitives
-- `@phcdevworks/spectre-shell-signals` owns reactive primitives only
-
-That separation keeps the reactivity layer portable and prevents it from
-becoming a general-purpose runtime or state framework.
+This package owns only low-level reactive primitives. It does not own DOM rendering, routing, lifecycle orchestration, async scheduling, stores, persistence, or framework adapters.
 
 ## Development
 
-Install dependencies, then run the package checks:
-
 ```bash
+npm install
 npm run check
 ```
 
-Key source areas:
+Useful scripts:
 
-- `src/signal.ts`
-- `src/computed.ts`
-- `src/effect.ts`
-- `src/internals/node.ts`
-- `src/internals/tracking.ts`
-- `tests/signals.test.ts`
+- `npm run typecheck` validates TypeScript without emitting files.
+- `npm run lint` runs ESLint.
+- `npm run test` runs the Vitest suite once.
+- `npm run build` emits ESM, CJS, and declarations to `dist`.
+- `npm run check` runs the standard package verification flow.
 
-## Contributing
+## Release Notes
 
-When contributing:
-
-- keep the API tiny and explicit
-- prefer implementation clarity over abstraction-heavy design
-- avoid adding framework concepts or store-like helpers
-- add tests before changing reactive semantics
-- run npm run check before opening a pull request
-
-Scope discipline is part of the package contract.
+See [CHANGELOG.md](./CHANGELOG.md).
 
 ## License
 
-MIT © PHCDevworks. See [LICENSE](LICENSE).
+MIT. See [LICENSE](./LICENSE).
