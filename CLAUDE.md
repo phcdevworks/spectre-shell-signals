@@ -1,7 +1,11 @@
 # CLAUDE.md — spectre-shell-signals
 
-Primary AI maintainer: Claude Code (claude-sonnet-4-6, @anthropic)
+Primary AI maintainer: **Claude Code** (claude-sonnet-4-6, Anthropic)
 Human owner: PHCDevworks / brad.potts@coastdigitalgroup.com
+
+## Commit Policy
+
+Claude Code does **not** create git commits, push branches, or create tags in this repository. Changes are prepared and validated but left for human review and commit.
 
 ---
 
