@@ -1,5 +1,13 @@
 # @phcdevworks/spectre-shell-signals
 
+## Primary AI Maintainer
+
+**Claude Code** (claude-sonnet-4-6, Anthropic) is the primary AI developer on this project.
+
+Claude Code operates from [CLAUDE.md](./CLAUDE.md), which is the authoritative development reference. All AI agents working on this repository should read both files before making changes.
+
+---
+
 ## Mission
 
 `@phcdevworks/spectre-shell-signals` is the minimal reactive primitives package for the Spectre system.
@@ -81,7 +89,7 @@ When making changes:
 3. Prefer readable internals over abstraction-heavy architecture.
 4. Protect synchronous, predictable semantics unless there is a strong reason not to.
 5. Do not introduce new exports casually.
-6. Do not build “for later.”
+6. Do not build "for later."
 7. Do not add framework concepts.
 8. Do not turn primitives into a store library.
 
@@ -164,15 +172,11 @@ Do not pull responsibilities across those lines.
 
 ## Validation requirements
 
-Before finishing work, agents should run the relevant checks that exist in this repo:
+Before finishing work, agents must run:
 
-    npm run build
-    npm test
     npm run check
 
-If linting or other validation scripts exist and are part of the active workflow, run them too.
-
-Do not claim success without reporting what actually ran.
+This runs typecheck, lint, build, and test in sequence. Do not claim success without confirming all four pass.
 
 ---
 

@@ -4,12 +4,8 @@
 - [ ] Summary of changes
 - [ ] Rationale/context
 
-## Testing
+## Checks
 
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] Other (describe):
-
-## Screenshots (if UI)
+- [ ] `npm run check` (typecheck + lint + build + test)
 
 ## Notes for reviewers

@@ -22,5 +22,11 @@
     "javascriptreact",
     "typescript",
     "typescriptreact"
+  ],
+  "cSpell.words": [
+    "phcdevworks",
+    "spectre",
+    "tsup",
+    "vitest"
   ]
 }
