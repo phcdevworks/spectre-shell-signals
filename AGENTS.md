@@ -1,10 +1,60 @@
 # @phcdevworks/spectre-shell-signals
 
-## Primary AI Maintainer
+## Primary AI Developer
 
-**Claude Code** (claude-sonnet-4-6, Anthropic) is the primary AI developer on this project.
+**Claude Code** (`claude-sonnet-4-6`) is the designated primary AI developer for
+this repository, maintained on behalf of Bradley Potts
+(brad.potts@coastdigitalgroup.com) at PHCDevworks. All development is driven
+through Claude Code operating from `CLAUDE.md` as the authoritative working
+guide. Human final review and commit authority rests with Bradley Potts.
 
-Claude Code operates from [CLAUDE.md](./CLAUDE.md), which is the authoritative development reference. All AI agents working on this repository should read both files before making changes.
+Claude Code does not create git commits. Changes are prepared and validated,
+then handed off for human review and commit.
+
+## Codex Release Agent
+
+Codex operates as the release and readiness counterpart for this repository.
+Claude Code remains the lead implementer and `CLAUDE.md` remains the
+authoritative working guide.
+
+Codex may be looped in to:
+
+- check package scope and production readiness before release
+- keep tabs on changed files and avoid overwriting work from others
+- refactor only when required for correctness, maintainability, or release hygiene
+- standardize documentation and metadata when they drift from implementation
+- run `npm run check` before declaring work complete
+- surface release blockers, compatibility risks, and missing tests
+
+Codex does not create commits, tags, releases, or publish packages. Human final
+review and commit authority remains with Bradley Potts.
+
+## GitHub Copilot Support Assistant
+
+GitHub Copilot is the general development support assistant for this
+repository. Copilot improves developer productivity in the IDE through inline
+completions, small code suggestions, test suggestions, TypeScript assistance,
+API usage hints, and light refactor guidance.
+
+Copilot does not own lead implementation decisions, architecture direction,
+release coordination, production stabilization ownership, repo-wide AI
+governance, or automated maintenance workflows.
+
+## Google Jules Maintenance Agent
+
+Google Jules is the automated maintenance agent for small repository updates,
+including micro-fixes and dependency micro-updates.
+
+Jules does not replace Claude Code as lead developer, does not take over Codex
+release/readiness ownership, and does not define architecture direction.
+
+## AI Boundary Summary
+
+- Claude Code: lead developer and primary implementation owner
+- OpenAI Codex: documentation, releases, production stabilization, repo hygiene,
+  and config standardization
+- GitHub Copilot: general development support
+- Google Jules: automated micro-maintenance
 
 ---
 
