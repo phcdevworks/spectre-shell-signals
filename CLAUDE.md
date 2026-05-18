@@ -7,6 +7,18 @@ Human owner: PHCDevworks / brad.potts@coastdigitalgroup.com
 
 Claude Code does **not** create git commits, push branches, or create tags in this repository. Changes are prepared and validated but left for human review and commit.
 
+## AI Team
+
+| Role                   | Agent          | Authority                                                     |
+| ---------------------- | -------------- | ------------------------------------------------------------- |
+| Human owner            | Bradley Potts  | Final authority — commits, tags, releases                     |
+| Lead developer         | Claude Code    | Implementation, architecture, tests, CI                       |
+| Release/docs oversight | OpenAI Codex   | Release readiness, changelog, production safety               |
+| Development support    | GitHub Copilot | Inline suggestions, IDE support                               |
+| Maintenance            | Google Jules   | Bounded micro-maintenance and dependency updates (`JULES.md`) |
+
+See [AGENTS.md](./AGENTS.md) for full role boundaries and per-agent handoff rules.
+
 ---
 
 ## What this package is

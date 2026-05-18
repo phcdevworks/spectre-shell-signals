@@ -30,6 +30,7 @@ maintenance when `JULES.md` explicitly allows it and all validation gates pass.
 | `CODEX.md`                        | OpenAI Codex                 | Release-readiness, production stabilization, and config posture    |
 | `JULES.md`                        | Google Jules                 | Bounded automated maintenance guidance                             |
 | `.codex/`                         | OpenAI Codex                 | Optional Codex profile and release checklist                       |
+| `COPILOT.md`                      | GitHub Copilot               | Role summary and development boundaries for GitHub Copilot         |
 | `.github/copilot-instructions.md` | GitHub Copilot               | In-editor suggestion boundaries                                    |
 | `.claude/settings.json`           | Claude Code runtime          | Local command denies for commit, push, tag, merge, and publish     |
 | `.coderabbit.yaml`                | CodeRabbit                   | Automated review checks aligned with package boundaries            |
