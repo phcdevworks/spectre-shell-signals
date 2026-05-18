@@ -3,7 +3,11 @@
     "deny": [
       "Bash(git commit*)",
       "Bash(git push*)",
-      "Bash(git tag*)"
+      "Bash(git tag*)",
+      "Bash(git merge*)",
+      "Bash(gh pr merge*)",
+      "Bash(gh release*)",
+      "Bash(npm publish*)"
     ]
   }
 }

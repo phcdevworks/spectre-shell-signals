@@ -16,6 +16,7 @@
 
 - [ ] `npm run check` passes (typecheck + lint + build + test)
 - [ ] `CHANGELOG.md` updated
+- [ ] AI-agent guidance updated if roles, release flow, or automation config changed
 
 ## Screenshots (if applicable)
 

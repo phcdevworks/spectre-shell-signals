@@ -1,21 +1,59 @@
-# @phcdevworks/spectre-shell-signals
+# AGENTS.md - spectre-shell-signals
 
-## Primary AI Developer
+## AI Operating Model
+
+This is the central AI coordination document for the repository. Agent-specific
+files may add tool-local guidance, but they must not override the role
+boundaries below.
+
+This repository uses a four-agent AI operating model with defined,
+non-overlapping roles:
+
+| Agent              | Role                                                                   |
+| ------------------ | ---------------------------------------------------------------------- |
+| **Claude Code**    | Lead developer - primary implementation, architecture, tests           |
+| **OpenAI Codex**   | Documentation, releases, production stabilization, repo hygiene        |
+| **GitHub Copilot** | General development assistance (in-editor suggestions)                 |
+| **Google Jules**   | Automated maintenance - small fixes, dependency updates, micro-patches |
+
+Human commit and release authority rests with Bradley Potts
+(brad.potts@coastdigitalgroup.com). No AI agent creates git commits, pushes
+branches, creates tags, merges pull requests, publishes packages, or creates
+releases.
+
+## Instruction Map
+
+| File                              | Audience                     | Purpose                                                            |
+| --------------------------------- | ---------------------------- | ------------------------------------------------------------------ |
+| `AGENTS.md`                       | All agents, especially Codex | Central role model, coordination rules, verification gate          |
+| `CLAUDE.md`                       | Claude Code                  | Lead-development guide for implementation, architecture, and tests |
+| `CODEX.md`                        | OpenAI Codex                 | Release-readiness, production stabilization, and config posture    |
+| `.codex/`                         | OpenAI Codex                 | Optional Codex profile and release checklist                       |
+| `.github/copilot-instructions.md` | GitHub Copilot               | In-editor suggestion boundaries                                    |
+| `.claude/settings.json`           | Claude Code runtime          | Local command denies for commit, push, tag, merge, and publish     |
+| `.coderabbit.yaml`                | CodeRabbit                   | Automated review checks aligned with package boundaries            |
+| `.github/dependabot.yml`          | Dependabot / Jules handoff   | Dependency-update cadence for automated maintenance                |
+
+## Claude Code - Lead Developer
 
 **Claude Code** (`claude-sonnet-4-6`) is the designated primary AI developer for
 this repository, maintained on behalf of Bradley Potts
 (brad.potts@coastdigitalgroup.com) at PHCDevworks. All development is driven
 through Claude Code operating from `CLAUDE.md` as the authoritative working
-guide. Human final review and commit authority rests with Bradley Potts.
+guide.
 
-Claude Code does not create git commits. Changes are prepared and validated,
-then handed off for human review and commit.
+**Owns:** reactive primitive implementation, architecture, tests, and final
+implementation validation.
 
-## Codex Release Agent
+**Does not own:** documentation publishing, release versioning, changelog
+authorship, dependency bump PRs, or repo-wide AI governance.
 
-Codex operates as the release and readiness counterpart for this repository.
-Claude Code remains the lead implementer and `CLAUDE.md` remains the
-authoritative working guide.
+## OpenAI Codex - Documentation & Releases
+
+Codex handles documentation quality, release preparation, production
+stabilization, repo hygiene, config standardization, and release-readiness
+checks. Codex operates from `AGENTS.md`, `CODEX.md`, and the optional `.codex/`
+profile.
 
 Codex may be looped in to:
 
@@ -26,27 +64,31 @@ Codex may be looped in to:
 - run `npm run check` before declaring work complete
 - surface release blockers, compatibility risks, and missing tests
 
-Codex does not create commits, tags, releases, or publish packages. Human final
-review and commit authority remains with Bradley Potts.
+Codex does not own primary implementation, test strategy leadership,
+architecture decisions inside the reactive-primitives boundary,
+dependency-update ownership, deployment, publishing, or release execution.
 
-## GitHub Copilot Support Assistant
+## GitHub Copilot - Development Assistance
 
-GitHub Copilot is the general development support assistant for this
-repository. Copilot improves developer productivity in the IDE through inline
-completions, small code suggestions, test suggestions, TypeScript assistance,
-API usage hints, and light refactor guidance.
+GitHub Copilot is the general development support assistant for this repository.
+Copilot improves developer productivity in the IDE through inline completions,
+small code suggestions, test suggestions, TypeScript assistance, API usage
+hints, and light refactor guidance.
 
 Copilot does not own lead implementation decisions, architecture direction,
 release coordination, production stabilization ownership, repo-wide AI
-governance, or automated maintenance workflows.
+governance, automated maintenance workflows, config standardization ownership,
+or commit authority.
 
-## Google Jules Maintenance Agent
+## Google Jules - Automated Maintenance
 
 Google Jules is the automated maintenance agent for small repository updates,
 including micro-fixes and dependency micro-updates.
 
 Jules does not replace Claude Code as lead developer, does not take over Codex
 release/readiness ownership, and does not define architecture direction.
+Jules does not own feature work, public API changes, large refactors, release
+decisions, or publishing.
 
 ## AI Boundary Summary
 
@@ -55,6 +97,23 @@ release/readiness ownership, and does not define architecture direction.
   and config standardization
 - GitHub Copilot: general development support
 - Google Jules: automated micro-maintenance
+
+## Coordination Rules
+
+- When instructions conflict, follow this priority: direct human request,
+  `AGENTS.md`, agent-specific file, then tool suggestions.
+- Claude Code leads any change that alters reactive behavior, public TypeScript
+  contracts, tests, or package architecture.
+- Codex keeps production readiness in check and leads documentation, release
+  notes, release preparation, stabilization review, repo hygiene, and AI/config
+  cleanup.
+- Copilot output is advisory only; accepted suggestions still follow the owning
+  agent or human reviewer.
+- Jules and Dependabot changes should stay mechanical and easy to review.
+  Escalate behavior changes to Claude Code and release/changelog questions to
+  Codex.
+- Keep handoffs short: summarize changed files, validation status,
+  public-behavior impact, and unresolved risk.
 
 ---
 

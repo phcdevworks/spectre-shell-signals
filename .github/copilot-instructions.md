@@ -12,7 +12,10 @@ Copilot supports day-to-day IDE productivity:
 - test suggestion scaffolding
 - pattern-aware implementation help that matches existing code
 
-Copilot does not own implementation direction, architecture decisions, release coordination, production stabilization ownership, repo-wide AI governance, or automated maintenance workflows.
+Copilot does not own implementation direction, architecture decisions, release
+coordination, production stabilization ownership, repo-wide AI governance,
+automated maintenance workflows, config standardization ownership, or commit
+authority.
 
 ## Agent Boundaries
 

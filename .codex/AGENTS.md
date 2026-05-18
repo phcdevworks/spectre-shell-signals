@@ -19,7 +19,7 @@ Codex should:
 Codex should not:
 
 - override Claude Code's lead role
-- create commits, tags, or releases
+- create commits, pushes, tags, merges, publishes, or releases
 - expand the package beyond `signal`, `computed`, `effect`, and directly related
   public types
 - introduce store, framework, persistence, async resource, router, DOM, or

@@ -45,6 +45,16 @@ reviews:
     actionlint:
       enabled: true
   path_instructions:
+    - path: "AGENTS.md"
+      instructions: "Verify the four-agent operating model stays intact: Claude Code leads implementation; OpenAI Codex owns documentation, releases, production stabilization, repo hygiene, changelog/release-note support, and config standardization; GitHub Copilot is advisory; Google Jules handles small automated maintenance."
+    - path: "CLAUDE.md"
+      instructions: "Verify Claude Code remains the lead developer and primary implementation owner without taking release, publish, or automated maintenance ownership."
+    - path: "CODEX.md"
+      instructions: "Verify Codex stays focused on documentation, releases, production stabilization, repo hygiene, changelog/release-note support, and config standardization without taking Claude Code implementation ownership."
+    - path: ".codex/**"
+      instructions: "Codex support files should strengthen release readiness, documentation consistency, production stabilization, repo hygiene, changelog/release-note support, and config cleanup while preserving Claude Code as implementation lead."
+    - path: ".github/copilot-instructions.md"
+      instructions: "Ensure Copilot remains advisory only and does not claim ownership of architecture, releases, dependency maintenance, config standardization, or commit authority."
     - path: "**/*.ts"
       instructions: "Enforce strict TypeScript: flag missing type annotations, any usage, non-null assertions without justification, and unhandled promise rejections."
     - path: "src/**"
