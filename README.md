@@ -1,8 +1,26 @@
 # @phcdevworks/spectre-shell-signals
 
+[![CI](https://github.com/phcdevworks/spectre-shell-signals/actions/workflows/ci.yml/badge.svg)](https://github.com/phcdevworks/spectre-shell-signals/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/@phcdevworks/spectre-shell-signals.svg)](https://www.npmjs.com/package/@phcdevworks/spectre-shell-signals)
+
 Small synchronous reactive primitives for Spectre packages. The package provides `signal`, `computed`, and `effect` without tying Spectre runtime code to a UI framework.
 
+Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks) — composable, zero-dependency packages for client-side shell applications.
+
 [Issues](https://github.com/phcdevworks/spectre-shell-signals/issues) | [Pull requests](https://github.com/phcdevworks/spectre-shell-signals/pulls) | [Security](./SECURITY.md) | [Contributing](./CONTRIBUTING.md)
+
+## When to use this package
+
+- You need synchronous reactive primitives (`signal`, `computed`, `effect`) without a full state management framework.
+- You want typed, lazily-evaluated derived values with explicit disposal.
+- You are building on top of a Spectre shell or want framework-agnostic reactive state in vanilla TypeScript.
+
+## When not to use this package
+
+- You need a global store, atoms, selectors, or async resource primitives.
+- You need framework-specific hooks such as `useSignal` for React or Vue.
+- You need persistence, devtools, observables, event buses, or middleware.
+- You need cross-component state coordination patterns beyond sharing signal instances.
 
 ## Capabilities
 
@@ -61,6 +79,19 @@ Useful scripts:
 - `npm run test` runs the Vitest suite once.
 - `npm run build` emits ESM, CJS, and declarations to `dist`.
 - `npm run check` runs the standard package verification flow.
+
+### Troubleshooting
+
+| Problem | Likely cause | Fix |
+|---|---|---|
+| `npm run check` fails on typecheck | Type error in source or tests | Run `npm run typecheck` to isolate |
+| `dist/` is missing after clone | Build output is gitignored | Run `npm run build` |
+| Tests fail in CI but pass locally | Node version mismatch | CI runs Node 22 and 24; match locally |
+| Effect runs more than expected | Unintended `.value` read in tracked scope | Move non-reactive reads outside the effect callback |
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md). The gate is `npm run check` — all of typecheck, lint, build, and tests must pass. Do not expand the reactive-primitives scope; see [AGENTS.md](./AGENTS.md) for boundaries.
 
 ## Release Notes
 

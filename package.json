@@ -50,6 +50,9 @@
     "LICENSE"
   ],
   "sideEffects": false,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "tsup --config tsup.config.ts",
     "clean": "rm -rf dist",
