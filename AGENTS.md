@@ -6,7 +6,7 @@ This is the central AI coordination document for the repository. Agent-specific
 files may add tool-local guidance, but they must not override the role
 boundaries below.
 
-This repository uses a five-agent AI operating model with defined,
+This repository uses a four-agent AI operating model with defined,
 non-overlapping roles:
 
 | Agent              | Role                                                                   |
@@ -15,12 +15,11 @@ non-overlapping roles:
 | **OpenAI Codex**   | Documentation, releases, production stabilization, repo hygiene        |
 | **GitHub Copilot** | General development assistance (in-editor suggestions)                 |
 | **Google Jules**   | Automated maintenance - small fixes, dependency updates, micro-patches |
-| **ChatGPT**        | Strategy, coordination, prompt design, and external review             |
 
-Human commit and release authority rests with Bradley Potts
-(brad.potts@coastdigitalgroup.com). No AI agent creates git commits, pushes
-branches, creates tags, merges pull requests, publishes packages, or creates
-releases.
+Human final review, release decisions, tagging, publishing, and merge authority rest with Bradley Potts
+(brad.potts@coastdigitalgroup.com). Claude Code, Codex, and Copilot do not
+commit by default. Jules may commit and push only bounded automated
+maintenance when `JULES.md` explicitly allows it and all validation gates pass.
 
 ## Instruction Map
 
@@ -29,6 +28,7 @@ releases.
 | `AGENTS.md`                       | All agents, especially Codex | Central role model, coordination rules, verification gate          |
 | `CLAUDE.md`                       | Claude Code                  | Lead-development guide for implementation, architecture, and tests |
 | `CODEX.md`                        | OpenAI Codex                 | Release-readiness, production stabilization, and config posture    |
+| `JULES.md`                        | Google Jules                 | Bounded automated maintenance guidance                             |
 | `.codex/`                         | OpenAI Codex                 | Optional Codex profile and release checklist                       |
 | `.github/copilot-instructions.md` | GitHub Copilot               | In-editor suggestion boundaries                                    |
 | `.claude/settings.json`           | Claude Code runtime          | Local command denies for commit, push, tag, merge, and publish     |
@@ -91,24 +91,11 @@ release/readiness ownership, and does not define architecture direction.
 Jules does not own feature work, public API changes, large refactors, release
 decisions, or publishing.
 
-## ChatGPT — Strategy and Coordination
-
-ChatGPT provides strategy, coordination, prompt design, and external review.
-It is an advisory layer, not an implementation or release agent.
-
-**Supports:** architecture strategy, AI coordination, prompt refinement,
-cross-project review, and high-level technical direction.
-
-**Does not own:** implementation, release execution, commit authority,
-production stabilization, or repository changes. ChatGPT input is advisory
-and requires human or Claude Code review before acting.
-
 ## AI Boundary Summary
 
 - Claude Code: lead developer and primary implementation owner
 - OpenAI Codex: documentation, releases, production stabilization, repo hygiene,
   and config standardization
-- ChatGPT: strategy, coordination, prompt design, and external review
 - GitHub Copilot: general development support
 - Google Jules: automated micro-maintenance
 

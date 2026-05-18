@@ -13,7 +13,7 @@ Copilot is support-only and does not own architecture or release decisions.
 - Claude Code: lead implementation and architecture owner.
 - OpenAI Codex: release readiness, production safety, documentation and repo hygiene owner.
 - GitHub Copilot: supporting development assistant.
-- Google Jules: automated micro-maintenance only.
+- Google Jules: automated micro-maintenance only (`JULES.md`).
 
 ## Package Boundary
 

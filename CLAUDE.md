@@ -79,14 +79,14 @@ See [AGENTS.md](./AGENTS.md) for the full boundary list.
 
 ## Tooling
 
-| Tool | Config |
-|---|---|
-| TypeScript 6 | `tsconfig.json` |
-| tsup | `tsup.config.ts` |
-| ESLint + typescript-eslint | `eslint.config.ts` |
-| Prettier | `.prettierrc` |
-| Vitest | `vitest.config.ts` |
-| CI | `.github/workflows/ci.yml` (Node 22, 24) |
+| Tool                       | Config                                   |
+| -------------------------- | ---------------------------------------- |
+| TypeScript 6               | `tsconfig.json`                          |
+| tsup                       | `tsup.config.ts`                         |
+| ESLint + typescript-eslint | `eslint.config.ts`                       |
+| Prettier                   | `.prettierrc`                            |
+| Vitest                     | `vitest.config.ts`                       |
+| CI                         | `.github/workflows/ci.yml` (Node 22, 24) |
 
 `tsconfig.json` includes `"ignoreDeprecations": "6.0"` — required for TypeScript 6 compatibility with some legacy flags. Do not remove it.
 

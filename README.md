@@ -1,13 +1,16 @@
 # @phcdevworks/spectre-shell-signals
 
-[![CI](https://github.com/phcdevworks/spectre-shell-signals/actions/workflows/ci.yml/badge.svg)](https://github.com/phcdevworks/spectre-shell-signals/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/@phcdevworks/spectre-shell-signals.svg)](https://www.npmjs.com/package/@phcdevworks/spectre-shell-signals)
+[![CI](https://img.shields.io/github/actions/workflow/status/phcdevworks/spectre-shell-signals/ci.yml?branch=main&label=CI)](https://github.com/phcdevworks/spectre-shell-signals/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/phcdevworks/spectre-shell-signals)](LICENSE)
+[![Node](https://img.shields.io/node/v/@phcdevworks/spectre-shell-signals)](https://nodejs.org)
 
 Small synchronous reactive primitives for Spectre packages. The package provides `signal`, `computed`, and `effect` without tying Spectre runtime code to a UI framework.
 
 Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks) — composable, zero-dependency packages for client-side shell applications.
 
-[Issues](https://github.com/phcdevworks/spectre-shell-signals/issues) | [Pull requests](https://github.com/phcdevworks/spectre-shell-signals/pulls) | [Security](./SECURITY.md) | [Contributing](./CONTRIBUTING.md)
+[Contributing](CONTRIBUTING.md) | [Changelog](CHANGELOG.md) |
+[Roadmap](ROADMAP.md) | [Security Policy](SECURITY.md)
 
 ## When to use this package
 
@@ -80,14 +83,19 @@ Useful scripts:
 - `npm run build` emits ESM, CJS, and declarations to `dist`.
 - `npm run check` runs the standard package verification flow.
 
+AI-agent coordination starts in [AGENTS.md](./AGENTS.md), with companion
+guidance in [CLAUDE.md](./CLAUDE.md), [CODEX.md](./CODEX.md),
+[COPILOT.md](./COPILOT.md), [JULES.md](./JULES.md), and
+[.github/copilot-instructions.md](./.github/copilot-instructions.md).
+
 ### Troubleshooting
 
-| Problem | Likely cause | Fix |
-|---|---|---|
-| `npm run check` fails on typecheck | Type error in source or tests | Run `npm run typecheck` to isolate |
-| `dist/` is missing after clone | Build output is gitignored | Run `npm run build` |
-| Tests fail in CI but pass locally | Node version mismatch | CI runs Node 22 and 24; match locally |
-| Effect runs more than expected | Unintended `.value` read in tracked scope | Move non-reactive reads outside the effect callback |
+| Problem                            | Likely cause                              | Fix                                                 |
+| ---------------------------------- | ----------------------------------------- | --------------------------------------------------- |
+| `npm run check` fails on typecheck | Type error in source or tests             | Run `npm run typecheck` to isolate                  |
+| `dist/` is missing after clone     | Build output is gitignored                | Run `npm run build`                                 |
+| Tests fail in CI but pass locally  | Node version mismatch                     | CI runs Node 22 and 24; match locally               |
+| Effect runs more than expected     | Unintended `.value` read in tracked scope | Move non-reactive reads outside the effect callback |
 
 ## Contributing
 
