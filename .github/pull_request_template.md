@@ -1,23 +1,53 @@
 ## Summary
 
-- [ ] Linked issue (or `N/A`)
-- [ ] Summary of changes
-- [ ] Rationale/context
+- [ ] Linked issue (or N/A)
+- [ ] What changed
+- [ ] Why this change is needed
 
 ## Type of Change
 
-- [ ] Bug fix / patch
-- [ ] New feature / additive
+- [ ] Bug fix (non-breaking)
+- [ ] Feature (non-breaking)
 - [ ] Breaking change
-- [ ] Documentation / config only
 - [ ] Refactor (no behavior change)
+- [ ] Documentation or config only
 
-## Checklist
+## Package Boundary Check
 
-- [ ] `npm run check` passes (typecheck + lint + build + test)
-- [ ] `CHANGELOG.md` updated
-- [ ] AI-agent guidance updated if roles, release flow, or automation config changed
+- [ ] Change stays within this package scope (reactive primitives only)
+- [ ] No scope drift into stores, frameworks, router/shell, or app-specific logic
 
-## Screenshots (if applicable)
+## Public API Impact
 
-## Notes for Reviewers
+- [ ] No public API contract change
+- [ ] Public API changed (describe impact and migration notes below)
+
+## Validation
+
+- [ ] Command run: npm run check
+- [ ] Result: pass
+
+## Documentation Updated
+
+- [ ] README updated (if needed)
+- [ ] CHANGELOG updated (if needed)
+- [ ] No documentation updates required
+
+## Release Impact
+
+- [ ] No release impact
+- [ ] Patch
+- [ ] Minor
+- [ ] Major
+
+## Codex Review Needed
+
+- [ ] Yes
+- [ ] No
+
+## Claude Code Implementation Notes
+
+- [ ] N/A
+- [ ] Included below
+
+## Additional Notes

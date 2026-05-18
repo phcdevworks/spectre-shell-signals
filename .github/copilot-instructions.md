@@ -21,6 +21,7 @@ authority.
 
 - Claude Code is the lead developer and primary implementation owner.
 - OpenAI Codex owns documentation alignment, release readiness, production stabilization, repo hygiene, and config standardization.
+- ChatGPT provides strategy, coordination, prompt design, and external review.
 - GitHub Copilot provides general development support only.
 - Google Jules handles automated micro-maintenance such as small fixes, dependency updates, and micro-updates.
 
