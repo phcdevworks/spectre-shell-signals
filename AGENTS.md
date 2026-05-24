@@ -1,375 +1,136 @@
-# AGENTS.md - spectre-shell-signals
+# Spectre Shell Signals Agent Guide
 
-## AI Operating Model
+This repository is maintained by PHCDevworks and contains the reactive-primitives
+package of the Spectre shell system.
 
-This is the central AI coordination document for the repository. Agent-specific
-files may add tool-local guidance, but they must not override the role
-boundaries below.
-
-This repository uses a four-agent AI operating model with defined,
-non-overlapping roles:
-
-| Agent              | Role                                                                   |
-| ------------------ | ---------------------------------------------------------------------- |
-| **Claude Code**    | Lead developer - primary implementation, architecture, tests           |
-| **OpenAI Codex**   | Documentation, releases, production stabilization, repo hygiene        |
-| **GitHub Copilot** | General development assistance (in-editor suggestions)                 |
-| **Google Jules**   | Automated maintenance - small fixes, dependency updates, micro-patches |
-
-Human final review, release decisions, tagging, publishing, and merge authority rest with Bradley Potts
-(brad.potts@coastdigitalgroup.com). Claude Code, Codex, and Copilot do not
-commit by default. Jules may commit and push only bounded automated
-maintenance when `JULES.md` explicitly allows it and all validation gates pass.
-
-## Instruction Map
-
-| File                              | Audience                     | Purpose                                                            |
-| --------------------------------- | ---------------------------- | ------------------------------------------------------------------ |
-| `AGENTS.md`                       | All agents, especially Codex | Central role model, coordination rules, verification gate          |
-| `CLAUDE.md`                       | Claude Code                  | Lead-development guide for implementation, architecture, and tests |
-| `CODEX.md`                        | OpenAI Codex                 | Release-readiness, production stabilization, and config posture    |
-| `JULES.md`                        | Google Jules                 | Bounded automated maintenance guidance                             |
-| `.codex/`                         | OpenAI Codex                 | Optional Codex profile and release checklist                       |
-| `COPILOT.md`                      | GitHub Copilot               | Role summary and development boundaries for GitHub Copilot         |
-| `.github/copilot-instructions.md` | GitHub Copilot               | In-editor suggestion boundaries                                    |
-| `.claude/settings.json`           | Claude Code runtime          | Local command denies for commit, push, tag, merge, and publish     |
-| `.coderabbit.yaml`                | CodeRabbit                   | Automated review checks aligned with package boundaries            |
-| `.github/dependabot.yml`          | Dependabot / Jules handoff   | Dependency-update cadence for automated maintenance                |
-
-## Claude Code - Lead Developer
+## Primary AI Developer
 
 **Claude Code** (`claude-sonnet-4-6`) is the designated primary AI developer for
 this repository, maintained on behalf of Bradley Potts
 (brad.potts@coastdigitalgroup.com) at PHCDevworks. All development is driven
 through Claude Code operating from `CLAUDE.md` as the authoritative working
-guide.
+guide. Human final review and commit authority rests with Bradley Potts.
 
-**Owns:** reactive primitive implementation, architecture, tests, and final
-implementation validation.
+Claude Code does not create git commits; changes are prepared and validated, then
+handed off for human review and commit.
 
-**Does not own:** documentation publishing, release versioning, changelog
-authorship, dependency bump PRs, or repo-wide AI governance.
+## AI Operating Model
 
-## OpenAI Codex - Documentation & Releases
+| Agent          | Role                                                                | Authority                                          |
+| -------------- | ------------------------------------------------------------------- | -------------------------------------------------- |
+| Claude Code    | Lead developer - primary implementation, architecture, tests        | `CLAUDE.md`                                        |
+| OpenAI Codex   | Documentation, releases, production stabilization, repo hygiene     | `CODEX.md`                                         |
+| GitHub Copilot | General development assistance (in-editor suggestions)              | `COPILOT.md` and `.github/copilot-instructions.md` |
+| Google Jules   | Automated maintenance - small fixes, dependency updates             | `JULES.md`                                         |
 
-Codex handles documentation quality, release preparation, production
-stabilization, repo hygiene, config standardization, and release-readiness
-checks. Codex operates from `AGENTS.md`, `CODEX.md`, and the optional `.codex/`
-profile.
+**Bradley Potts** holds final authority for all commits, merges, tags,
+publishing, and releases. Claude Code, Codex, and Copilot do not commit by
+default. Jules may commit and push only bounded automated maintenance when
+`JULES.md` explicitly allows it and all validation gates pass.
 
-Codex may be looped in to:
+## Shared Source Rules
 
-- check package scope and production readiness before release
-- keep tabs on changed files and avoid overwriting work from others
-- refactor only when required for correctness, maintainability, or release hygiene
-- standardize documentation and metadata when they drift from implementation
-- run `npm run check` before declaring work complete
-- surface release blockers, compatibility risks, and missing tests
+These rules apply to every agent without exception.
 
-Codex does not own primary implementation, test strategy leadership,
-architecture decisions inside the reactive-primitives boundary,
-dependency-update ownership, deployment, publishing, or release execution.
+| Path | Status | Notes |
+|---|---|---|
+| `src/` | **May edit** | All primitive implementation; changes require test coverage |
+| `tests/` | **May edit** | Test suite is part of the contract; behavior changes require test updates |
+| `src/index.ts` | **May edit** | Public re-exports only; new exports require reactive-primitives justification |
+| `src/internals/` | **May edit** | `Node` and `tracking.ts` are private - do not export them |
+| `README.md`, other docs | **May edit** | Keep aligned with the actual public API |
+| `CHANGELOG.md` | **May edit** | Update `[Unreleased]` for all user-visible changes |
+| `package.json` | **May edit** | Version follows semver; bump when publishing |
+| `dist/` | **Never edit directly** | Always regenerated by `npm run build`; manual edits are overwritten |
 
-## GitHub Copilot - Development Assistance
+Full validation command: `npm run check` (typecheck + lint + build + test). All
+four steps must pass before any commit or handoff.
 
-GitHub Copilot is the general development support assistant for this repository.
-Copilot improves developer productivity in the IDE through inline completions,
-small code suggestions, test suggestions, TypeScript assistance, API usage
-hints, and light refactor guidance.
+Detailed implementation workflow lives in `CLAUDE.md`. Human contribution
+workflow lives in `CONTRIBUTING.md`. Strategic direction lives in `ROADMAP.md`.
 
-Copilot does not own lead implementation decisions, architecture direction,
-release coordination, production stabilization ownership, repo-wide AI
-governance, automated maintenance workflows, config standardization ownership,
-or commit authority.
+## Agent-Specific Guides
 
-## Google Jules - Automated Maintenance
+- `CLAUDE.md` - primary development authority and implementation workflow.
+- `CODEX.md` - documentation, release, stabilization, and repo hygiene workflow.
+- `JULES.md` - bounded automated maintenance workflow.
+- `COPILOT.md` and `.github/copilot-instructions.md` - support-assistant workflow.
 
-Google Jules is the automated maintenance agent for small repository updates,
-including micro-fixes and dependency micro-updates.
+## Pull Request Creation
 
-Jules does not replace Claude Code as lead developer, does not take over Codex
-release/readiness ownership, and does not define architecture direction.
-Jules does not own feature work, public API changes, large refactors, release
-decisions, or publishing.
+Every agent that opens a PR must populate every section of the repo's PR
+template (`.github/pull_request_template.md`):
 
-## AI Boundary Summary
+- **Summary** - linked issue (`#N` or N/A), what changed, and why.
+- **Type of Change** - check every box that applies.
+- **Package Boundary Check** - confirm the change stays within reactive-primitives
+  scope with no drift into stores, frameworks, or app-specific logic.
+- **Public API Impact** - state whether any export was added, changed, or removed.
+- **Validation** - run `npm run check` and record the result.
+- **Documentation Updated** - confirm README, CHANGELOG, and docs are aligned.
+- **Release Impact** - state patch / minor / major or no release impact.
+- **Codex Review Needed** - flag if documentation, release notes, or hygiene
+  review is warranted.
 
-- Claude Code: lead developer and primary implementation owner
-- OpenAI Codex: documentation, releases, production stabilization, repo hygiene,
-  and config standardization
-- GitHub Copilot: general development support
-- Google Jules: automated micro-maintenance
-
-## Coordination Rules
-
-- When instructions conflict, follow this priority: direct human request,
-  `AGENTS.md`, agent-specific file, then tool suggestions.
-- Claude Code leads any change that alters reactive behavior, public TypeScript
-  contracts, tests, or package architecture.
-- Codex keeps production readiness in check and leads documentation, release
-  notes, release preparation, stabilization review, repo hygiene, and AI/config
-  cleanup.
-- Copilot output is advisory only; accepted suggestions still follow the owning
-  agent or human reviewer.
-- Jules and Dependabot changes should stay mechanical and easy to review.
-  Escalate behavior changes to Claude Code and release/changelog questions to
-  Codex.
-- Keep handoffs short: summarize changed files, validation status,
-  public-behavior impact, and unresolved risk.
-
----
+Never submit a PR with an empty body or only the template headings left unfilled.
 
 ## Mission
 
-`@phcdevworks/spectre-shell-signals` is the minimal reactive primitives package for the Spectre system.
-
-It provides a small, framework-agnostic foundation for local reactive state, derived values, and reactive effects. Its job is to expose a tiny, predictable reactivity layer that other Spectre packages and compatible applications can build on without inheriting a full state-management framework.
+`@phcdevworks/spectre-shell-signals` is the minimal reactive-primitives package
+for the Spectre system. It provides a small, framework-agnostic foundation for
+local reactive state, derived values, and reactive effects — a tiny, predictable
+reactivity layer that other Spectre packages and compatible applications can build
+on without inheriting a full state-management framework.
 
 This package must stay narrow, explicit, portable, and easy to reason about.
 
----
+## Core Rules
 
-## Package role
+1. Keep the public API tiny: `signal`, `computed`, `effect`, and directly related
+   types only.
+2. Prefer explicit behavior over magical behavior.
+3. Prefer readable internals over abstraction-heavy architecture.
+4. Protect synchronous, predictable semantics.
+5. Do not introduce new exports without a clear reactive-primitives justification.
+6. Do not build for hypothetical future requirements.
+7. Do not add framework concepts or turn primitives into a store library.
+8. Tests are part of the contract — behavior changes require test updates.
+9. Keep package metadata, README, and docs aligned with the actual implementation.
+10. Do not expand this package into stores, async layers, persistence, or
+    framework-specific behavior.
 
-This package owns primitive reactivity only.
-
-It exists to provide:
-
-- writable signals
-- lazy computed values
-- reactive effects
-- dependency tracking
-- invalidation
-- cleanup and disposal behavior
-
-It does **not** exist to define application architecture.
-
----
-
-## What this package owns
-
-Agents may work on:
-
-- `signal<T>(initialValue)`
-- `computed<T>(fn)`
-- `effect(fn)`
-- tracked `.value` reads and writes
-- dependency collection and invalidation
-- cleanup behavior before effect re-run and on disposal
-- predictable synchronous semantics
-- small TypeScript types for the public API
-- tests that lock reactive behavior and edge cases
-- documentation that protects scope and clarifies ownership
-- packaging, validation, and release hygiene for this package only
-
----
-
-## What this package does not own
+## What This Package Does Not Own
 
 Agents must not add or expand into:
 
-- global store architecture
-- app-wide state containers
-- business/domain state modeling
+- global store architecture or app-wide state containers
+- business or domain state modeling
 - router or URL state
-- shell orchestration
-- component rendering
+- shell orchestration or component rendering
 - DOM binding helpers
 - React, Vue, Solid, Astro, or framework-specific adapters
-- async cache/query layers
+- async cache or query layers
 - persistence or localStorage/sessionStorage helpers
-- event buses
-- streams or observable abstractions
+- event buses or observable streams
 - selectors as a store pattern
-- middleware systems
-- plugin systems
+- middleware or plugin systems
 - devtools, inspectors, dashboards, or debugging overlays
 - scheduler complexity beyond minimal reactive correctness
 - speculative extension hooks for future use
 
-If a proposed feature is not directly required for `signal`, `computed`, `effect`, dependency tracking, invalidation, cleanup, or disposal, it does not belong in this repository.
+If a proposed feature is not directly required for `signal`, `computed`, `effect`,
+dependency tracking, invalidation, cleanup, or disposal, it does not belong in
+this repository.
 
----
+## Repository Boundaries
 
-## Design rules
-
-When making changes:
-
-1. Keep the API tiny.
-2. Prefer explicit behavior over magical behavior.
-3. Prefer readable internals over abstraction-heavy architecture.
-4. Protect synchronous, predictable semantics unless there is a strong reason not to.
-5. Do not introduce new exports casually.
-6. Do not build "for later."
-7. Do not add framework concepts.
-8. Do not turn primitives into a store library.
-
-This package should feel small enough that another maintainer can understand the full runtime model quickly.
-
----
-
-## Public API discipline
-
-The intended public API is minimal:
-
-- `signal`
-- `computed`
-- `effect`
-
-Related exported types are acceptable when they directly describe the existing runtime API.
-
-Agents must not add new runtime exports unless they are clearly necessary to preserve or clarify the primitive reactivity contract.
-
-Before adding any export, ask:
-
-- Does this directly support primitive reactivity?
-- Is this required now, not hypothetically later?
-- Would this make the package feel more like a store or framework runtime?
-
-If there is any doubt, do not add it.
-
----
-
-## Allowed work
-
-Good contributions include:
-
-- fixing dependency-tracking bugs
-- improving computed invalidation correctness
-- tightening cleanup/disposal behavior
-- strengthening tests for reactive semantics
-- clarifying README ownership boundaries
-- improving package metadata and release hygiene
-- adding CI validation for build, test, and type-check flows
-- simplifying internals without changing package scope
-
----
-
-## Disallowed work
-
-Do not introduce:
-
-- `createStore`
-- `selector`
-- `atom`
-- `resource`
-- `watch`
-- `subscribe` as a broader external event API
-- framework hooks like `useSignal`
-- persistence helpers like `persistSignal`
-- router-integrated state helpers
-- async signal resources
-- transaction systems unless absolutely required for correctness
-- plugin registration patterns
-- debugging panels or devtools protocols
-
-These features may be valid elsewhere, but they do not belong here.
-
----
-
-## Repository boundaries
-
-This package should remain aligned with the broader Spectre split of responsibilities:
+This package should remain aligned with the broader Spectre split of
+responsibilities:
 
 - `@phcdevworks/spectre-tokens` owns visual language and token contracts
 - `@phcdevworks/spectre-ui` owns token-driven styling and class recipes
-- `@phcdevworks/spectre-shell` owns thin shell composition/runtime surface
+- `@phcdevworks/spectre-shell` owns thin shell composition and runtime surface
 - `@phcdevworks/spectre-shell-router` owns routing primitives
 - `@phcdevworks/spectre-shell-signals` owns reactive primitives only
 
 Do not pull responsibilities across those lines.
-
----
-
-## Validation requirements
-
-Before finishing work, agents must run:
-
-    npm run check
-
-This runs typecheck, lint, build, and test in sequence. Do not claim success without confirming all four pass.
-
----
-
-## Test expectations
-
-Reactive packages drift when semantics are changed casually. Tests are part of the package contract.
-
-Changes that affect behavior should add or update coverage for cases such as:
-
-- signal read/write behavior
-- unchanged writes not notifying dependents
-- computed laziness
-- computed caching
-- dependency invalidation
-- effect initial execution
-- cleanup before re-run
-- cleanup on disposal
-- dependency switching
-- nested computed values
-- multiple subscribers
-- circular/self-referential protection where applicable
-
-Do not change semantics without tests that prove the intended behavior.
-
----
-
-## Documentation requirements
-
-README and package metadata must stay aligned with the actual implementation.
-
-Agents must:
-
-- keep the README narrow and package-oriented
-- document only exports that actually exist
-- reinforce non-goals to prevent drift
-- avoid speculative roadmap language
-- keep naming, repository URLs, badges, and package metadata consistent
-
-If the repository name, package name, and docs are misaligned, fix that as part of repo hygiene.
-
----
-
-## Change sizing
-
-Prefer small, controlled changes.
-
-Good:
-
-- one semantic fix
-- one documentation alignment pass
-- one validation/CI improvement
-- one metadata consistency fix
-
-Avoid large mixed changes that combine:
-
-- runtime redesign
-- docs rewrite
-- packaging changes
-- test overhauls
-- naming changes
-
-Unless all are required to resolve one clearly bounded issue.
-
----
-
-## Drift check before finalizing
-
-Before submitting work, review the result against these questions:
-
-- Is the package still reactive-primitives-only?
-- Did any store-like concept leak in?
-- Did any framework-specific concept leak in?
-- Did the public API grow unnecessarily?
-- Did docs promise anything not implemented?
-- Did package metadata stay consistent with repo identity?
-
-If any answer is yes, fix the drift before finishing.
-
----
-
-## Default operating stance
-
-When unsure, choose the smaller API, the narrower scope, the simpler implementation, and the clearer documentation.
-
-This repository wins by staying disciplined.
