@@ -1,6 +1,8 @@
 import {
   type CleanupRegistrar,
   clearTracking,
+  isBatching,
+  queueEffect,
   type TrackingObserver,
   withTracking,
 } from './internals/tracking';
@@ -18,13 +20,25 @@ class EffectRunner implements TrackingObserver {
   private cleanups: EffectCleanup[] = [];
   private active = true;
   private running = false;
+  private queued = false;
 
   constructor(private readonly callback: EffectCallback) {
     this.run();
   }
 
   notify(): void {
-    if (!this.active) {
+    if (!this.active || this.queued) {
+      return;
+    }
+
+    if (isBatching()) {
+      this.queued = true;
+      queueEffect(() => {
+        this.queued = false;
+        if (this.active) {
+          this.run();
+        }
+      });
       return;
     }
 

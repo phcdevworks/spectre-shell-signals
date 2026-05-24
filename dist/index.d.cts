@@ -1,3 +1,5 @@
+declare function batch(fn: () => void): void;
+
 interface Computed<T> {
     readonly value: T;
     dispose(): void;
@@ -19,4 +21,4 @@ interface Signal<T> {
 }
 declare function signal<T>(initialValue: T): Signal<T>;
 
-export { type CleanupRegistrar, type Computed, type EffectCallback, type EffectCleanup, type Signal, type StopEffect, computed, effect, signal };
+export { type CleanupRegistrar, type Computed, type EffectCallback, type EffectCleanup, type Signal, type StopEffect, batch, computed, effect, signal };

@@ -4,6 +4,14 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+### Added
+
+- **`batch(fn)`**: Defers subscriber notification until `fn` returns so that effects in diamond-dependency graphs run once per batch instead of once per signal write. Nested `batch()` calls defer until the outermost batch ends.
+
+### Changed
+
+- **Computed stability audit**: Confirmed and tested that no-op signal writes (`signal.value = signal.value`) do not re-derive downstream computed values or re-run downstream effects anywhere in the invalidation path.
+
 ## [1.0.0] - 2026-04-25
 
 Release Title: Stable Reactive Primitives Release

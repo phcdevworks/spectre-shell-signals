@@ -20,6 +20,36 @@ function clearTracking(observer) {
   }
   observer.nodes.clear();
 }
+var batchDepth = 0;
+var pendingEffects = /* @__PURE__ */ new Set();
+function isBatching() {
+  return batchDepth > 0;
+}
+function queueEffect(flush) {
+  pendingEffects.add(flush);
+}
+function startBatch() {
+  batchDepth++;
+}
+function endBatch() {
+  if (--batchDepth === 0) {
+    const snapshot = Array.from(pendingEffects);
+    pendingEffects.clear();
+    for (const flush of snapshot) {
+      flush();
+    }
+  }
+}
+
+// src/batch.ts
+function batch(fn) {
+  startBatch();
+  try {
+    fn();
+  } finally {
+    endBatch();
+  }
+}
 
 // src/internals/node.ts
 var Node = class {
@@ -94,10 +124,21 @@ var EffectRunner = class {
     this.cleanups = [];
     this.active = true;
     this.running = false;
+    this.queued = false;
     this.run();
   }
   notify() {
-    if (!this.active) {
+    if (!this.active || this.queued) {
+      return;
+    }
+    if (isBatching()) {
+      this.queued = true;
+      queueEffect(() => {
+        this.queued = false;
+        if (this.active) {
+          this.run();
+        }
+      });
       return;
     }
     this.run();
@@ -166,6 +207,7 @@ function signal(initialValue) {
   return new SignalImpl(initialValue);
 }
 
+exports.batch = batch;
 exports.computed = computed;
 exports.effect = effect;
 exports.signal = signal;

@@ -33,3 +33,28 @@ export function clearTracking(observer: TrackingObserver): void {
 
   observer.nodes.clear();
 }
+
+let batchDepth = 0;
+const pendingEffects = new Set<() => void>();
+
+export function isBatching(): boolean {
+  return batchDepth > 0;
+}
+
+export function queueEffect(flush: () => void): void {
+  pendingEffects.add(flush);
+}
+
+export function startBatch(): void {
+  batchDepth++;
+}
+
+export function endBatch(): void {
+  if (--batchDepth === 0) {
+    const snapshot = Array.from(pendingEffects);
+    pendingEffects.clear();
+    for (const flush of snapshot) {
+      flush();
+    }
+  }
+}

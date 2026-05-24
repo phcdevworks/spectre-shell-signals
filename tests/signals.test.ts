@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { computed, effect, signal } from '../src';
+import { batch, computed, effect, signal } from '../src';
 
 describe('@phcdevworks/spectre-shell-signals', () => {
   it('reads and writes signal values through .value', () => {
@@ -285,5 +285,147 @@ describe('@phcdevworks/spectre-shell-signals', () => {
     stop();
 
     expect(seen).toEqual([0]);
+  });
+
+  it('does not re-derive a computed when a dependency is written with the same value', () => {
+    const count = signal(2);
+    const spy = vi.fn(() => count.value * 2);
+    const doubled = computed(spy);
+
+    expect(doubled.value).toBe(4);
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    count.value = 2;
+
+    expect(doubled.value).toBe(4);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not re-run an effect when a no-op write propagates through a computed chain', () => {
+    const count = signal(1);
+    const doubled = computed(() => count.value * 2);
+    const runs = vi.fn(() => {
+      void doubled.value;
+    });
+
+    effect(runs);
+    expect(runs).toHaveBeenCalledTimes(1);
+
+    count.value = 1;
+
+    expect(runs).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not double-trigger downstream when a computed is already dirty', () => {
+    const a = signal(1);
+    const b = signal(2);
+    const sum = computed(() => a.value + b.value);
+    const runs: number[] = [];
+
+    effect(() => {
+      runs.push(sum.value);
+    });
+
+    a.value = 10;
+    b.value = 20;
+
+    expect(runs).toEqual([3, 12, 30]);
+  });
+});
+
+describe('batch', () => {
+  it('defers effect re-runs until the batch ends', () => {
+    const count = signal(0);
+    const seen: number[] = [];
+
+    effect(() => {
+      seen.push(count.value);
+    });
+
+    batch(() => {
+      count.value = 1;
+      count.value = 2;
+      expect(seen).toEqual([0]);
+    });
+
+    expect(seen).toEqual([0, 2]);
+  });
+
+  it('runs a diamond-dependency effect once per batch, not once per write', () => {
+    const a = signal(1);
+    const b = signal(2);
+    const runs = vi.fn();
+
+    effect(() => {
+      void a.value;
+      void b.value;
+      runs();
+    });
+
+    expect(runs).toHaveBeenCalledTimes(1);
+
+    batch(() => {
+      a.value = 10;
+      b.value = 20;
+    });
+
+    expect(runs).toHaveBeenCalledTimes(2);
+  });
+
+  it('defers effects until the outermost nested batch ends', () => {
+    const count = signal(0);
+    const seen: number[] = [];
+
+    effect(() => {
+      seen.push(count.value);
+    });
+
+    batch(() => {
+      batch(() => {
+        count.value = 1;
+      });
+      expect(seen).toEqual([0]);
+      count.value = 2;
+    });
+
+    expect(seen).toEqual([0, 2]);
+  });
+
+  it('runs effect cleanup once on re-run after batch, not once per write', () => {
+    const count = signal(0);
+    const events: string[] = [];
+
+    effect((onCleanup) => {
+      const current = count.value;
+      events.push(`run:${current}`);
+      onCleanup(() => {
+        events.push(`cleanup:${current}`);
+      });
+    });
+
+    batch(() => {
+      count.value = 1;
+      count.value = 2;
+    });
+
+    expect(events).toEqual(['run:0', 'cleanup:0', 'run:2']);
+  });
+
+  it('runs a batched effect through a computed chain once', () => {
+    const a = signal(1);
+    const b = signal(2);
+    const sum = computed(() => a.value + b.value);
+    const seen: number[] = [];
+
+    effect(() => {
+      seen.push(sum.value);
+    });
+
+    batch(() => {
+      a.value = 10;
+      b.value = 20;
+    });
+
+    expect(seen).toEqual([3, 30]);
   });
 });

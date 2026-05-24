@@ -62,6 +62,7 @@ doubled.dispose()
 - `signal(initialValue)` returns a mutable signal.
 - `computed(fn)` returns a cached computed value with `dispose()`.
 - `effect(fn)` runs immediately, reruns when tracked dependencies change, and returns a stop function.
+- `batch(fn)` defers subscriber notification until `fn` returns, so effects run once per batch rather than once per write.
 - Types include `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`, `CleanupRegistrar`, and `StopEffect`.
 
 ## Boundaries

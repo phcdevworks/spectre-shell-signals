@@ -58,13 +58,13 @@ toward a stable, dependable foundation for consuming packages.
 
 ### P1: Reactive Ergonomics
 
-- [ ] Add `batch()` export for synchronous write batching
+- [x] Add `batch()` export for synchronous write batching
   - `batch(fn)` defers subscriber notification until `fn` returns
   - Effects run once per batch, not once per signal write
   - Tests: diamond graphs, nested batches, batch + cleanup interaction
   - Document in `README.md`
 
-- [ ] Audit computed stability on no-op writes
+- [x] Audit computed stability on no-op writes
   - Confirm no-op writes (`signal.value = signal.value`) do not invalidate
     dependents through computed chains
   - Add or expand tests covering full invalidation paths
