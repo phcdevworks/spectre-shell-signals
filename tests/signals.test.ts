@@ -333,6 +333,41 @@ describe('@phcdevworks/spectre-shell-signals', () => {
   });
 });
 
+describe('peek', () => {
+  it('returns the current value without registering a dependency in an effect', () => {
+    const count = signal(0);
+    const runs = vi.fn(() => {
+      void count.peek();
+    });
+
+    effect(runs);
+    count.value = 1;
+
+    expect(runs).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns the current value without registering a dependency in a computed', () => {
+    const count = signal(0);
+    const spy = vi.fn(() => count.peek() * 2);
+    const doubled = computed(spy);
+
+    expect(doubled.value).toBe(0);
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    count.value = 5;
+
+    expect(doubled.value).toBe(0);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns the same value as .value when read outside a tracked context', () => {
+    const count = signal(42);
+    expect(count.peek()).toBe(42);
+    count.value = 99;
+    expect(count.peek()).toBe(99);
+  });
+});
+
 describe('batch', () => {
   it('defers effect re-runs until the batch ends', () => {
     const count = signal(0);

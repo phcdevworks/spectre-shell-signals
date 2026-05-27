@@ -18,6 +18,7 @@ declare function effect(fn: EffectCallback): StopEffect;
 interface Signal<T> {
     get value(): T;
     set value(nextValue: T);
+    peek(): T;
 }
 declare function signal<T>(initialValue: T): Signal<T>;
 

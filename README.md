@@ -27,7 +27,7 @@ Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks
 
 ## Capabilities
 
-- Mutable signals through a `.value` getter and setter.
+- Mutable signals through a `.value` getter and setter, and a `.peek()` method for untracked reads.
 - Lazily evaluated computed values with dependency tracking.
 - Synchronous effects with cleanup registration.
 - Explicit disposal for computed values and effects.
@@ -59,11 +59,26 @@ doubled.dispose()
 
 ## API
 
-- `signal(initialValue)` returns a mutable signal.
+- `signal(initialValue)` returns a mutable signal with `.value` (tracked read/write) and `.peek()` (untracked read).
 - `computed(fn)` returns a cached computed value with `dispose()`.
 - `effect(fn)` runs immediately, reruns when tracked dependencies change, and returns a stop function.
 - `batch(fn)` defers subscriber notification until `fn` returns, so effects run once per batch rather than once per write.
 - Types include `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`, `CleanupRegistrar`, and `StopEffect`.
+
+### `signal.peek()`
+
+`peek()` reads the current value without registering the caller as a subscriber. Use it inside an effect or computed body when you need the value but do not want to re-run the observer when it changes.
+
+```ts
+const count = signal(0)
+
+effect(() => {
+  // re-runs whenever `flag` changes, but NOT when `count` changes
+  if (flag.value) {
+    console.log(count.peek())
+  }
+})
+```
 
 ## Boundaries
 

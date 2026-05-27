@@ -200,6 +200,9 @@ var SignalImpl = class {
     this.currentValue = nextValue;
     this.node.trigger();
   }
+  peek() {
+    return this.currentValue;
+  }
 };
 function signal(initialValue) {
   return new SignalImpl(initialValue);

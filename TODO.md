@@ -44,7 +44,7 @@ toward a stable, dependable foundation for consuming packages.
 
 ### P0: Reactive Correctness / Must-Do
 
-- [ ] Add `peek()` to `Signal<T>`
+- [x] Add `peek()` to `Signal<T>`
   - `signal.peek()` reads the current value without registering a dependency
   - Bypasses the tracking stack entirely
   - Tests: `peek()` inside effects and computed bodies does not create subscriptions

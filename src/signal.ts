@@ -3,6 +3,7 @@ import { Node } from './internals/node';
 export interface Signal<T> {
   get value(): T;
   set value(nextValue: T);
+  peek(): T;
 }
 
 class SignalImpl<T> implements Signal<T> {
@@ -22,6 +23,10 @@ class SignalImpl<T> implements Signal<T> {
 
     this.currentValue = nextValue;
     this.node.trigger();
+  }
+
+  peek(): T {
+    return this.currentValue;
   }
 }
 

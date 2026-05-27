@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/phcdevworks/spectre-shell-signals#readme",
   "type": "module",
-  "packageManager": "npm@11.15.0",
+  "packageManager": "npm@11.16.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
