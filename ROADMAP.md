@@ -26,45 +26,30 @@ stable, dependable foundation for consuming packages — not expanding scope.
 - Dual ESM/CJS output via `tsup`.
 - CI runs `npm run check` on Node 22 and 24.
 
-### Current gaps to address
+### Delivered since initial release
 
-- Effect batching is not implemented — diamond-dependency graphs trigger
-  redundant effect runs.
-- Computed values re-derive on every access even when no dependency has
-  changed in some edge cases under certain invalidation patterns.
+- `Signal.peek()` - reads current value without registering a dependency
+  (delivered in v0.3.0).
+- `batch()` - defers subscriber notification across multiple synchronous writes
+  (delivered in v0.3.0).
+- Computed stability under no-op writes - audited and confirmed correct.
+
+### Remaining gaps to address
+
 - No `onError` hook for effects — uncaught errors in effects silently
   terminate the effect chain.
-- There is no `peek()` on signals — reading a signal's value without
-  registering a dependency requires workarounds.
+- Computed values may re-derive on every access in some edge cases under
+  certain invalidation patterns (lower priority; audit pending).
 
 ## 2. Roadmap
 
 ## P0: Reactive Correctness / Must-Do
 
-### P0.1 Signal `peek()` Method
+### P0.1 Signal `peek()` Method -- DELIVERED
 
-Objective Add a `peek()` method to `Signal<T>` for reading the current value
-without registering a dependency.
-
-Why it matters Some consumers need to read signal state inside effects or
-computed functions without creating a dependency (e.g. reading a cache signal
-inside an effect that should only react to a trigger signal). Without `peek()`,
-consumers use workarounds that break tracking invariants.
-
-Suggested deliverables
-
-- Add `peek(): T` to the `Signal<T>` type and implementation
-- `peek()` bypasses the tracking stack entirely
-- Tests for `peek()` inside effects and computed bodies
-- Document in `README.md` under public API
-
-Dependency notes
-
-- No upstream dependencies; can start immediately
-
-Risk if skipped
-
-- Consumers implement manual tracking bypasses that are fragile and untested
+`peek(): T` is implemented on `Signal<T>`. It bypasses the tracking stack
+entirely. Tests confirm no dependency is registered when `peek()` is called
+inside effects or computed bodies. Documented in `README.md`.
 
 ### P0.2 Effect Error Boundary
 
@@ -83,7 +68,7 @@ Suggested deliverables
 
 Dependency notes
 
-- No upstream dependencies; can run alongside P0.1
+- No upstream dependencies.
 
 Risk if skipped
 
@@ -91,50 +76,17 @@ Risk if skipped
 
 ## P1: Reactive Ergonomics
 
-### P1.1 Effect Batching
+### P1.1 Effect Batching -- DELIVERED
 
-Objective Batch synchronous signal writes so effects run once per batch rather
-than once per write.
+`batch(fn: () => void): void` is implemented and exported. Signal writes inside
+`batch()` defer subscriber notification until the batch ends. Effects run once
+per batch, not once per signal write. Tests cover diamond graphs, nested
+batches, and batch + cleanup interaction. Documented in `README.md`.
 
-Why it matters Diamond-dependency patterns (one effect depends on two signals
-that are written together) trigger redundant effect runs. Batching eliminates
-unnecessary work and is the standard primitive in reactive systems.
+### P1.2 `computed` Stability Under No-Change Writes -- DELIVERED
 
-Suggested deliverables
-
-- Add a `batch(fn: () => void): void` export
-- Signal writes inside `batch()` defer subscriber notification until the batch
-  ends
-- Effects run once per batch, not once per signal write
-- Tests for diamond graphs, nested batches, and batch + cleanup interaction
-- Document in `README.md`
-
-Dependency notes
-
-- Should be done after P0 correctness work is stable
-
-Risk if skipped
-
-- High-frequency writes cause redundant effect execution and performance issues
-  in consuming packages
-
-### P1.2 `computed` Stability Under No-Change Writes
-
-Objective Ensure computed values do not re-derive when a signal is written with
-the same value.
-
-Why it matters `signal.value = signal.value` should not invalidate dependents.
-This is already guarded on signal writes but worth auditing through the full
-invalidation path.
-
-Suggested deliverables
-
-- Audit and add tests covering no-op writes through computed chains
-- Fix any discovered invalidation path that skips the equality check
-
-Dependency notes
-
-- Low effort; can run at any point
+Audited and confirmed correct. No-op writes (`signal.value = signal.value`) do
+not invalidate dependents through computed chains. Test coverage added.
 
 ## P2: Later / Controlled Improvement
 
@@ -171,9 +123,9 @@ Dependency notes
 
 ## 4. Recommended Execution Order
 
-1. Signal `peek()` method (unblocks consuming packages immediately)
+1. ~~Signal `peek()` method~~ -- delivered
 2. Effect error boundary (reliability for production use)
-3. Effect batching (performance correctness for diamond graphs)
-4. Computed stability audit
+3. ~~Effect batching~~ -- delivered
+4. ~~Computed stability audit~~ -- delivered
 5. Evaluate async effects only when a proven consumer need exists
 6. Evaluate DevTools hook only when adoption justifies it
