@@ -116,8 +116,9 @@ function computed(fn) {
 
 // src/effect.ts
 var EffectRunner = class {
-  constructor(callback) {
+  constructor(callback, options = {}) {
     this.callback = callback;
+    this.options = options;
     this.nodes = /* @__PURE__ */ new Set();
     this.cleanups = [];
     this.active = true;
@@ -166,6 +167,12 @@ var EffectRunner = class {
           this.cleanups.push(cleanup);
         })
       );
+    } catch (err) {
+      if (this.options.onError) {
+        this.options.onError(err);
+      } else {
+        throw err;
+      }
     } finally {
       this.running = false;
     }
@@ -178,8 +185,8 @@ var EffectRunner = class {
     }
   }
 };
-function effect(fn) {
-  const runner = new EffectRunner(fn);
+function effect(fn, options) {
+  const runner = new EffectRunner(fn, options);
   return () => runner.stop();
 }
 

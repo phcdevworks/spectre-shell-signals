@@ -36,8 +36,6 @@ stable, dependable foundation for consuming packages — not expanding scope.
 
 ### Remaining gaps to address
 
-- No `onError` hook for effects — uncaught errors in effects silently
-  terminate the effect chain.
 - Computed values may re-derive on every access in some edge cases under
   certain invalidation patterns (lower priority; audit pending).
 
@@ -51,28 +49,14 @@ stable, dependable foundation for consuming packages — not expanding scope.
 entirely. Tests confirm no dependency is registered when `peek()` is called
 inside effects or computed bodies. Documented in `README.md`.
 
-### P0.2 Effect Error Boundary
+### P0.2 Effect Error Boundary -- DELIVERED
 
-Objective Allow effects to handle errors without silently dying.
-
-Why it matters An uncaught error inside an effect currently propagates
-unhandled, terminating the effect and leaving reactive state in limbo. This
-makes debugging production issues difficult.
-
-Suggested deliverables
-
-- Add optional `onError?: (err: unknown) => void` to `effect()` options
-- Default behavior continues to throw synchronously (no silent swallow)
-- Tests for error handling, re-run after error, and cleanup on error
-- Document error boundary behavior in `README.md`
-
-Dependency notes
-
-- No upstream dependencies.
-
-Risk if skipped
-
-- Reactive errors in consuming applications are hard to diagnose
+`effect(fn, { onError })` is implemented. Errors thrown inside an effect
+callback are passed to `onError` when provided; the effect stays active and
+re-runs normally on the next dependency change. Default behavior (no `onError`)
+continues to throw synchronously. Tests cover propagation by default, `onError`
+on initial and re-run, re-run after error, and cleanup ordering on error.
+Documented in `README.md`.
 
 ## P1: Reactive Ergonomics
 
@@ -124,7 +108,7 @@ Dependency notes
 ## 4. Recommended Execution Order
 
 1. ~~Signal `peek()` method~~ -- delivered
-2. Effect error boundary (reliability for production use)
+2. ~~Effect error boundary~~ -- delivered
 3. ~~Effect batching~~ -- delivered
 4. ~~Computed stability audit~~ -- delivered
 5. Evaluate async effects only when a proven consumer need exists

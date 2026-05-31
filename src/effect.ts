@@ -14,6 +14,10 @@ export type EffectCleanup = () => void;
 export type EffectCallback = (onCleanup: CleanupRegistrar) => void;
 export type StopEffect = () => void;
 
+export interface EffectOptions {
+  onError?: (err: unknown) => void;
+}
+
 class EffectRunner implements TrackingObserver {
   readonly nodes = new Set<Node>();
 
@@ -22,7 +26,10 @@ class EffectRunner implements TrackingObserver {
   private running = false;
   private queued = false;
 
-  constructor(private readonly callback: EffectCallback) {
+  constructor(
+    private readonly callback: EffectCallback,
+    private readonly options: EffectOptions = {},
+  ) {
     this.run();
   }
 
@@ -74,6 +81,12 @@ class EffectRunner implements TrackingObserver {
           this.cleanups.push(cleanup);
         }),
       );
+    } catch (err) {
+      if (this.options.onError) {
+        this.options.onError(err);
+      } else {
+        throw err;
+      }
     } finally {
       this.running = false;
     }
@@ -89,7 +102,7 @@ class EffectRunner implements TrackingObserver {
   }
 }
 
-export function effect(fn: EffectCallback): StopEffect {
-  const runner = new EffectRunner(fn);
+export function effect(fn: EffectCallback, options?: EffectOptions): StopEffect {
+  const runner = new EffectRunner(fn, options);
   return () => runner.stop();
 }

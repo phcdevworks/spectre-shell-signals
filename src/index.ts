@@ -5,6 +5,7 @@ export {
   type CleanupRegistrar,
   type EffectCallback,
   type EffectCleanup,
+  type EffectOptions,
   type StopEffect,
 } from './effect';
 export { signal, type Signal } from './signal';

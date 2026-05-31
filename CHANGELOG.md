@@ -8,6 +8,7 @@ All notable changes to this project will be documented here. The format follows 
 
 - **`signal.peek()`**: Reads the current signal value without registering a dependency. Use inside effects or computed bodies when you need the value but do not want the observer to re-run when it changes.
 - **`batch(fn)`**: Defers subscriber notification until `fn` returns so that effects in diamond-dependency graphs run once per batch instead of once per signal write. Nested `batch()` calls defer until the outermost batch ends.
+- **`EffectOptions.onError`**: Optional error handler for `effect(fn, { onError })`. When provided, errors thrown inside the effect callback are passed to `onError` instead of propagating. The effect stays active and re-runs on the next dependency change. Default behavior (no `onError`) continues to throw synchronously.
 
 ### Changed
 

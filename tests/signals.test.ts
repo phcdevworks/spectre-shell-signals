@@ -464,3 +464,87 @@ describe('batch', () => {
     expect(seen).toEqual([3, 30]);
   });
 });
+
+describe('effect error boundary', () => {
+  it('propagates uncaught errors from the initial run by default', () => {
+    expect(() =>
+      effect(() => {
+        throw new Error('boom');
+      }),
+    ).toThrowError('boom');
+  });
+
+  it('propagates uncaught errors on re-run by default', () => {
+    const count = signal(0);
+    const stop = effect(() => {
+      if (count.value > 0) {
+        throw new Error('boom');
+      }
+    });
+
+    expect(() => {
+      count.value = 1;
+    }).toThrowError('boom');
+
+    stop();
+  });
+
+  it('calls onError instead of throwing when the initial run errors', () => {
+    const errors: unknown[] = [];
+
+    const stop = effect(
+      () => {
+        throw new Error('boom');
+      },
+      { onError: (err) => errors.push(err) },
+    );
+
+    expect(errors).toHaveLength(1);
+    expect((errors[0] as Error).message).toBe('boom');
+    stop();
+  });
+
+  it('calls onError on re-run and keeps the effect active', () => {
+    const count = signal(0);
+    const errors: unknown[] = [];
+    const seen: number[] = [];
+
+    const stop = effect(
+      (onCleanup) => {
+        const v = count.value;
+        if (v === 1) throw new Error('mid-run error');
+        seen.push(v);
+        onCleanup(() => {});
+      },
+      { onError: (err) => errors.push(err) },
+    );
+
+    count.value = 1;
+    count.value = 2;
+    stop();
+
+    expect(errors).toHaveLength(1);
+    expect((errors[0] as Error).message).toBe('mid-run error');
+    expect(seen).toEqual([0, 2]);
+  });
+
+  it('runs cleanup from a prior run before the erroring re-run', () => {
+    const count = signal(0);
+    const events: string[] = [];
+
+    const stop = effect(
+      (onCleanup) => {
+        const v = count.value;
+        onCleanup(() => events.push(`cleanup:${v}`));
+        if (v === 1) throw new Error('error');
+        events.push(`run:${v}`);
+      },
+      { onError: () => {} },
+    );
+
+    count.value = 1;
+    stop();
+
+    expect(events).toEqual(['run:0', 'cleanup:0', 'cleanup:1']);
+  });
+});

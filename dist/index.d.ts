@@ -13,7 +13,10 @@ interface CleanupRegistrar {
 type EffectCleanup = () => void;
 type EffectCallback = (onCleanup: CleanupRegistrar) => void;
 type StopEffect = () => void;
-declare function effect(fn: EffectCallback): StopEffect;
+interface EffectOptions {
+    onError?: (err: unknown) => void;
+}
+declare function effect(fn: EffectCallback, options?: EffectOptions): StopEffect;
 
 interface Signal<T> {
     get value(): T;
@@ -22,4 +25,4 @@ interface Signal<T> {
 }
 declare function signal<T>(initialValue: T): Signal<T>;
 
-export { type CleanupRegistrar, type Computed, type EffectCallback, type EffectCleanup, type Signal, type StopEffect, batch, computed, effect, signal };
+export { type CleanupRegistrar, type Computed, type EffectCallback, type EffectCleanup, type EffectOptions, type Signal, type StopEffect, batch, computed, effect, signal };

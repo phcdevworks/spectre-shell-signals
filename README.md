@@ -61,9 +61,9 @@ doubled.dispose()
 
 - `signal(initialValue)` returns a mutable signal with `.value` (tracked read/write) and `.peek()` (untracked read).
 - `computed(fn)` returns a cached computed value with `dispose()`.
-- `effect(fn)` runs immediately, reruns when tracked dependencies change, and returns a stop function.
+- `effect(fn, options?)` runs immediately, reruns when tracked dependencies change, and returns a stop function. Pass `{ onError }` to handle errors without stopping the effect.
 - `batch(fn)` defers subscriber notification until `fn` returns, so effects run once per batch rather than once per write.
-- Types include `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`, `CleanupRegistrar`, and `StopEffect`.
+- Types include `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`, `EffectOptions`, `CleanupRegistrar`, and `StopEffect`.
 
 ### `signal.peek()`
 
@@ -79,6 +79,28 @@ effect(() => {
   }
 })
 ```
+
+### Effect error boundary
+
+Pass `onError` to handle errors thrown inside an effect without stopping the reactive chain. The effect stays active and re-runs normally when its next dependency changes.
+
+```ts
+const count = signal(0)
+
+const stop = effect(
+  () => {
+    if (count.value === 1) throw new Error('bad state')
+    console.log(count.value)
+  },
+  { onError: (err) => console.error('effect error:', err) },
+)
+
+count.value = 1 // onError fires, effect stays alive
+count.value = 2 // logs 2 normally
+stop()
+```
+
+Without `onError`, errors propagate synchronously to the caller — the initial run throws from `effect()`, and re-run errors throw from the signal setter.
 
 ## Boundaries
 
