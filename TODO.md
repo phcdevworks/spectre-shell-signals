@@ -50,7 +50,7 @@ toward a stable, dependable foundation for consuming packages.
   - Tests: `peek()` inside effects and computed bodies does not create subscriptions
   - Document under public API in `README.md`
 
-- [ ] Add effect error boundary
+- [x] Add effect error boundary
   - Add optional `onError?: (err: unknown) => void` to `effect()` options
   - Default behavior: re-throw synchronously (no silent swallow)
   - Tests: error handling, re-run after error, cleanup on error
@@ -72,9 +72,9 @@ toward a stable, dependable foundation for consuming packages.
 
 ### P2: Later / Controlled Improvement
 
-- [ ] Evaluate async effect support (decision document only - no implementation
+- [x] Evaluate async effect support (decision document only - no implementation
   until proven need)
-- [ ] Evaluate DevTools hook (decision document only - no implementation until
+- [x] Evaluate DevTools hook (decision document only - no implementation until
   adoption justifies it)
 
 ## Recommended Execution Order
