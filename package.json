@@ -61,6 +61,8 @@
     "release:propose": "jiti scripts/propose-version.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "format:md": "prettier --write \"**/*.md\"",
+    "format:md:check": "prettier --check \"**/*.md\"",
     "test": "vitest run",
     "check": "npm run typecheck && npm run lint && npm run build && npm run test",
     "prepublishOnly": "npm run check"

@@ -19,7 +19,7 @@ build gate.
 ### P1: Build, Types, and Distribution
 
 - [x] Export public types: `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`,
-  `CleanupRegistrar`, `StopEffect`
+      `CleanupRegistrar`, `StopEffect`
 - [x] Dual ESM/CJS output via `tsup`
 - [x] TypeScript 6 with strict mode via `tsconfig.json`
 - [x] `npm run check` gate: typecheck + lint + build + test
@@ -27,7 +27,7 @@ build gate.
 ### P2: Test Coverage and CI
 
 - [x] Behavioral test suite (19 cases) covering: unchanged-write guards, computed
-  caching, dependency switching, circular protection, cleanup on disposal
+      caching, dependency switching, circular protection, cleanup on disposal
 - [x] CI on Node 22 and 24 via `.github/workflows/ci.yml`
 
 ### P3: Documentation and Repo Hygiene
@@ -73,16 +73,16 @@ active use across the Spectre stack.
 ### P1: Downstream Integration
 
 - [ ] **spectre-tokens** — assess which token values are static vs. reactive;
-  wire reactive tokens through signals rather than ad-hoc patterns
+      wire reactive tokens through signals rather than ad-hoc patterns
 - [ ] **spectre-ui** — establish the pattern for consuming a signal inside a UI
-  component (direct `.value` read in effect, or computed class/style state)
+      component (direct `.value` read in effect, or computed class/style state)
 - [ ] **spectre-ui-astro** — define how signals initializes and tears down within
-  an Astro island lifecycle; confirm `effect` cleanup works on component unmount
+      an Astro island lifecycle; confirm `effect` cleanup works on component unmount
 
 ### P2: Documentation
 
 - [ ] Write a consuming-package integration guide covering: install, shared signal
-  instances, computed and effect in a component context, cleanup patterns
+      instances, computed and effect in a component context, cleanup patterns
 - [ ] Add Astro-specific notes for island hydration and teardown
 
 ---

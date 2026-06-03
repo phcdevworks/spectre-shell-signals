@@ -40,14 +40,14 @@ about the reactive graph deterministically.
 synchronous signal to bridge:
 
 ```ts
-const data = signal<Data | null>(null);
+const data = signal<Data | null>(null)
 
 effect(() => {
-  const id = selectedId.value; // tracked dependency
+  const id = selectedId.value // tracked dependency
   fetchData(id).then((result) => {
-    data.value = result; // write back from async context, untracked
-  });
-});
+    data.value = result // write back from async context, untracked
+  })
+})
 ```
 
 This pattern is explicit about what is tracked and when the result lands.

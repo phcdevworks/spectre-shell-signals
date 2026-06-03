@@ -6,6 +6,8 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [1.1.0] - 2026-06-04
 
+Release Title: Reactive Ergonomics Release
+
 ### Added
 
 - **`signal.peek()`**: Reads the current signal value without registering a dependency. Use inside effects or computed bodies when you need the value but do not want the observer to re-run when it changes.

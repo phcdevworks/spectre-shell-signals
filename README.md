@@ -92,7 +92,7 @@ const stop = effect(
     if (count.value === 1) throw new Error('bad state')
     console.log(count.value)
   },
-  { onError: (err) => console.error('effect error:', err) },
+  { onError: (err) => console.error('effect error:', err) }
 )
 
 count.value = 1 // onError fires, effect stays alive
@@ -106,12 +106,12 @@ Without `onError`, errors propagate synchronously to the caller — the initial 
 
 `spectre-shell-signals` is the reactive primitive foundation for the Spectre stack:
 
-| Package | Role |
-| --- | --- |
-| `spectre-shell-signals` | Reactive primitives (`signal`, `computed`, `effect`) |
-| `spectre-tokens` | Visual language and token contracts (reactive token values) |
-| `spectre-ui` | Token-driven styling and class recipes (reactive component state) |
-| `spectre-ui-astro` | Astro component layer (island lifecycle integration) |
+| Package                 | Role                                                              |
+| ----------------------- | ----------------------------------------------------------------- |
+| `spectre-shell-signals` | Reactive primitives (`signal`, `computed`, `effect`)              |
+| `spectre-tokens`        | Visual language and token contracts (reactive token values)       |
+| `spectre-ui`            | Token-driven styling and class recipes (reactive component state) |
+| `spectre-ui-astro`      | Astro component layer (island lifecycle integration)              |
 
 Consuming packages depend on this package for reactive state. They do not re-export
 its primitives or extend its API.
