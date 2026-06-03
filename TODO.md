@@ -37,54 +37,55 @@ build gate.
 
 ---
 
-## Phase 2 - Mature Operations
+## Phase 2 - Mature Operations: Completed
 
-All items below are forward-looking. This phase hardens the reactive contract
-toward a stable, dependable foundation for consuming packages.
+All Phase 2 items are delivered and validated.
 
-### P0: Reactive Correctness / Must-Do
+### P0: Reactive Correctness
 
-- [x] Add `peek()` to `Signal<T>`
-  - `signal.peek()` reads the current value without registering a dependency
-  - Bypasses the tracking stack entirely
-  - Tests: `peek()` inside effects and computed bodies does not create subscriptions
-  - Document under public API in `README.md`
-
-- [x] Add effect error boundary
-  - Add optional `onError?: (err: unknown) => void` to `effect()` options
-  - Default behavior: re-throw synchronously (no silent swallow)
-  - Tests: error handling, re-run after error, cleanup on error
-  - Document error boundary behavior in `README.md`
+- [x] `signal.peek()` — untracked read, no dependency registration
+- [x] Effect error boundary — `onError` option, effect stays active after error
 
 ### P1: Reactive Ergonomics
 
-- [x] Add `batch()` export for synchronous write batching
-  - `batch(fn)` defers subscriber notification until `fn` returns
-  - Effects run once per batch, not once per signal write
-  - Tests: diamond graphs, nested batches, batch + cleanup interaction
-  - Document in `README.md`
+- [x] `batch()` — deferred notification for diamond graphs and multi-write scenarios
+- [x] Computed stability audit — no-op writes confirmed not to invalidate dependents
 
-- [x] Audit computed stability on no-op writes
-  - Confirm no-op writes (`signal.value = signal.value`) do not invalidate
-    dependents through computed chains
-  - Add or expand tests covering full invalidation paths
-  - Fix any path that skips the equality check
+### P2: Evaluation Documents
 
-### P2: Later / Controlled Improvement
+- [x] Async effect support decision document
+- [x] DevTools hook decision document
 
-- [x] Evaluate async effect support (decision document only - no implementation
-  until proven need)
-- [x] Evaluate DevTools hook (decision document only - no implementation until
-  adoption justifies it)
+---
 
-## Recommended Execution Order
+## Phase 3 - Integration & Adoption
 
-1. Signal `peek()` method (unblocks consuming packages immediately)
-2. Effect error boundary (reliability for production use)
-3. Effect batching (performance correctness for diamond graphs)
-4. Computed stability audit
-5. Async effects evaluation (demand-driven)
-6. DevTools hook evaluation (adoption-driven)
+The foundation is solid. This phase moves signals from a standalone package into
+active use across the Spectre stack.
+
+### P0: Release
+
+- [ ] Cut CHANGELOG `[Unreleased]` to `[1.1.0]` with `peek`, `batch`, `onError`
+- [ ] Bump `package.json` version to `1.1.0`
+- [ ] Publish `@phcdevworks/spectre-shell-signals@1.1.0` to npm
+- [ ] Confirm published package is consumable (ESM + CJS, types resolve correctly)
+
+### P1: Downstream Integration
+
+- [ ] **spectre-tokens** — assess which token values are static vs. reactive;
+  wire reactive tokens through signals rather than ad-hoc patterns
+- [ ] **spectre-ui** — establish the pattern for consuming a signal inside a UI
+  component (direct `.value` read in effect, or computed class/style state)
+- [ ] **spectre-ui-astro** — define how signals initializes and tears down within
+  an Astro island lifecycle; confirm `effect` cleanup works on component unmount
+
+### P2: Documentation
+
+- [ ] Write a consuming-package integration guide covering: install, shared signal
+  instances, computed and effect in a component context, cleanup patterns
+- [ ] Add Astro-specific notes for island hydration and teardown
+
+---
 
 ## Explicitly Out of Scope
 

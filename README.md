@@ -102,6 +102,20 @@ stop()
 
 Without `onError`, errors propagate synchronously to the caller — the initial run throws from `effect()`, and re-run errors throw from the signal setter.
 
+## Ecosystem
+
+`spectre-shell-signals` is the reactive primitive foundation for the Spectre stack:
+
+| Package | Role |
+| --- | --- |
+| `spectre-shell-signals` | Reactive primitives (`signal`, `computed`, `effect`) |
+| `spectre-tokens` | Visual language and token contracts (reactive token values) |
+| `spectre-ui` | Token-driven styling and class recipes (reactive component state) |
+| `spectre-ui-astro` | Astro component layer (island lifecycle integration) |
+
+Consuming packages depend on this package for reactive state. They do not re-export
+its primitives or extend its API.
+
 ## Boundaries
 
 This package owns only low-level reactive primitives. It does not own DOM rendering, routing, lifecycle orchestration, async scheduling, stores, persistence, or framework adapters.

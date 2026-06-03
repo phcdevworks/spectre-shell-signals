@@ -82,6 +82,12 @@ local reactive state, derived values, and reactive effects — a tiny, predictab
 reactivity layer that other Spectre packages and compatible applications can build
 on without inheriting a full state-management framework.
 
+The reactive foundation (`signal`, `computed`, `effect`, `batch`) is stable and
+published. The current focus is integration: getting these primitives actively
+consumed by `spectre-tokens`, `spectre-ui`, and `spectre-ui-astro`. Work in this
+repository should serve that integration goal — hardening the contract, improving
+integration ergonomics, and documenting consuming-package patterns.
+
 This package must stay narrow, explicit, portable, and easy to reason about.
 
 ## Core Rules
@@ -124,13 +130,17 @@ this repository.
 
 ## Repository Boundaries
 
-This package should remain aligned with the broader Spectre split of
-responsibilities:
+This package is the reactive primitive foundation for the Spectre stack. The
+consuming packages, in dependency order:
 
-- `@phcdevworks/spectre-tokens` owns visual language and token contracts
-- `@phcdevworks/spectre-ui` owns token-driven styling and class recipes
-- `@phcdevworks/spectre-shell` owns thin shell composition and runtime surface
-- `@phcdevworks/spectre-shell-router` owns routing primitives
-- `@phcdevworks/spectre-shell-signals` owns reactive primitives only
+| Package | Role | Integration target |
+| --- | --- | --- |
+| `@phcdevworks/spectre-tokens` | Visual language and token contracts | Reactive token values |
+| `@phcdevworks/spectre-ui` | Token-driven styling and class recipes | Reactive component state |
+| `@phcdevworks/spectre-ui-astro` | Astro component layer | Island lifecycle integration |
+| `@phcdevworks/spectre-shell` | Shell composition and runtime surface | — |
+| `@phcdevworks/spectre-shell-router` | Routing primitives | — |
 
-Do not pull responsibilities across those lines.
+`spectre-shell-signals` owns reactive primitives only. Do not pull responsibilities
+across these lines in either direction — signals does not own rendering, routing,
+tokens, or component logic.
