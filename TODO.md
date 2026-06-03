@@ -65,8 +65,8 @@ active use across the Spectre stack.
 
 ### P0: Release
 
-- [ ] Cut CHANGELOG `[Unreleased]` to `[1.1.0]` with `peek`, `batch`, `onError`
-- [ ] Bump `package.json` version to `1.1.0`
+- [x] Cut CHANGELOG `[Unreleased]` to `[1.1.0]` with `peek`, `batch`, `onError`
+- [x] Bump `package.json` version to `1.1.0`
 - [ ] Publish `@phcdevworks/spectre-shell-signals@1.1.0` to npm
 - [ ] Confirm published package is consumable (ESM + CJS, types resolve correctly)
 

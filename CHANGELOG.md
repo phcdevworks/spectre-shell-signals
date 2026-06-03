@@ -4,6 +4,8 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-06-04
+
 ### Added
 
 - **`signal.peek()`**: Reads the current signal value without registering a dependency. Use inside effects or computed bodies when you need the value but do not want the observer to re-run when it changes.
@@ -47,6 +49,7 @@ Release Title: Initial Reactive Primitives Foundation
 - **Tooling**: Added TypeScript build output with `tsup`, Vitest coverage for reactive semantics, and CI validation for build, test, and type-check workflows.
 - **Documentation**: Added package README, contribution guidance, and repository metadata aligned to the scoped package and its narrow reactivity-only ownership.
 
-[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/1.0.0...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/0.0.1...1.0.0
 [0.0.1]: https://github.com/phcdevworks/spectre-shell-signals/tree/0.0.1
