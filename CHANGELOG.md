@@ -4,6 +4,12 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+### Added
+
+- Added `@phcdevworks/spectre-manifest` as a devDependency. `spectre.manifest.json`
+  at the repo root declares this package's ecosystem role, layer, exports, and
+  allowed dependency targets. `check:ecosystem` validates it in the check pipeline.
+
 ## [1.1.0] - 2026-06-04
 
 Release Title: Reactive Ergonomics Release

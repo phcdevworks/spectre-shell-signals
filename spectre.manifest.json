@@ -1,0 +1,89 @@
+{
+  "$schema": "./node_modules/@phcdevworks/spectre-manifest/schema/spectre.manifest.schema.json",
+  "$id": "urn:phcdevworks:spectre-shell-signals:manifest",
+  "schemaVersion": "0.1",
+  "system": {
+    "name": "Spectre",
+    "version": "1.0.0",
+    "manifestVersion": "0.1",
+    "summary": "Ecosystem manifest for @phcdevworks/spectre-shell-signals — minimal reactive signal primitives.",
+    "packageManager": "npm",
+    "repository": "https://github.com/phcdevworks/spectre-shell-signals"
+  },
+  "layers": {
+    "foundation": {
+      "title": "Foundation",
+      "description": "Base design-system packages and adapters that higher layers build on.",
+      "order": 10,
+      "dependsOn": []
+    },
+    "build": {
+      "title": "Build",
+      "description": "Composition and application-facing packages built on top of the foundation layer.",
+      "order": 20,
+      "dependsOn": ["foundation"]
+    }
+  },
+  "packages": {
+    "@phcdevworks/spectre-shell-signals": {
+      "role": "shell-state-signals",
+      "layer": "build",
+      "stability": "beta",
+      "description": "Minimal, framework-agnostic reactive primitives package for Spectre applications.",
+      "exports": ["."],
+      "dependencies": [],
+      "allowedTargets": ["external"],
+      "notes": [
+        "No Spectre design or UI dependencies — reactive primitives must stay decoupled from any design system.",
+        "Consumed by spectre-shell; prefer spectre-shell for full application bootstrap."
+      ]
+    }
+  },
+  "rules": {
+    "dependencyDirection": [
+      {
+        "fromLayer": "build",
+        "allowedLayers": ["foundation", "build"],
+        "notes": ["Build packages may compose foundation packages and collaborate within the build layer."]
+      },
+      {
+        "fromLayer": "foundation",
+        "allowedLayers": ["foundation"]
+      }
+    ],
+    "forbiddenImports": [],
+    "boundaryConstraints": [
+      {
+        "scope": "package:@phcdevworks/spectre-shell-signals",
+        "rule": "No dependencies on other Spectre packages.",
+        "reason": "Keeps signal primitives framework-agnostic and decoupled from any specific design system."
+      }
+    ]
+  },
+  "ai": {
+    "preferredEntrypoints": [
+      {
+        "task": "add reactive state signals to a Spectre application",
+        "kind": "package",
+        "entrypoint": "@phcdevworks/spectre-shell-signals"
+      },
+      {
+        "task": "run full validation gate",
+        "kind": "command",
+        "entrypoint": "npm run check"
+      }
+    ],
+    "generationRules": [
+      "Do not add Spectre design or UI package dependencies to this package.",
+      "Run npm run check before staging any commit."
+    ],
+    "usageGuidance": [
+      "Import signals from @phcdevworks/spectre-shell-signals.",
+      "For full application bootstrap, prefer consuming via @phcdevworks/spectre-shell."
+    ],
+    "safeDefaults": [
+      "Do not import from other Spectre packages in this package.",
+      "Keep signal primitives framework-agnostic and free of design system coupling."
+    ]
+  }
+}

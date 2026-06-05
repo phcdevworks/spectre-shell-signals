@@ -64,13 +64,15 @@
     "format:md": "prettier --write \"**/*.md\"",
     "format:md:check": "prettier --check \"**/*.md\"",
     "test": "vitest run",
-    "check": "npm run typecheck && npm run lint && npm run build && npm run test",
+    "check:ecosystem": "spectre-manifest-validate spectre.manifest.json && spectre-manifest-check spectre.manifest.json .",
+    "check": "npm run typecheck && npm run lint && npm run build && npm run test && npm run check:ecosystem",
     "prepublishOnly": "npm run check"
   },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
+    "@phcdevworks/spectre-manifest": "^1.0.0",
     "@types/node": "^25.9.1",
     "@typescript-eslint/eslint-plugin": "^8.60.1",
     "@typescript-eslint/parser": "^8.60.1",
