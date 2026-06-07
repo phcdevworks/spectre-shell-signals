@@ -70,20 +70,23 @@ package into active use across the Spectre stack.
 
 ### P0: Publish Confirmation
 
-- [ ] Publish `@phcdevworks/spectre-shell-signals@1.1.0` to npm
-- [ ] Confirm published package is consumable from Node and browser
+- [x] Publish `@phcdevworks/spectre-shell-signals@1.1.0` to npm
+- [x] Confirm published package is consumable from Node and browser
       (ESM + CJS, types resolve, `import` and `require` both work)
-- [ ] Document versioning policy: semver, breaking changes require major bump
+- [x] Document versioning policy: semver, breaking changes require major bump
       and downstream coordination
 
 ### P1: Downstream Integration
 
-- [ ] **spectre-tokens** — assess which token values are static vs. reactive;
+- [x] **spectre-tokens** — assess which token values are static vs. reactive;
       establish the pattern for wiring reactive tokens through signals
-- [ ] **spectre-ui** — establish the pattern for consuming a signal inside a UI
+      (see `docs/integration/spectre-tokens.md`)
+- [x] **spectre-ui** — establish the pattern for consuming a signal inside a UI
       component (direct `.value` read in effect, or computed class/style state)
-- [ ] **spectre-ui-astro** — define how signals initializes and tears down within
+      (see `docs/integration/spectre-ui.md`)
+- [x] **spectre-ui-astro** — define how signals initializes and tears down within
       an Astro island lifecycle; confirm `effect` cleanup works on component unmount
+      (see `docs/integration/spectre-ui-astro.md`)
 
 ### P2: Integration Guide
 

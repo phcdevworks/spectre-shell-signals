@@ -6,6 +6,20 @@ All notable changes to this project will be documented here. The format follows 
 
 ### Added
 
+- Added `docs/integration/spectre-tokens.md`, assessing which `spectre-tokens`
+  values are static vs. reactive (only the active mode varies at runtime) and
+  documenting the `signal`/`computed`/`effect` pattern for wiring mode-dependent
+  token values into a consuming application.
+- Added `docs/integration/spectre-ui.md`, documenting the pattern for wrapping
+  `spectre-ui`'s pure recipe functions in `computed` and applying the resulting
+  class strings to the DOM from `effect`.
+- Added `docs/integration/spectre-ui-astro.md`, assessing the (currently
+  nonexistent) Astro island lifecycle in `spectre-ui-astro` and recording the
+  reference pattern for initializing signals at hydration and invoking
+  `StopEffect` on teardown when the package ships its first interactive island.
+- Added `docs/versioning-policy.md`, documenting how semver is applied to this
+  package (what counts as breaking/feature/fix) and how downstream Spectre
+  packages are coordinated on major releases. Linked from `CONTRIBUTING.md`.
 - Added `@phcdevworks/spectre-manifest` as a devDependency. `spectre.manifest.json`
   at the repo root declares this package's ecosystem role, layer, exports, and
   allowed dependency targets. `check:ecosystem` validates it in the check pipeline.

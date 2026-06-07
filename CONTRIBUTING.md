@@ -28,6 +28,12 @@ npm run check
 
 `npm run check` is the full gate: typecheck, lint, build, test, and ecosystem validation. All must pass before opening a pull request.
 
+## Versioning
+
+This package follows semantic versioning. See the [Versioning Policy](docs/versioning-policy.md)
+for what counts as a breaking, feature, or fix change, and how downstream
+Spectre packages are coordinated on major releases.
+
 ## Pull Requests
 
 Describe the reactive behavior changed, call out compatibility risks, and include the commands you ran. Populate all sections of the PR template.
