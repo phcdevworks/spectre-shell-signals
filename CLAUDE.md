@@ -1,7 +1,7 @@
 # CLAUDE.md - spectre-shell-signals
 
 **Package:** `@phcdevworks/spectre-shell-signals`
-**Human owner:** Bradley Potts (brad.potts@coastdigitalgroup.com)
+**Human owner:** Bradley Potts
 **Primary AI developer:** Claude Code (claude-sonnet-4-6)
 
 This file is the authoritative guide for Claude Code operating in this
@@ -34,7 +34,7 @@ npm run typecheck    # TypeScript check, no emit
 npm run lint         # ESLint
 npm run build        # tsup -> dist/ (ESM + CJS + .d.ts)
 npm run test         # vitest run (one-shot)
-npm run check        # typecheck + lint + build + test (the full gate)
+npm run check        # typecheck + lint + build + test + check:ecosystem (the full gate)
 npm run format       # prettier --write
 npm run clean        # rm -rf dist
 npm run release:propose  # propose semver bump from CHANGELOG.md [Unreleased]
@@ -45,17 +45,18 @@ before declaring work done.
 
 ## Architecture
 
-```
+```text
 src/
   index.ts              # public re-exports only
   signal.ts             # Signal<T> - mutable reactive value
   computed.ts           # Computed<T> - lazy derived value with disposal
   effect.ts             # effect() - reactive side-effect with cleanup
+  batch.ts              # batch() - deferred subscriber notification
   internals/
     node.ts             # Node - subscriber registry per reactive source
     tracking.ts         # activeObserver stack, withTracking, clearTracking
 tests/
-  signals.test.ts       # full behavioral test suite (19 tests)
+  signals.test.ts       # full behavioral test suite (35 tests)
 ```
 
 **Reactive model**: every `.value` read inside a tracked context (effect or
@@ -71,11 +72,12 @@ export them.
 ```ts
 signal<T>(initialValue: T): Signal<T>
 computed<T>(fn: () => T): Computed<T>
-effect(fn: EffectCallback): StopEffect
+effect(fn: EffectCallback, options?: EffectOptions): StopEffect
+batch(fn: () => void): void
 ```
 
 Exported types: `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`,
-`CleanupRegistrar`, `StopEffect`.
+`EffectOptions`, `CleanupRegistrar`, `StopEffect`.
 
 Before adding any export, ask:
 

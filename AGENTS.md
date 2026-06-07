@@ -6,8 +6,7 @@ package of the Spectre shell system.
 ## Primary AI Developer
 
 **Claude Code** (`claude-sonnet-4-6`) is the designated primary AI developer for
-this repository, maintained on behalf of Bradley Potts
-(brad.potts@coastdigitalgroup.com) at PHCDevworks. All development is driven
+this repository, maintained on behalf of Bradley Potts at PHCDevworks. All development is driven
 through Claude Code operating from `CLAUDE.md` as the authoritative working
 guide. Human final review and commit authority rests with Bradley Potts.
 
@@ -93,8 +92,8 @@ This package must stay narrow, explicit, portable, and easy to reason about.
 
 ## Core Rules
 
-1. Keep the public API tiny: `signal`, `computed`, `effect`, and directly related
-   types only.
+1. Keep the public API tiny: `signal`, `computed`, `effect`, `batch`, and directly
+   related types only.
 2. Prefer explicit behavior over magical behavior.
 3. Prefer readable internals over abstraction-heavy architecture.
 4. Protect synchronous, predictable semantics.
@@ -154,6 +153,7 @@ layer, exports, and allowed Spectre dependency targets. `check:ecosystem` valida
 it as part of `npm run check`.
 
 Keep `spectre.manifest.json` in sync when:
+
 - Package exports in `package.json` are added or removed
 - A Spectre package dependency is added or removed
 - The package stability changes

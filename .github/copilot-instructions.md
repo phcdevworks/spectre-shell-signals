@@ -30,7 +30,7 @@ If there is any conflict, follow `AGENTS.md` and `CLAUDE.md`.
 
 When suggesting edits, keep changes small and aligned with this package:
 
-- Preserve reactive-primitives-only scope: `signal`, `computed`, `effect`.
+- Preserve reactive-primitives-only scope: `signal`, `computed`, `effect`, `batch`.
 - Do not suggest stores, framework adapters, router helpers, persistence, async resource layers, event buses, or devtools surface area.
 - Preserve synchronous semantics and existing naming/style patterns.
 - Prefer focused changes over broad rewrites.

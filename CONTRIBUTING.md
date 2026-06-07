@@ -12,7 +12,7 @@ Thanks for helping improve `@phcdevworks/spectre-shell-signals`. This package ow
 ## Project Standards
 
 - Keep config files in TypeScript when the tool supports it.
-- Keep the public API limited to `signal`, `computed`, `effect`, and their types.
+- Keep the public API limited to `signal`, `computed`, `effect`, `batch`, and their types.
 - Preserve synchronous dependency tracking semantics.
 - Add or update tests before changing cleanup, disposal, or notification behavior.
 
@@ -26,6 +26,16 @@ npm run test
 npm run check
 ```
 
+`npm run check` is the full gate: typecheck, lint, build, test, and ecosystem validation. All must pass before opening a pull request.
+
 ## Pull Requests
 
-Describe the reactive behavior changed, call out compatibility risks, and include the commands you ran.
+Describe the reactive behavior changed, call out compatibility risks, and include the commands you ran. Populate all sections of the PR template.
+
+## Code of Conduct
+
+By participating in this project, you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the MIT License.
