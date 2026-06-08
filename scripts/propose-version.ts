@@ -13,10 +13,7 @@ const ALLOWED = ['additive', 'semantic change', 'breaking']
 const changelog = readFileSync(changelogPath, 'utf8')
 const unreleasedSection = changelog.split('## [Unreleased]')[1]?.split('\n## [')[0] ?? ''
 
-const classificationPattern = new RegExp(
-  `${CLASSIFICATION_PREFIX}\\s*(${ALLOWED.join('|')})`,
-  'i'
-)
+const classificationPattern = new RegExp(`${CLASSIFICATION_PREFIX}\\s*(${ALLOWED.join('|')})`, 'i')
 const match = unreleasedSection.match(classificationPattern)
 
 if (!match) {
@@ -29,7 +26,7 @@ if (!match) {
     [
       'Unreleased section has content but is missing a contract change classification.',
       `Expected: ${CLASSIFICATION_PREFIX} <${ALLOWED.join(' | ')}>`,
-      'Add a classification line to CHANGELOG.md [Unreleased] before proposing a version.'
+      'Add a classification line to CHANGELOG.md [Unreleased] before proposing a version.',
     ].join('\n')
   )
 }

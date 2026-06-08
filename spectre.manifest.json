@@ -44,7 +44,9 @@
       {
         "fromLayer": "build",
         "allowedLayers": ["foundation", "build"],
-        "notes": ["Build packages may compose foundation packages and collaborate within the build layer."]
+        "notes": [
+          "Build packages may compose foundation packages and collaborate within the build layer."
+        ]
       },
       {
         "fromLayer": "foundation",

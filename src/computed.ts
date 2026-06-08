@@ -1,65 +1,61 @@
-import {
-  clearTracking,
-  type TrackingObserver,
-  withTracking,
-} from './internals/tracking';
-import { Node } from './internals/node';
+import { clearTracking, type TrackingObserver, withTracking } from './internals/tracking'
+import { Node } from './internals/node'
 
 export interface Computed<T> {
-  readonly value: T;
-  dispose(): void;
+  readonly value: T
+  dispose(): void
 }
 
 class ComputedImpl<T> implements Computed<T>, TrackingObserver {
-  readonly nodes = new Set<Node>();
-  readonly node = new Node();
+  readonly nodes = new Set<Node>()
+  readonly node = new Node()
 
-  private cachedValue!: T;
-  private dirty = true;
-  private evaluating = false;
+  private cachedValue!: T
+  private dirty = true
+  private evaluating = false
 
   constructor(private readonly computeValue: () => T) {}
 
   get value(): T {
-    this.node.track();
+    this.node.track()
 
     if (this.dirty) {
-      this.recompute();
+      this.recompute()
     }
 
-    return this.cachedValue;
+    return this.cachedValue
   }
 
   notify(): void {
     if (this.dirty) {
-      return;
+      return
     }
 
-    this.dirty = true;
-    this.node.trigger();
+    this.dirty = true
+    this.node.trigger()
   }
 
   dispose(): void {
-    clearTracking(this);
+    clearTracking(this)
   }
 
   private recompute(): void {
     if (this.evaluating) {
-      throw new Error('Circular computed dependencies are not supported.');
+      throw new Error('Circular computed dependencies are not supported.')
     }
 
-    this.evaluating = true;
-    clearTracking(this);
+    this.evaluating = true
+    clearTracking(this)
 
     try {
-      this.cachedValue = withTracking(this, this.computeValue);
-      this.dirty = false;
+      this.cachedValue = withTracking(this, this.computeValue)
+      this.dirty = false
     } finally {
-      this.evaluating = false;
+      this.evaluating = false
     }
   }
 }
 
 export function computed<T>(fn: () => T): Computed<T> {
-  return new ComputedImpl(fn);
+  return new ComputedImpl(fn)
 }

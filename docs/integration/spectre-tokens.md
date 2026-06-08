@@ -21,7 +21,7 @@ turns that object into a CSS custom-property map.
 **Nearly everything here is static.** The token values themselves do not change
 at runtime — they are compile-time constants resolved once per build. There is
 nothing in this package that reads or writes a `signal`, and there should not
-be: token *values* are data, not reactive state.
+be: token _values_ are data, not reactive state.
 
 ## The One Runtime-Variable Concept: Mode
 
@@ -64,7 +64,7 @@ effect(() => {
 
 Guidelines that follow from this:
 
-- **Signals hold *selection*, not data.** `activeMode` is a signal because it
+- **Signals hold _selection_, not data.** `activeMode` is a signal because it
   changes; `tokens` stays a plain static import because it does not.
 - **`computed` for derivation, not duplication.** Resolving mode-specific
   values or generating CSS variable maps belongs in `computed` so it is cached
@@ -80,6 +80,6 @@ Guidelines that follow from this:
 
 No changes are required in `spectre-shell-signals` to support `spectre-tokens`.
 The integration boundary is clean: `spectre-tokens` provides static data and a
-`SpectreModeName` type; a consumer wires the *active mode* through a `signal`
+`SpectreModeName` type; a consumer wires the _active mode_ through a `signal`
 and derives mode-dependent values with `computed`, applying them via `effect`.
 This pattern should be carried into the Phase 3 P2 integration guide.

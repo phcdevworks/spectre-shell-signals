@@ -17,16 +17,6 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "npm.packageManager": "npm",
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "cSpell.words": [
-    "phcdevworks",
-    "spectre",
-    "tsup",
-    "vitest"
-  ]
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "cSpell.words": ["phcdevworks", "spectre", "tsup", "vitest"]
 }

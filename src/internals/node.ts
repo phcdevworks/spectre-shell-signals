@@ -1,24 +1,24 @@
-import { getActiveObserver, type TrackingObserver } from './tracking';
+import { getActiveObserver, type TrackingObserver } from './tracking'
 
 export class Node {
-  readonly subscribers = new Set<TrackingObserver>();
+  readonly subscribers = new Set<TrackingObserver>()
 
   track(): void {
-    const observer = getActiveObserver();
+    const observer = getActiveObserver()
 
     if (!observer) {
-      return;
+      return
     }
 
-    this.subscribers.add(observer);
-    observer.nodes.add(this);
+    this.subscribers.add(observer)
+    observer.nodes.add(this)
   }
 
   trigger(): void {
-    const subscribers = Array.from(this.subscribers);
+    const subscribers = Array.from(this.subscribers)
 
     for (const subscriber of subscribers) {
-      subscriber.notify();
+      subscriber.notify()
     }
   }
 }

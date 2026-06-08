@@ -12,7 +12,7 @@ state?
 
 ## What spectre-ui Actually Ships
 
-`spectre-ui` is a Layer 2 *styling contract*: a set of pure "recipe" functions
+`spectre-ui` is a Layer 2 _styling contract_: a set of pure "recipe" functions
 (`getButtonClasses`, `getCardClasses`, `getBadgeClasses`, etc. — see
 `src/recipes/*.ts`) that take a plain options object and return a class-name
 string, plus static CSS bundles and a Tailwind preset/theme. There are no
@@ -25,7 +25,7 @@ shape a `computed` wants to wrap.
 
 ## Integration Pattern
 
-The reactive state lives in the *consuming component* (e.g. an Astro island, a
+The reactive state lives in the _consuming component_ (e.g. an Astro island, a
 framework adapter, or hand-written interactive markup), not in `spectre-ui`.
 The pattern is: **hold interaction state in signals, derive the class string
 with `computed`, and apply it to the DOM in `effect`.**
@@ -56,8 +56,12 @@ effect(() => {
   buttonEl.className = buttonClasses.value
 })
 
-buttonEl.addEventListener('pointerenter', () => { hovered.value = true })
-buttonEl.addEventListener('pointerleave', () => { hovered.value = false })
+buttonEl.addEventListener('pointerenter', () => {
+  hovered.value = true
+})
+buttonEl.addEventListener('pointerleave', () => {
+  hovered.value = false
+})
 ```
 
 Guidelines that follow from this:

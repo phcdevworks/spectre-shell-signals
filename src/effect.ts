@@ -5,104 +5,104 @@ import {
   queueEffect,
   type TrackingObserver,
   withTracking,
-} from './internals/tracking';
+} from './internals/tracking'
 
-export type { CleanupRegistrar };
-import { Node } from './internals/node';
+export type { CleanupRegistrar }
+import { Node } from './internals/node'
 
-export type EffectCleanup = () => void;
-export type EffectCallback = (onCleanup: CleanupRegistrar) => void;
-export type StopEffect = () => void;
+export type EffectCleanup = () => void
+export type EffectCallback = (onCleanup: CleanupRegistrar) => void
+export type StopEffect = () => void
 
 export interface EffectOptions {
-  onError?: (err: unknown) => void;
+  onError?: (err: unknown) => void
 }
 
 class EffectRunner implements TrackingObserver {
-  readonly nodes = new Set<Node>();
+  readonly nodes = new Set<Node>()
 
-  private cleanups: EffectCleanup[] = [];
-  private active = true;
-  private running = false;
-  private queued = false;
+  private cleanups: EffectCleanup[] = []
+  private active = true
+  private running = false
+  private queued = false
 
   constructor(
     private readonly callback: EffectCallback,
-    private readonly options: EffectOptions = {},
+    private readonly options: EffectOptions = {}
   ) {
-    this.run();
+    this.run()
   }
 
   notify(): void {
     if (!this.active || this.queued) {
-      return;
+      return
     }
 
     if (isBatching()) {
-      this.queued = true;
+      this.queued = true
       queueEffect(() => {
-        this.queued = false;
+        this.queued = false
         if (this.active) {
-          this.run();
+          this.run()
         }
-      });
-      return;
+      })
+      return
     }
 
-    this.run();
+    this.run()
   }
 
   stop(): void {
     if (!this.active) {
-      return;
+      return
     }
 
-    this.active = false;
-    clearTracking(this);
-    this.runCleanup();
+    this.active = false
+    clearTracking(this)
+    this.runCleanup()
   }
 
   private run(): void {
     if (!this.active) {
-      return;
+      return
     }
 
     if (this.running) {
-      throw new Error('Effects cannot synchronously trigger themselves.');
+      throw new Error('Effects cannot synchronously trigger themselves.')
     }
 
-    this.running = true;
-    this.runCleanup();
-    clearTracking(this);
+    this.running = true
+    this.runCleanup()
+    clearTracking(this)
 
     try {
       withTracking(this, () =>
         this.callback((cleanup) => {
-          this.cleanups.push(cleanup);
-        }),
-      );
+          this.cleanups.push(cleanup)
+        })
+      )
     } catch (err) {
       if (this.options.onError) {
-        this.options.onError(err);
+        this.options.onError(err)
       } else {
-        throw err;
+        throw err
       }
     } finally {
-      this.running = false;
+      this.running = false
     }
   }
 
   private runCleanup(): void {
-    const cleanups = this.cleanups;
-    this.cleanups = [];
+    const cleanups = this.cleanups
+    this.cleanups = []
 
     for (let index = cleanups.length - 1; index >= 0; index -= 1) {
-      cleanups[index]?.();
+      cleanups[index]?.()
     }
   }
 }
 
 export function effect(fn: EffectCallback, options?: EffectOptions): StopEffect {
-  const runner = new EffectRunner(fn, options);
-  return () => runner.stop();
+  const runner = new EffectRunner(fn, options)
+  return () => runner.stop()
 }

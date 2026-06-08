@@ -90,7 +90,7 @@ Guidelines that follow from this:
   renderer (`client:*` with React/Vue/Svelte/etc.), use that framework's own
   unmount hook to call `stop()`. Plain `<script>` islands with no transitions
   enabled don't get a teardown signal at all — in that case `effect` cleanup
-  only matters for *re-runs* (dependency changes), not disposal, and that
+  only matters for _re-runs_ (dependency changes), not disposal, and that
   already works per the existing test suite.
 - **Confirm `effect` cleanup is unaffected by being inside a `<script>`
   module.** Nothing about Astro's script execution model changes how `effect`

@@ -90,9 +90,11 @@ package into active use across the Spectre stack.
 
 ### P2: Integration Guide
 
-- [ ] Write a consuming-package integration guide covering: install, shared signal
+- [x] Write a consuming-package integration guide covering: install, shared signal
       instances, `computed` and `effect` in a component context, cleanup patterns
-- [ ] Add Astro-specific notes for island hydration and teardown
+      (see `docs/integration/guide.md`)
+- [x] Add Astro-specific notes for island hydration and teardown
+      (see `docs/integration/guide.md#astro-specific-notes-island-hydration-and-teardown`)
 
 ---
 

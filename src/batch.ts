@@ -1,10 +1,10 @@
-import { endBatch, startBatch } from './internals/tracking';
+import { endBatch, startBatch } from './internals/tracking'
 
 export function batch(fn: () => void): void {
-  startBatch();
+  startBatch()
   try {
-    fn();
+    fn()
   } finally {
-    endBatch();
+    endBatch()
   }
 }

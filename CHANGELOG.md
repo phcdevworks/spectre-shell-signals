@@ -17,6 +17,12 @@ All notable changes to this project will be documented here. The format follows 
   nonexistent) Astro island lifecycle in `spectre-ui-astro` and recording the
   reference pattern for initializing signals at hydration and invoking
   `StopEffect` on teardown when the package ships its first interactive island.
+- Added `docs/integration/guide.md`, the consuming-package integration guide:
+  install, the state → derivation → effect pattern, shared signal instances,
+  `computed`/`effect` usage in a component context, `StopEffect` cleanup
+  patterns, and Astro-specific notes on island hydration and teardown. Ties
+  together the patterns recorded in the `spectre-tokens`, `spectre-ui`, and
+  `spectre-ui-astro` integration assessments.
 - Added `docs/versioning-policy.md`, documenting how semver is applied to this
   package (what counts as breaking/feature/fix) and how downstream Spectre
   packages are coordinated on major releases. Linked from `CONTRIBUTING.md`.
