@@ -81,10 +81,12 @@ are queued for the v1.2.0 release.
 - **Ecosystem manifest** — `spectre.manifest.json` + `check:ecosystem` in the
   full check gate.
 
-### Next release: v1.2.0
+### Next release: v1.2.0 ← NEXT ACTION
 
-Run `npm run release:propose` to confirm the semver classification.
-Bradley Potts holds final publish authority.
+All `[Unreleased]` items are ready to ship. Run `npm run release:propose` to confirm
+the semver classification, then hand off to Bradley Potts for tag and publish.
+
+No implementation work is needed before this release.
 
 ---
 
@@ -128,8 +130,8 @@ activated.
 
 ## 6. Recommended Execution Order
 
-1. **Phase 1** — done.
-2. **Phase 2** — done.
-3. **Phase 3** — done.
-4. **Release v1.2.0** — publish integration docs and manifest work.
-5. **Phase 4** — async effects / DevTools only when adoption trigger is met.
+1. ~~Phase 1~~ ✓
+2. ~~Phase 2~~ ✓
+3. ~~Phase 3~~ ✓
+4. **Release v1.2.0** ← next (run `npm run release:propose`, hand off to Bradley Potts)
+5. Phase 4 — async effects / DevTools only when adoption trigger is met.
