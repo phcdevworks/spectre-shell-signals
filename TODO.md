@@ -63,10 +63,10 @@ All Phase 2 items are delivered and validated as of v1.1.0.
 
 ---
 
-## Phase 3 — Integration & Adoption
+## Phase 3 — Integration & Adoption: Completed
 
-The foundation is solid and published. This phase moves signals from a standalone
-package into active use across the Spectre stack.
+All Phase 3 items delivered. Integration docs live in `docs/integration/`.
+Versioning policy documented. Ready to release as v1.2.0.
 
 ### P0: Publish Confirmation
 
@@ -98,16 +98,51 @@ package into active use across the Spectre stack.
 
 ---
 
+## Phase 4 — Ecosystem Hardening (demand-driven)
+
+Do not start these until a concrete consuming-package need is proven. The
+adoption trigger for each item is listed explicitly — do not infer demand.
+
+### P0: Async Effect Support
+
+- [ ] Add async-capable effect variant
+  - **Trigger**: a downstream integration (spectre-ui-astro, spectre-shell, or
+    a consuming app) has a reactive async workflow that cannot be expressed by
+    scheduling async calls inside a synchronous `effect()`.
+  - Acceptance: the synchronous `effect()` contract is unchanged; async variant
+    is additive and does not affect the base reactive model.
+
+### P1: DevTools Hook
+
+- [ ] Expose a reactive graph inspection hook
+  - **Trigger**: debugging reactive graphs becomes a concrete pain point raised
+    by a downstream package maintainer, not just a theoretical nicety.
+  - Acceptance: hook is opt-in and tree-shakeable; zero cost when not used.
+
+---
+
+## Upcoming Release: v1.2.0
+
+The following `[Unreleased]` items are queued and ready to ship:
+
+- Integration docs: `docs/integration/` (spectre-tokens, spectre-ui,
+  spectre-ui-astro, guide.md)
+- Versioning policy: `docs/versioning-policy.md`
+- Ecosystem manifest: `spectre.manifest.json` + `check:ecosystem`
+
+Run `npm run release:propose` to confirm the semver classification.
+Bradley Potts holds final publish authority.
+
+---
+
 ## Recommended Execution Order
 
 1. Phase 1 — done.
 2. Phase 2 — done.
-3. Phase 3 P0 — confirm v1.1.0 is consumable from Node and browser.
-4. Phase 3 P1 — spectre-tokens integration assessment.
-5. Phase 3 P1 — spectre-ui integration pattern.
-6. Phase 3 P1 — spectre-ui-astro lifecycle integration.
-7. Phase 3 P2 — consuming-package integration guide.
-8. Phase 4 — async effects / DevTools only when proven necessary.
+3. Phase 3 — done.
+4. **Release v1.2.0** — publish integration docs and manifest work.
+5. Phase 4 P0 — async effects only when a downstream need is proven.
+6. Phase 4 P1 — DevTools hook only when debugging becomes a real pain point.
 
 ## Explicitly Out of Scope
 

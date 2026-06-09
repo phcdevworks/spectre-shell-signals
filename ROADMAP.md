@@ -61,62 +61,56 @@ All Phase 2 work is complete as of v1.1.0.
 
 ---
 
-## 3. Phase 3 — Integration & Adoption
+## 3. Phase 3 — Integration & Adoption — Delivered
 
-The foundation is stable and published. This phase moves signals from a
-standalone package into active use across the Spectre stack. This is not about
-adding primitives — it is about making the existing primitives the foundation
-the downstream packages build on.
+All Phase 3 work is complete. Integration documentation and versioning policy
+are written; the ecosystem manifest is wired into the check gate. These items
+are queued for the v1.2.0 release.
 
-### P0: Publish Confirmation
+### What was delivered
 
-- Confirm the published v1.1.0 package is consumable from Node and browser
-  environments (ESM + CJS, types resolve correctly).
-- Establish the versioning policy explicitly: signals follows semver; breaking
-  API changes require a major bump and downstream coordination.
+- **Integration docs** — `docs/integration/` covers all three downstream targets:
+  `spectre-tokens` (static vs. reactive token assessment), `spectre-ui` (signal
+  consumption inside UI components), and `spectre-ui-astro` (island hydration and
+  `StopEffect` teardown).
+- **Integration guide** — `docs/integration/guide.md` covers the full consuming-
+  package pattern: install, shared signal instances, `computed` and `effect` in
+  component context, cleanup, and Astro-specific teardown notes.
+- **Versioning policy** — `docs/versioning-policy.md` documents the semver
+  contract and downstream coordination protocol for major releases.
+- **Ecosystem manifest** — `spectre.manifest.json` + `check:ecosystem` in the
+  full check gate.
 
-### P1: Downstream Integration
+### Next release: v1.2.0
 
-The three active consuming targets, in dependency order:
-
-**`spectre-tokens`** — Reactive token contracts  
-Token values that respond to theme, user preference, or runtime state should
-be wired through signals rather than ad-hoc patterns. Integration goal: identify
-which token values are static vs. reactive and establish the consumption pattern.
-
-**`spectre-ui`** — Token-driven styling and class recipes  
-UI components need reactive class or style state driven by signals (active,
-disabled, theme, etc.). Integration goal: establish the pattern for consuming a
-signal inside a UI component — direct `.value` read inside an effect, or a
-computed that derives class state from one or more signals.
-
-**`spectre-ui-astro`** — Astro component layer  
-Astro's island architecture means client-side reactivity lives in hydrated
-components. Integration goal: define how signals initializes and tears down
-within an Astro island lifecycle; confirm `effect` cleanup plays correctly with
-component unmount.
-
-### P2: Integration Guide
-
-- Write a consuming-package integration guide (separate doc, not inline in
-  README).
-- Cover: installing the package, creating shared signal instances, using
-  `computed` and `effect` in a component context, cleanup and disposal patterns.
-- Keep the guide framework-agnostic where possible; Astro-specific teardown
-  notes in a separate section.
+Run `npm run release:propose` to confirm the semver classification.
+Bradley Potts holds final publish authority.
 
 ---
 
 ## 4. Phase 4 — Ecosystem Hardening (demand-driven)
 
-These are only pursued if a concrete consuming-package need is proven:
+These are only pursued when a concrete consuming-package need is proven.
+Do not start either speculatively.
 
-- **Async effect support** — only if an integration requires reactive async work
-  that cannot be handled by scheduling async calls inside a synchronous effect.
-- **DevTools hook** — only if debugging reactive graphs becomes a real pain point
-  across the consuming packages.
+### Async effect support
 
-Do not add either speculatively.
+**Adoption trigger**: a downstream integration has a reactive async workflow
+that cannot be expressed by scheduling async calls inside a synchronous
+`effect()`. If synchronous `effect()` can handle the use case (even awkwardly),
+this is not triggered.
+
+When triggered: additive async variant that does not change the synchronous
+`effect()` contract; zero impact on consumers not using the async variant.
+
+### DevTools hook
+
+**Adoption trigger**: debugging reactive dependency graphs becomes a concrete
+pain point reported by a downstream package maintainer. Theoretical value does
+not count.
+
+When triggered: opt-in, tree-shakeable inspection hook; zero cost when not
+activated.
 
 ---
 
@@ -136,9 +130,6 @@ Do not add either speculatively.
 
 1. **Phase 1** — done.
 2. **Phase 2** — done.
-3. **Phase 3 P0** — confirm v1.1.0 is consumable from Node and browser.
-4. **Phase 3 P1** — spectre-tokens integration assessment.
-5. **Phase 3 P1** — spectre-ui integration pattern.
-6. **Phase 3 P1** — spectre-ui-astro lifecycle integration.
-7. **Phase 3 P2** — consuming-package integration guide.
-8. **Phase 4** — async effects / DevTools only when proven necessary.
+3. **Phase 3** — done.
+4. **Release v1.2.0** — publish integration docs and manifest work.
+5. **Phase 4** — async effects / DevTools only when adoption trigger is met.
