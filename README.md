@@ -183,7 +183,7 @@ guidance in [CLAUDE.md](./CLAUDE.md), [CODEX.md](./CODEX.md),
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md). The gate is `npm run check` — all of typecheck, lint, build, and tests must pass. Do not expand the reactive-primitives scope; see [AGENTS.md](./AGENTS.md) for boundaries.
+See [CONTRIBUTING.md](./CONTRIBUTING.md). The gate is `npm run check` — typecheck, lint, build, test, and ecosystem validation must all pass. Do not expand the reactive-primitives scope; see [AGENTS.md](./AGENTS.md) for boundaries.
 
 ## Release Notes
 

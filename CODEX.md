@@ -64,7 +64,7 @@ preserves Claude Code's ownership.
 
 Before marking a release-ready handoff:
 
-1. Confirm `npm run check` passes (typecheck + lint + build + test).
+1. Confirm `npm run check` passes (typecheck + lint + build + test + check:ecosystem).
 2. Confirm CI is green on the release commit or branch.
 3. Verify `README.md` matches the public API: `signal`, `computed`, `effect`, and
    exported types.
@@ -86,6 +86,15 @@ Follow the shared PR requirements in `AGENTS.md`. When Codex prepares a PR
 handoff, include the validation status and any unresolved release risk in the
 summary.
 
+## Git Boundaries
+
+Codex may inspect git status and diffs freely. Codex must not reset, discard,
+or overwrite changes it did not make. Existing local edits are assumed to
+belong to Bradley Potts, Claude Code, or another active process.
+
+Codex does not commit by default. Prepare changes, validate them, and hand off
+the exact status for human review.
+
 ## Handoff Format
 
 Use concise handoffs:
@@ -95,3 +104,13 @@ Use concise handoffs:
 - Validation run
 - Release/public API impact
 - Remaining risks or follow-up recommendations
+
+## Source of Truth Hierarchy
+
+When guidance conflicts, resolve in this order:
+
+1. `package.json` / `CHANGELOG.md` - actual shipped state
+2. `CLAUDE.md` - development authority
+3. `AGENTS.md` - shared agent boundaries
+4. This file (`CODEX.md`) - Codex operational procedures
+5. `ROADMAP.md` / `TODO.md` - planning documents, may be stale
