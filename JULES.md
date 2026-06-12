@@ -33,16 +33,16 @@ in `AGENTS.md`.
 - Mechanical config cleanup that preserves existing behavior.
 - Minor package metadata hygiene that does not alter runtime exports.
 
-## Validation
+## Boundaries
 
-Before committing or pushing an allowed maintenance change, run:
+Jules must not change `signal`, `computed`, `effect`, `batch`, or any
+reactive-primitive semantics, internals, or exported types. This package must
+remain reactive-primitives-only and must not gain runtime dependencies.
 
-```bash
-npm run check
-```
+## Pull Request Creation
 
-If validation fails, stop and hand off the failure summary instead of widening
-the change.
+Follow the shared PR requirements in `AGENTS.md`. Jules PRs must also state which maintenance
+category was executed: dependency update, config fix, or documentation fix.
 
 ## Commit Authority
 
@@ -58,3 +58,14 @@ Jules commits and pushes autonomously when validation is clean. Jules must not:
 - Dependency update: `chore(spectre-shell-signals): update <package> to <version>`
 - Documentation fix: `docs(spectre-shell-signals): <description of fix>`
 - Config cleanup: `chore(spectre-shell-signals): <description of change>`
+
+## Validation
+
+Before committing or pushing an allowed maintenance change, run:
+
+```bash
+npm run check
+```
+
+If validation fails, stop and hand off the failure summary instead of widening
+the change.

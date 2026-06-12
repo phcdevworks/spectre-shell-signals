@@ -38,9 +38,24 @@ in `AGENTS.md`.
 - Do not publish, merge, tag, or release.
 - Do not broaden package scope.
 
+## Validation
+
+Follow the shared verification gate in `AGENTS.md`. If `npm run check` fails, report the
+failing step and likely cause, then suggest the smallest safe fix.
+
+## Documentation Expectations
+
+Keep `README.md`, `CHANGELOG.md`, and GitHub templates consistent with current
+reactive-primitives behavior and exported API.
+
 ## Pull Request Creation
 
 Follow the shared PR requirements in `AGENTS.md`.
+
+## PR and Issue Support
+
+Support package-boundary review, public API impact notes, validation status,
+and release impact visibility for Codex handoff.
 
 ## Source of Detailed Guidance
 

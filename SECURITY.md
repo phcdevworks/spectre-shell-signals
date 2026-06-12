@@ -2,39 +2,67 @@
 
 ## Supported Versions
 
-We support the latest published version of `@phcdevworks/spectre-shell-signals`. Security updates are applied to the current major version only.
+We aim to support the latest published version of the project. Security updates are applied to the current major version only.
 
-Keep your dependency pinned to the latest release to receive any fixes.
+**Please ensure you are using the most recent versions** of the Spectre packages. Older releases may not receive security fixes.
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability, **do not open a public issue**. Report it privately to protect users.
+If you discover a security vulnerability, please **DO NOT** open a public issue. Security issues should be reported privately to protect users.
 
 ### How to Report
 
-**Preferred**: Use GitHub Security Advisories to privately report vulnerabilities on this repository.
+**Preferred method**: Use GitHub Security Advisories to privately report vulnerabilities on the specific repository.
 
-**Alternative**: Direct message the maintainers through GitHub.
+**Alternative methods**:
+
+- Direct message maintainers through GitHub
+- Email the maintainers if provided in the repository
 
 ### What to Include
 
-1. Description of the vulnerability and potential impact
-2. Steps to reproduce or proof-of-concept code
-3. Affected versions (if known)
-4. Suggested mitigation (if you have ideas)
+Please provide as much detail as possible to help us reproduce and assess impact:
+
+1. **Description of the vulnerability** and potential impact
+2. **Steps to reproduce** or proof-of-concept code
+3. **Affected versions** (if known)
+4. **Potential attack scenarios**
+5. **Suggested mitigation** (if you have ideas)
 
 ### What to Expect
 
-1. **Acknowledgment** within 48 hours
-2. **Initial assessment** within 5 business days
-3. **Status updates** throughout the fix process
-4. **Coordinated disclosure** timing agreed with the reporter
-5. **Credit** in the security advisory (unless you prefer to remain anonymous)
+1. **Acknowledgment**: We will acknowledge receipt within **48 hours**
+2. **Assessment**: We will investigate and provide an initial assessment within **5 business days**
+3. **Updates**: We will keep you informed of the fix status throughout the process
+4. **Resolution**: We will work on a fix and coordinate disclosure timing with you
+5. **Credit**: We will credit you in the security advisory (unless you prefer to remain anonymous)
 
 ## Responsible Disclosure
 
-Please allow reasonable time to investigate and patch before public disclosure.
+We appreciate responsible disclosure and will work with you to:
+
+- Understand the scope and severity of the issue
+- Develop and test a fix
+- Coordinate public disclosure timing
+- Credit your contribution (if desired)
+
+**Please allow us reasonable time to address the issue before public disclosure.**
+
+## Security Best Practices
+
+When using `@phcdevworks/spectre-shell-signals`:
+
+1. **Keep dependencies updated** to the latest versions.
+2. **Monitor dependencies** for known vulnerabilities (`npm audit`).
+3. **Use HTTPS** for all production sites.
+4. **Avoid putting sensitive data in signal state** that may be exposed via devtools or effects.
+5. **Follow framework security best practices** for the application consuming these primitives.
 
 ## Contact
 
-For non-vulnerability security questions, open a GitHub Discussion or tag maintainers in a relevant issue.
+For security-related questions that aren't vulnerabilities:
+
+- Open a GitHub Discussion on the repository
+- Tag maintainers in relevant issues
+
+Thank you for helping keep the Spectre community safe!

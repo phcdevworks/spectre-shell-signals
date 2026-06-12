@@ -1,5 +1,34 @@
 # Spectre Shell Signals Agent Guide
 
+## Repository Snapshot
+
+| Field | Value |
+|-------|-------|
+| Project team | `project-shell` |
+| Repository role | Spectre reactive primitives |
+| Package/artifact | `@phcdevworks/spectre-shell-signals` |
+| Validation gate | `npm run check` |
+
+## Standard Authority Model
+
+| Agent | Role | Authority |
+|-------|------|-----------|
+| Claude Code | Lead implementation and validation | [CLAUDE.md](CLAUDE.md) |
+| OpenAI Codex | Documentation, release readiness, stabilization, and repo hygiene | [CODEX.md](CODEX.md) |
+| ChatGPT | Strategy, coordination, prompt design, and external review | Support only |
+| GitHub Copilot | Development assistance | [COPILOT.md](COPILOT.md) |
+| Google Jules | Bounded automated maintenance | [JULES.md](JULES.md) |
+
+Bradley Potts holds final authority for commits, merges, tags, publishing, and
+releases.
+
+## Standard Handoff
+
+Every AI-prepared change should report files changed, validation performed,
+public behavior or contract impact, and unresolved risks. Do not edit generated
+outputs directly. Do not update [CHANGELOG.md](CHANGELOG.md) unless the change
+is release-relevant.
+
 This repository is maintained by PHCDevworks and contains the reactive-primitives
 package of the Spectre shell system.
 
@@ -15,17 +44,36 @@ handed off for human review and commit.
 
 ## AI Operating Model
 
-| Agent          | Role                                                            | Authority                                          |
-| -------------- | --------------------------------------------------------------- | -------------------------------------------------- |
-| Claude Code    | Lead developer - primary implementation, architecture, tests    | `CLAUDE.md`                                        |
-| OpenAI Codex   | Documentation, releases, production stabilization, repo hygiene | `CODEX.md`                                         |
-| GitHub Copilot | General development assistance (in-editor suggestions)          | `COPILOT.md` and `.github/copilot-instructions.md` |
-| Google Jules   | Automated maintenance - small fixes, dependency updates         | `JULES.md`                                         |
+This is the central AI coordination document for the repository. Agent-specific
+files may add tool-local guidance, but they must not override the role
+boundaries below.
+
+| Agent              | Role                                                                            | Authority                                          |
+| ------------------ | ------------------------------------------------------------------------------- | -------------------------------------------------- |
+| **Claude Code**    | Lead developer — primary implementation, architecture, tests                    | `CLAUDE.md`                                        |
+| **OpenAI Codex**   | Documentation, releases, production stabilization, repo hygiene                 | `CODEX.md`                                         |
+| **ChatGPT**        | Strategy, coordination, prompt design, and external review — support layer only | —                                                  |
+| **GitHub Copilot** | General development assistance (in-editor suggestions)                          | `COPILOT.md` and `.github/copilot-instructions.md` |
+| **Google Jules**   | Automated maintenance — small fixes, dependency updates, micro-patches          | `JULES.md`                                         |
 
 **Bradley Potts** holds final authority for all commits, merges, tags,
 publishing, and releases. Claude Code, Codex, and Copilot do not commit by
 default. Jules may commit and push only bounded automated maintenance when
 `JULES.md` explicitly allows it and all validation gates pass.
+
+## Instruction Map
+
+| File                               | Audience                     | Purpose                                                              |
+| ---------------------------------- | ----------------------------- | ----------------------------------------------------------------- |
+| `AGENTS.md`                        | All agents, especially Codex | Central role model, coordination rules, verification gate          |
+| `CLAUDE.md`                        | Claude Code                  | Lead-development guide for implementation, architecture, and tests |
+| `CODEX.md`                         | OpenAI Codex                 | Release-readiness, production stabilization, and config posture    |
+| `JULES.md`                         | Google Jules                 | Bounded automated maintenance guidance                              |
+| `COPILOT.md`                       | GitHub Copilot               | Role summary and development boundaries for GitHub Copilot         |
+| `.github/copilot-instructions.md`  | GitHub Copilot               | In-editor suggestion boundaries                                     |
+| `.claude/settings.json`            | Claude Code runtime           | Local command denies for commit, push, tag, merge, and publish     |
+| `.coderabbit.yaml`                 | CodeRabbit                    | Automated review checks aligned with package boundaries            |
+| `.github/dependabot.yml`           | Dependabot / Jules handoff    | Dependency-update cadence for automated maintenance                |
 
 ## Shared Source Rules
 
