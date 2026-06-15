@@ -1,8 +1,8 @@
 {
   "folders": [
     {
-      "path": ".",
-    },
+      "path": "."
+    }
   ],
   "settings": {
     "workbench.colorTheme": "Solarized Dark",
@@ -30,7 +30,7 @@
     "editor.detectIndentation": true,
     "editor.trimAutoWhitespace": true,
     "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": "explicit",
+      "source.fixAll.eslint": "explicit"
     },
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
@@ -39,11 +39,11 @@
       "**/.git": true,
       "**/.DS_Store": true,
       "**/dist": true,
-      "**/node_modules": true,
+      "**/node_modules": true
     },
     "files.watcherExclude": {
       "**/dist/**": true,
-      "**/node_modules/**": true,
+      "**/node_modules/**": true
     },
     "search.smartCase": true,
     "typescript.enablePromptUseWorkspaceTsdk": true,
@@ -56,7 +56,7 @@
     "scm.defaultViewMode": "tree",
     "[typescript]": {
       "editor.defaultFormatter": "vscode.typescript-language-features",
-      "editor.wordWrap": "off",
+      "editor.wordWrap": "off"
     },
     "[markdown]": {
       "editor.wordWrap": "on",
@@ -64,9 +64,9 @@
       "editor.quickSuggestions": {
         "comments": "off",
         "strings": "off",
-        "other": "off",
-      },
-    },
+        "other": "off"
+      }
+    }
   },
   "launch": {
     "version": "0.2.0",
@@ -75,9 +75,9 @@
         "name": "Build Signals",
         "type": "node-terminal",
         "request": "launch",
-        "command": "npm run build",
-      },
-    ],
+        "command": "npm run build"
+      }
+    ]
   },
   "extensions": {
     "recommendations": [
@@ -86,8 +86,8 @@
       "esbenp.prettier-vscode",
       "ms-vscode-remote.remote-wsl",
       "pkief.material-icon-theme",
-      "yzhang.markdown-all-in-one",
-    ],
+      "yzhang.markdown-all-in-one"
+    ]
   },
   "tasks": {
     "version": "2.0.0",
@@ -98,24 +98,24 @@
         "type": "shell",
         "group": {
           "kind": "build",
-          "isDefault": true,
-        },
+          "isDefault": true
+        }
       },
       {
         "label": "test",
         "command": "npm test",
-        "type": "shell",
+        "type": "shell"
       },
       {
         "label": "lint",
         "command": "npm run lint",
-        "type": "shell",
+        "type": "shell"
       },
       {
         "label": "format",
         "command": "npm run format",
-        "type": "shell",
-      },
-    ],
-  },
+        "type": "shell"
+      }
+    ]
+  }
 }
