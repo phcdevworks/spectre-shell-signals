@@ -46,6 +46,30 @@ package of the Spectre shell system.
 | `.coderabbit.yaml`                 | CodeRabbit                    | Automated review checks aligned with package boundaries            |
 | `.github/dependabot.yml`           | Dependabot / Jules handoff    | Dependency-update cadence for automated maintenance                |
 
+## Upstream Requests and Roadmap Self-Expansion
+
+Full directive: project-team [AGENTS.md](../AGENTS.md) "Upstream Requests and
+Roadmap Self-Expansion." Applied to this repo:
+
+- This repo is an independent peer package — it has no upstream dependency
+  within this workspace; do not invent one.
+- Downstream repos `spectre-shell` (app-layer bridge) and `spectre-init`
+  (scaffolds against it) may append reactive-primitive requests (e.g. a new
+  export needed for `spectre-tokens`/`spectre-ui`/`spectre-ui-astro`
+  integration) to this repo's own `TODO.md` under `## Requested by
+  Downstream`, dated and linked back to the requesting repo's
+  TODO.md/ROADMAP.md. Keep that section visible and separate from
+  self-planned reactive-primitives work.
+- This repo's own [ROADMAP.md](ROADMAP.md) may be proactively expanded with new
+  or reordered phases by the agent's own analysis — but never mark a phase
+  delivered without `npm run check` passing, and never add a store, async
+  layer, or framework adapter export to satisfy a downstream request — see
+  "What This Package Does Not Own" above; redirect that need upstream-of-need
+  instead (e.g. to the consuming package's own integration layer).
+- Surface any new TODO request or roadmap expansion in the handoff for Bradley
+  Potts in the same change it was made, and reflect cross-repo-relevant
+  changes in the project-team's own ROADMAP.md/TODO.md.
+
 ## Shared Source Rules
 
 These rules apply to every agent without exception.
@@ -123,6 +147,8 @@ This package must stay narrow, explicit, portable, and easy to reason about.
 9. Keep package metadata, README, and docs aligned with the actual implementation.
 10. Do not expand this package into stores, async layers, persistence, or
     framework-specific behavior.
+11. All `scripts/` tooling is TypeScript (`.ts`), run via
+    `node --experimental-strip-types`; never add a new `.js`/`.mjs` script.
 
 ## What This Package Does Not Own
 

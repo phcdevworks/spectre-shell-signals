@@ -65,7 +65,7 @@
     "format:md:check": "prettier --check \"**/*.md\"",
     "test": "vitest run",
     "check:ecosystem": "spectre-manifest-validate spectre.manifest.json && spectre-manifest-check spectre.manifest.json .",
-    "check:version-sync": "node scripts/check-readme-version.mjs",
+    "check:version-sync": "node --experimental-strip-types scripts/check-readme-version.ts",
     "check": "npm run typecheck && npm run lint && npm run build && npm run test && npm run check:version-sync && npm run check:ecosystem",
     "prepublishOnly": "npm run check"
   },
@@ -74,15 +74,15 @@
   },
   "devDependencies": {
     "@phcdevworks/spectre-manifest": "^1.0.0",
-    "@types/node": "^26.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.61.1",
-    "@typescript-eslint/parser": "^8.61.1",
-    "eslint": "^10.5.0",
+    "@types/node": "^26.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.62.0",
+    "@typescript-eslint/parser": "^8.62.0",
+    "eslint": "^10.6.0",
     "jiti": "^2.7.0",
-    "prettier": "^3.8.4",
+    "prettier": "^3.9.0",
     "tsup": "^8.5.1",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.61.1",
+    "typescript-eslint": "^8.62.0",
     "vitest": "^4.1.9"
   },
   "allowScripts": {

@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 const repoRoot = resolve(import.meta.dirname, '..');
 
 const pkgPath = process.env.README_VERSION_PKG_PATH ?? 'package.json';
-const pkg = JSON.parse(readFileSync(resolve(repoRoot, pkgPath), 'utf-8'));
+const pkg = JSON.parse(readFileSync(resolve(repoRoot, pkgPath), 'utf-8')) as { version: string };
 const readme = readFileSync(resolve(repoRoot, 'README.md'), 'utf-8');
 
 const match = readme.match(/\|\s*Current version\/status\s*\|\s*([^\s|]+)\s*\|/i);
