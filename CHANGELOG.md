@@ -32,7 +32,7 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [1.1.0] - 2026-06-04
 
-Release Title: Reactive Ergonomics Release
+Release Title: Phase 2 - Reactive Ergonomics Release
 
 ### Added
 
@@ -46,7 +46,7 @@ Release Title: Reactive Ergonomics Release
 
 ## [1.0.0] - 2026-04-25
 
-Release Title: Stable Reactive Primitives Release
+Release Title: Phase 1 - Stable Reactive Primitives Release
 
 ### Added
 
@@ -67,7 +67,7 @@ Release Title: Stable Reactive Primitives Release
 
 ## [0.0.1] - 2026-04-13
 
-Release Title: Initial Reactive Primitives Foundation
+Release Title: Phase 1 - Initial Reactive Primitives Foundation
 
 ### Added
 
