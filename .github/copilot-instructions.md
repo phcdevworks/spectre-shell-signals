@@ -40,7 +40,8 @@ When suggesting edits, keep changes small and aligned with this package:
 
 - Keep TypeScript strict and explicit. Avoid introducing `any` unless justified.
 - For behavior changes, suggest test updates in `tests/signals.test.ts`.
-- Before considering work complete, run `npm run check` (typecheck, lint, build, test).
+- Before considering work complete, run `npm run check` (typecheck, lint, build,
+  test, README version-sync, ecosystem validation).
 
 ## Documentation Hygiene
 

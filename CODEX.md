@@ -64,7 +64,8 @@ preserves Claude Code's ownership.
 
 Before marking a release-ready handoff:
 
-1. Confirm `npm run check` passes (typecheck + lint + build + test + check:ecosystem).
+1. Confirm `npm run check` passes (typecheck + lint + build + test +
+   check:version-sync + check:ecosystem).
 2. Confirm CI is green on the release commit or branch.
 3. Verify `README.md` matches the public API: `signal`, `computed`, `effect`, and
    exported types.

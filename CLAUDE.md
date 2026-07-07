@@ -34,7 +34,7 @@ npm run typecheck    # TypeScript check, no emit
 npm run lint         # ESLint
 npm run build        # tsup -> dist/ (ESM + CJS + .d.ts)
 npm run test         # vitest run (one-shot)
-npm run check        # typecheck + lint + build + test + check:ecosystem (the full gate)
+npm run check        # typecheck + lint + build + test + check:version-sync + check:ecosystem (the full gate)
 npm run format       # prettier --write
 npm run clean        # rm -rf dist
 npm run release:propose  # propose semver bump from CHANGELOG.md [Unreleased]
