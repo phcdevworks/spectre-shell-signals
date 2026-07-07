@@ -165,6 +165,8 @@ Useful scripts:
 - `npm run lint` runs ESLint.
 - `npm run test` runs the Vitest suite once.
 - `npm run build` emits ESM, CJS, and declarations to `dist`.
+- `npm run check:version-sync` confirms the README "Current version/status" row matches `package.json`.
+- `npm run check:ecosystem` validates `spectre.manifest.json` against the ecosystem contract.
 - `npm run check` runs the standard package verification flow.
 
 AI-agent coordination starts in [AGENTS.md](./AGENTS.md), with companion
@@ -183,7 +185,7 @@ guidance in [CLAUDE.md](./CLAUDE.md), [CODEX.md](./CODEX.md),
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md). The gate is `npm run check` — typecheck, lint, build, test, and ecosystem validation must all pass. Do not expand the reactive-primitives scope; see [AGENTS.md](./AGENTS.md) for boundaries.
+See [CONTRIBUTING.md](./CONTRIBUTING.md). The gate is `npm run check` — typecheck, lint, build, test, README version-sync, and ecosystem validation must all pass. Do not expand the reactive-primitives scope; see [AGENTS.md](./AGENTS.md) for boundaries.
 
 ## Release Notes
 

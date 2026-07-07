@@ -23,10 +23,12 @@ npm run typecheck
 npm run lint
 npm run build
 npm run test
+npm run check:version-sync
+npm run check:ecosystem
 npm run check
 ```
 
-`npm run check` is the full gate: typecheck, lint, build, test, and ecosystem validation. All must pass before opening a pull request.
+`npm run check` is the full gate: typecheck, lint, build, test, README version-sync, and ecosystem validation. All must pass before opening a pull request.
 
 ## Versioning
 

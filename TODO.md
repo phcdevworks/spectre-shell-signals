@@ -54,6 +54,8 @@ All Phase 2 items are delivered and validated as of v1.1.0.
 
 - [x] `spectre.manifest.json` — ecosystem role, layer, exports, and allowed targets
 - [x] `check:ecosystem` wired into `npm run check` full gate
+- [x] `check:version-sync` — README "Current version/status" parity check,
+      wired into `npm run check` full gate (`scripts/check-readme-version.ts`)
 - [x] 35-case behavioral test suite covering all Phase 1 and Phase 2 semantics
 
 ### P3: Evaluation Documents

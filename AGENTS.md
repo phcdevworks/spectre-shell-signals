@@ -87,7 +87,8 @@ These rules apply to every agent without exception.
 | `spectre.manifest.json` | **May edit**            | Update when exports, Spectre dependencies, or stability change                |
 
 Full validation command: `npm run check` (typecheck + lint + build + test +
-check:ecosystem). All five steps must pass before any commit or handoff.
+check:version-sync + check:ecosystem). All six steps must pass before any
+commit or handoff.
 
 Detailed implementation workflow lives in `CLAUDE.md`. Human contribution
 workflow lives in `CONTRIBUTING.md`. Strategic direction lives in `ROADMAP.md`.

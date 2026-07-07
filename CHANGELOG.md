@@ -29,6 +29,9 @@ All notable changes to this project will be documented here. The format follows 
 - Added `@phcdevworks/spectre-manifest` as a devDependency. `spectre.manifest.json`
   at the repo root declares this package's ecosystem role, layer, exports, and
   allowed dependency targets. `check:ecosystem` validates it in the check pipeline.
+- Added `scripts/check-readme-version.ts` and wired it into `npm run check` as
+  `check:version-sync`, verifying the README "Current version/status" row
+  matches `package.json`'s version on every check run.
 
 ## [1.1.0] - 2026-06-04
 
