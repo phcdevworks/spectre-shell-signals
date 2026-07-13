@@ -1,5 +1,14 @@
 # @phcdevworks/spectre-shell-signals
 
+`@phcdevworks/spectre-shell-signals` is the reactive primitives package of
+the Spectre system. It provides `signal`, `computed`, and `effect` without
+tying Spectre runtime code to a UI framework.
+
+Maintained by [PHCDevworks](https://go.phcdev.co). It is the reactive
+primitive foundation for the Spectre stack, integrated by `spectre-tokens`,
+`spectre-ui`, and `spectre-ui-astro` in `project-design`, and by
+`spectre-shell` at the app-shell layer.
+
 ## Repository Snapshot
 
 | Field | Value |

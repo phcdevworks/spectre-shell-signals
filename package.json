@@ -1,7 +1,7 @@
 {
   "name": "@phcdevworks/spectre-shell-signals",
   "version": "1.1.0",
-  "description": "Minimal, framework-agnostic reactive primitives package for Spectre applications.",
+  "description": "@phcdevworks/spectre-shell-signals is the reactive primitives package of the Spectre system. It provides signal, computed, and effect without tying Spectre runtime code to a UI framework.",
   "keywords": [
     "phcdevworks",
     "spectre",
@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/phcdevworks/spectre-shell-signals#readme",
   "type": "module",
-  "packageManager": "npm@11.18.0",
+  "packageManager": "npm@12.0.1",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -73,17 +73,17 @@
     "access": "public"
   },
   "devDependencies": {
-    "@phcdevworks/spectre-manifest": "^1.0.0",
-    "@types/node": "^26.1.0",
-    "@typescript-eslint/eslint-plugin": "^8.62.1",
-    "@typescript-eslint/parser": "^8.62.1",
-    "eslint": "^10.6.0",
+    "@phcdevworks/spectre-manifest": "^1.1.0",
+    "@types/node": "^26.1.1",
+    "@typescript-eslint/eslint-plugin": "^8.63.0",
+    "@typescript-eslint/parser": "^8.63.0",
+    "eslint": "^10.7.0",
     "jiti": "^2.7.0",
-    "prettier": "^3.9.4",
+    "prettier": "^3.9.5",
     "tsup": "^8.5.1",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.62.1",
-    "vitest": "^4.1.9"
+    "typescript-eslint": "^8.63.0",
+    "vitest": "^4.1.10"
   },
   "allowScripts": {
     "esbuild@0.27.7": true
