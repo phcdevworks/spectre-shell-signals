@@ -4,6 +4,17 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+### Changed
+
+- Added a `typescript` peer dependency range, `^5.0 || ^6.0 || ^7.0`, adding
+  TypeScript 7 support alongside TypeScript 6. Internal tooling
+  (ESLint/typescript-eslint) runs against TypeScript 6 via an
+  `npm:@typescript/typescript6` alias since `typescript-eslint` does not yet
+  support TypeScript 7's programmatic API; TypeScript 7's native compiler is
+  available via the `@typescript/native` devDependency alias. Bumped
+  `@typescript-eslint/eslint-plugin`, `@typescript-eslint/parser`, and
+  `typescript-eslint` to `^8.65.0`.
+
 ### Added
 
 - Added `docs/integration/spectre-tokens.md`, assessing which `spectre-tokens`
