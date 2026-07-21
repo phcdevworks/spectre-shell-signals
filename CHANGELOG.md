@@ -4,6 +4,12 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-21
+
+Release Title: Phase 3 - Integration and Adoption Release
+
+Contract change type: additive
+
 ### Changed
 
 - Added a `typescript` peer dependency range, `^5.0 || ^6.0 || ^7.0`, adding
@@ -91,7 +97,8 @@ Release Title: Phase 1 - Initial Reactive Primitives Foundation
 - **Tooling**: Added TypeScript build output with `tsup`, Vitest coverage for reactive semantics, and CI validation for build, test, and type-check workflows.
 - **Documentation**: Added package README, contribution guidance, and repository metadata aligned to the scoped package and its narrow reactivity-only ownership.
 
-[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/1.1.0...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/1.2.0...HEAD
+[1.2.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/0.0.1...1.0.0
 [0.0.1]: https://github.com/phcdevworks/spectre-shell-signals/tree/0.0.1

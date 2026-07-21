@@ -125,19 +125,20 @@ adoption trigger for each item is listed explicitly — do not infer demand.
 
 ## Upcoming Release: v1.2.0 ← NEXT ACTION
 
-All implementation is done. The following `[Unreleased]` items are queued and ready to ship:
+All implementation is done. The following items are included in the prepared
+v1.2.0 release:
 
 - Integration docs: `docs/integration/` (spectre-tokens, spectre-ui, spectre-ui-astro, guide.md)
 - Versioning policy: `docs/versioning-policy.md`
 - Ecosystem manifest: `spectre.manifest.json` + `check:ecosystem`
 
-Steps to release:
+Release preparation:
 
-1. Run `npm run release:propose` — confirms the semver bump from `CHANGELOG.md [Unreleased]`
-2. Move `[Unreleased]` entries to the new version header in `CHANGELOG.md`
-3. Bump `version` in `package.json`
-4. Run `npm run check` — must pass clean
-5. Hand off to Bradley Potts for tag and publish
+1. [x] Run `npm run release:propose` — confirmed v1.2.0 as an additive minor release
+2. [x] Move `[Unreleased]` entries to the v1.2.0 header in `CHANGELOG.md`
+3. [x] Bump the package and lockfile versions to 1.2.0
+4. [x] Run `npm run check` — passed clean on 2026-07-21
+5. [ ] Bradley Potts reviews, commits, tags, and publishes v1.2.0
 
 ---
 

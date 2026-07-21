@@ -83,8 +83,9 @@ are queued for the v1.2.0 release.
 
 ### Next release: v1.2.0 ← NEXT ACTION
 
-All `[Unreleased]` items are ready to ship. Run `npm run release:propose` to confirm
-the semver classification, then hand off to Bradley Potts for tag and publish.
+Release metadata is prepared for v1.2.0 and the full validation gate passes.
+Bradley Potts retains final authority for the release commit, tag, and npm
+publication.
 
 No implementation work is needed before this release.
 
