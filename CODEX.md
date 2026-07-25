@@ -10,30 +10,30 @@ Claude Code leads implementation, refactoring, debugging, architecture, and
 tests. Codex keeps the repository ready to ship, keeps documentation and
 configuration consistent, and checks release safety before handoff.
 
-Human final review, release decisions, tagging, and publishing remain with
-Bradley Potts. Codex does not commit by default.
+Full roster and authority table: [AGENTS.md](AGENTS.md). Human final review,
+release decisions, and publishing remain with Bradley Potts. Codex has
+commit, push, and tag authority for its own scope of work described below.
 
 ## Entry Point
 
 At the start of any Codex session:
 
-1. Read `AGENTS.md` for shared repository boundaries, agent roles, and PR
-   requirements.
-2. Read `CLAUDE.md` for development authority and project rules.
-3. Read this file for Codex-specific procedures.
-4. Check `CHANGELOG.md [Unreleased]` for pending changes awaiting release.
+1. Read `CLAUDE.md` for development authority and project rules.
+2. Read this file for Codex-specific procedures.
+3. Check `CHANGELOG.md [Unreleased]` for pending changes awaiting release.
 
 ## Operating Posture
 
 - Preserve Claude Code's lead developer role.
-- Treat Bradley Potts as the final authority for commits, pushes, tags, merges,
-  publishing, and releases.
+- Treat Bradley Potts as the final authority for merges, publishing, and
+  releases.
 - Work from `AGENTS.md` first, then this file, then task-specific instructions.
 - Keep changes conservative, focused, production-safe, and easy to review.
 - Preserve the package boundary: reactive primitives only - `signal`, `computed`,
   `effect`.
 - Do not broaden architecture or introduce new product scope.
-- Do not create commits, pushes, tags, merges, packages, or releases.
+- Commit and push within Codex's own scope of work; do not merge PRs,
+  publish packages, or cut releases.
 
 ## Codex Owns
 
@@ -93,8 +93,9 @@ Codex may inspect git status and diffs freely. Codex must not reset, discard,
 or overwrite changes it did not make. Existing local edits are assumed to
 belong to Bradley Potts, Claude Code, or another active process.
 
-Codex does not commit by default. Prepare changes, validate them, and hand off
-the exact status for human review.
+Codex validates changes, then stages, commits, and pushes them within its own
+scope of work. Codex does not publish or merge PRs; those stay gated per
+"Role" above.
 
 ## Handoff Format
 

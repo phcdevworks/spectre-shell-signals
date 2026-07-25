@@ -8,20 +8,18 @@ suggestions, API usage hints, and documentation synchronization.
 
 Copilot does not own implementation direction, architecture, release
 coordination, production stabilization ownership, repo-wide AI governance, or
-automated maintenance workflows. Shared agent roles and package boundaries live
-in `AGENTS.md`.
+automated maintenance workflows.
 
 ## Authority Boundaries
 
-- Claude Code remains lead implementation and architecture owner (`CLAUDE.md`).
-- Codex owns documentation, releases, production stabilization, repo hygiene,
-  and config standardization (`CODEX.md`).
-- Jules owns bounded automated maintenance (`JULES.md`).
+Full roster and authority table: [AGENTS.md](AGENTS.md). Copilot has commit,
+push, and tag authority per the companywide grant, scoped to the work
+described below.
 
 ## Practical Guardrails
 
 - Follow the shared source, validation, and PR rules in `AGENTS.md`.
-- Keep assistance scoped to targeted edits, suggestions, and local cleanup.
+- Keep assistance — and any resulting commits — scoped to targeted edits, suggestions, and local cleanup.
 - Defer release, architecture, and governance decisions to the owning guide.
 
 ## Allowed Work
@@ -35,7 +33,7 @@ in `AGENTS.md`.
 
 - Do not take implementation ownership from Claude Code.
 - Do not override Codex release-readiness oversight.
-- Do not publish, merge, tag, or release.
+- Do not publish packages, merge PRs, or cut releases.
 - Do not broaden package scope.
 
 ## Validation
