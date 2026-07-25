@@ -14,17 +14,10 @@ Copilot supports day-to-day IDE productivity:
 
 Copilot does not own implementation direction, architecture decisions, release
 coordination, production stabilization ownership, repo-wide AI governance,
-automated maintenance workflows, config standardization ownership, or commit
-authority.
-
-## Agent Boundaries
-
-- Claude Code is the lead developer and primary implementation owner.
-- OpenAI Codex owns documentation alignment, release readiness, production stabilization, repo hygiene, and config standardization.
-- GitHub Copilot provides general development support only.
-- Google Jules handles automated micro-maintenance from `JULES.md`, such as small fixes, dependency updates, and micro-updates.
-
-If there is any conflict, follow `AGENTS.md` and `CLAUDE.md`.
+automated maintenance workflows, or config standardization ownership. Copilot
+does have commit, push, and tag authority per the companywide grant, scoped
+to the work described below. Full roster and authority table:
+[AGENTS.md](../AGENTS.md).
 
 ## Copilot Coding Alignment
 

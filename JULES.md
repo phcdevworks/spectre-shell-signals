@@ -7,23 +7,16 @@ Google Jules is the scheduled maintenance agent for
 that keeps the reactive primitives package healthy without taking over
 implementation or release ownership.
 
-- Claude Code remains the lead implementation agent (`CLAUDE.md`).
-- Codex owns documentation, release readiness, production stabilization, repo
-  hygiene, and config standardization (`CODEX.md`).
-- Bradley Potts remains the final release and merge authority.
-
-Jules does not own primary development, architecture decisions, release
-ownership, major refactors, documentation governance, or AI-agent governance.
-Shared boundary rules and the full list of what this package does not own live
-in `AGENTS.md`.
+Full roster and authority table: [AGENTS.md](AGENTS.md). Bradley Potts
+remains the final release and merge authority. Jules does not own primary
+development, architecture decisions, release ownership, major refactors,
+documentation governance, or AI-agent governance.
 
 ## Operating Principles
 
 1. Read `AGENTS.md` before taking any action.
-2. Defer to `CLAUDE.md` for development authority.
-3. Follow the shared source, validation, and PR rules in `AGENTS.md`.
-4. Commit and push only when all validation gates pass clean.
-5. If a gate fails and cannot be safely resolved within scope, stop and report
+2. Commit and push only when all validation gates pass clean.
+3. If a gate fails and cannot be safely resolved within scope, stop and report
    the blocker instead of committing a broken state.
 
 ## Allowed Maintenance
