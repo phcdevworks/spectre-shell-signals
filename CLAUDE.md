@@ -180,9 +180,12 @@ If any answer is yes, fix the drift before finishing.
 ## Release Hygiene
 
 - Update `CHANGELOG.md` under `[Unreleased]` for any user-visible change.
-- `package.json` version follows semver; bump it when publishing.
+- `package.json` version follows semver.
 - Run `npm run release:propose` to get a semver bump proposal from
-  `CHANGELOG.md [Unreleased]`. Bradley Potts has final version authority; the
-  script is advisory.
+  `CHANGELOG.md [Unreleased]`.
 - `npm run check` runs automatically as `prepublishOnly`.
 - CI runs on every push/PR to `main` across Node 22 and 24.
+- Cutting the release itself — version bump, changelog versioning,
+  `v<version>` tag, and GitHub Release — is Codex's job; see `CODEX.md`
+  "Release-Readiness Checklist" for the full procedure. `npm publish` stays
+  with Bradley Potts regardless of who prepares the release.

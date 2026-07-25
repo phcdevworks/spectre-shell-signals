@@ -10,9 +10,10 @@ Claude Code leads implementation, refactoring, debugging, architecture, and
 tests. Codex keeps the repository ready to ship, keeps documentation and
 configuration consistent, and checks release safety before handoff.
 
-Full roster and authority table: [AGENTS.md](AGENTS.md). Human final review,
-release decisions, and publishing remain with Bradley Potts. Codex has
-commit, push, and tag authority for its own scope of work described below.
+Full roster and authority table: [AGENTS.md](AGENTS.md). Codex has commit,
+push, and tag authority for its own scope of work described below,
+including cutting the release itself (see "Release-Readiness Checklist").
+`npm publish` remains a separate, manual step owned by Bradley Potts.
 
 ## Entry Point
 
@@ -62,7 +63,7 @@ preserves Claude Code's ownership.
 
 ## Release-Readiness Checklist
 
-Before marking a release-ready handoff:
+Before cutting a release:
 
 1. Confirm `npm run check` passes (typecheck + lint + build + test +
    check:version-sync + check:ecosystem).
@@ -76,10 +77,28 @@ Before marking a release-ready handoff:
 7. Confirm `dist/` exports (ESM, CJS, declarations) are consistent with
    `tsup.config.ts`.
 8. Confirm there are no unexpected runtime dependencies.
-9. Run `npm run release:propose` and include the output in the handoff summary.
-   Bradley Potts has final version authority; the script is advisory.
-10. Summarize changed files, validation status, public behavior impact, and
-    remaining risk.
+9. Run `npm run release:propose` and include the output in the handoff
+   summary.
+
+### Release Mechanics
+
+1. Bump `package.json` to the version from step 9 above.
+2. Move `[Unreleased]` notes into a new versioned entry:
+   `## [<version>] - <YYYY-MM-DD>`, with a release title line in the format
+   `**Release Title:** Phase <N> - <short title>`, where `Phase <N>` is the
+   active phase name from this repo's own `ROADMAP.md` and `<short title>`
+   is a concise summary of what shipped. If the release spans no single
+   ROADMAP phase, state that explicitly instead of inventing one.
+3. Stage and commit the version bump and changelog update.
+4. Create the git tag: `git tag v<version>` (matching `package.json`
+   exactly), then push the commit and tag.
+5. Publish the GitHub Release from that tag: `gh release create v<version>
+   --title "v<version>: Phase <N> - <short title>" --notes-file` (extract the
+   new version's changelog section, or `--notes` inline for a short release).
+6. `npm publish` is **not** run by Codex — that stays with Bradley Potts.
+7. Summarize changed files, validation status, public behavior impact, and
+   any unresolved risk for Bradley Potts, including the npm publish step
+   still pending his action.
 
 ## Pull Request Creation
 
