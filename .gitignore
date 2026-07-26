@@ -1,7 +1,7 @@
 # Dependencies
 node_modules/
 
-# Build output
+# Build artifacts
 dist/
 
 # Logs and caches
@@ -10,3 +10,4 @@ dist/
 
 # OS files
 .DS_Store
+Thumbs.db
