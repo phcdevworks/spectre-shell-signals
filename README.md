@@ -53,13 +53,13 @@ Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks
 [Contributing](CONTRIBUTING.md) | [Changelog](CHANGELOG.md) |
 [Roadmap](ROADMAP.md) | [Security Policy](SECURITY.md)
 
-## When to use this package
+## When To Use This Package
 
 - You need synchronous reactive primitives (`signal`, `computed`, `effect`) without a full state management framework.
 - You want typed, lazily-evaluated derived values with explicit disposal.
 - You are building on top of a Spectre shell or want framework-agnostic reactive state in vanilla TypeScript.
 
-## When not to use this package
+## When Not To Use This Package
 
 - You need a global store, atoms, selectors, or async resource primitives.
 - You need framework-specific hooks such as `useSignal` for React or Vue.
@@ -74,7 +74,7 @@ Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks
 - Explicit disposal for computed values and effects.
 - A deliberately small public API for shared Spectre runtime state.
 
-## Install
+## Installation
 
 ```bash
 npm install @phcdevworks/spectre-shell-signals
@@ -191,6 +191,23 @@ guidance in [CLAUDE.md](./CLAUDE.md), [CODEX.md](./CODEX.md),
 | `dist/` is missing after clone     | Build output is gitignored                | Run `npm run build`                                 |
 | Tests fail in CI but pass locally  | Node version mismatch                     | CI runs Node 22 and 24; match locally               |
 | Effect runs more than expected     | Unintended `.value` read in tracked scope | Move non-reactive reads outside the effect callback |
+
+## AI And Automation Boundaries
+
+Claude Code (`claude-sonnet-4-6`) is the primary development agent for this
+repository. Codex handles releases, including cutting tagged releases and
+GitHub Releases, and production stabilization. Jules handles small automated
+fixes and dependency updates. GitHub Copilot provides development support.
+
+All AI agents with repository access (Claude Code, Codex, Copilot, Jules)
+have commit, push, and tag authority in this repository. Publishing to npm
+remains Bradley Potts's sole authority. See [AGENTS.md](AGENTS.md) for the
+full commit-policy and release-authority grant.
+
+**Protected from automated change:** the reactive-primitives-only scope (no
+DOM rendering, routing, lifecycle orchestration, async scheduling, stores,
+persistence, or framework adapters added locally). See
+[AGENTS.md](AGENTS.md) for full agent governance and boundary rules.
 
 ## Contributing
 
