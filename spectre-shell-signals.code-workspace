@@ -115,6 +115,11 @@
         "label": "format",
         "command": "npm run format",
         "type": "shell"
+      },
+      {
+        "label": "check",
+        "command": "npm run check",
+        "type": "shell"
       }
     ]
   }
