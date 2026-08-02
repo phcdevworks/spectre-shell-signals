@@ -123,22 +123,13 @@ adoption trigger for each item is listed explicitly — do not infer demand.
 
 ---
 
-## Upcoming Release: v1.2.0 ← NEXT ACTION
+## Released: v1.2.0
 
-All implementation is done. The following items are included in the prepared
-v1.2.0 release:
+v1.2.0 shipped on 2026-07-21, closing out Phase 3:
 
 - Integration docs: `docs/integration/` (spectre-tokens, spectre-ui, spectre-ui-astro, guide.md)
 - Versioning policy: `docs/versioning-policy.md`
 - Ecosystem manifest: `spectre.manifest.json` + `check:ecosystem`
-
-Release preparation:
-
-1. [x] Run `npm run release:propose` — confirmed v1.2.0 as an additive minor release
-2. [x] Move `[Unreleased]` entries to the v1.2.0 header in `CHANGELOG.md`
-3. [x] Bump the package and lockfile versions to 1.2.0
-4. [x] Run `npm run check` — passed clean on 2026-07-21
-5. [ ] Bradley Potts reviews, commits, tags, and publishes v1.2.0
 
 ---
 
@@ -147,7 +138,7 @@ Release preparation:
 1. Phase 1 — done.
 2. Phase 2 — done.
 3. Phase 3 — done.
-4. **Release v1.2.0** — publish integration docs and manifest work.
+4. ~~Release v1.2.0~~ ✓ — published 2026-07-21.
 5. Phase 4 P0 — async effects only when a downstream need is proven.
 6. Phase 4 P1 — DevTools hook only when debugging becomes a real pain point.
 

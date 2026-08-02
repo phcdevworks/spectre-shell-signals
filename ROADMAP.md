@@ -81,13 +81,9 @@ are queued for the v1.2.0 release.
 - **Ecosystem manifest** — `spectre.manifest.json` + `check:ecosystem` in the
   full check gate.
 
-### Next release: v1.2.0 ← NEXT ACTION
+### Released: v1.2.0
 
-Release metadata is prepared for v1.2.0 and the full validation gate passes.
-Bradley Potts retains final authority for the release commit, tag, and npm
-publication.
-
-No implementation work is needed before this release.
+Published 2026-07-21. No implementation work is pending.
 
 ---
 
@@ -134,5 +130,5 @@ activated.
 1. ~~Phase 1~~ ✓
 2. ~~Phase 2~~ ✓
 3. ~~Phase 3~~ ✓
-4. **Release v1.2.0** ← next (run `npm run release:propose`, hand off to Bradley Potts)
+4. ~~Release v1.2.0~~ ✓ — published 2026-07-21.
 5. Phase 4 — async effects / DevTools only when adoption trigger is met.
