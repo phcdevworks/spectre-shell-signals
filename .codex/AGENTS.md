@@ -53,6 +53,14 @@ issue, or handoff — even names that are already public or well-known. Full
 directive: repo root [AGENTS.md](../AGENTS.md) "Confidential External
 Identities".
 
+## Commit Authorship
+
+Commit authorship is human-only. Codex never adds itself (or any other AI) as
+a commit author or co-author — no `Co-Authored-By: Claude`/`Codex`/`Copilot`
+trailer, no author-field changes. When drafting commit or PR message text for
+a human to use, never include such a trailer or list an AI as author or
+co-author.
+
 ## Release Gate
 
 Use `.codex/release-checklist.md` before publish, release, or PR handoff work.
