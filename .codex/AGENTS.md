@@ -45,6 +45,14 @@ Codex should not:
 5. Run `npm run check` before declaring success.
 6. Hand off with changed files, validation results, and unresolved risks.
 
+## Confidential External Identities
+
+Zero tolerance, no exceptions: never record external customer, vendor, user,
+client-site, or private-project identities in any file, commit, tag, PR,
+issue, or handoff — even names that are already public or well-known. Full
+directive: repo root [AGENTS.md](../AGENTS.md) "Confidential External
+Identities".
+
 ## Release Gate
 
 Use `.codex/release-checklist.md` before publish, release, or PR handoff work.
