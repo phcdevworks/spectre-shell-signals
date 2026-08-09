@@ -1,8 +1,8 @@
 # @phcdevworks/spectre-shell-signals
 
 `@phcdevworks/spectre-shell-signals` is the reactive primitives package of
-the Spectre system. It provides `signal`, `computed`, and `effect` without
-tying Spectre runtime code to a UI framework.
+the Spectre system. It provides `signal`, `computed`, `effect`, `asyncEffect`,
+and `batch` without tying Spectre runtime code to a UI framework.
 
 Maintained by [PHCDevworks](https://go.phcdev.co). It is the reactive
 primitive foundation for the Spectre stack, integrated by `spectre-tokens`,
@@ -11,12 +11,12 @@ primitive foundation for the Spectre stack, integrated by `spectre-tokens`,
 
 ## Repository Snapshot
 
-| Field | Value |
-|-------|-------|
-| Project team | `project-shell` |
-| Repository role | Spectre reactive primitives |
-| Package/artifact | `@phcdevworks/spectre-shell-signals` |
-| Current version/status | 1.2.0 |
+| Field                  | Value                                |
+| ---------------------- | ------------------------------------ |
+| Project team           | `project-shell`                      |
+| Repository role        | Spectre reactive primitives          |
+| Package/artifact       | `@phcdevworks/spectre-shell-signals` |
+| Current version/status | 1.3.0                                |
 
 ## Standard Workflow
 
@@ -29,24 +29,26 @@ primitive foundation for the Spectre stack, integrated by `spectre-tokens`,
 
 ## Documentation Map
 
-| Guide | Path |
-|-------|------|
-| Agent rules | [AGENTS.md](AGENTS.md) |
-| Claude Code | [CLAUDE.md](CLAUDE.md) |
-| Codex | [CODEX.md](CODEX.md) |
-| Copilot | [COPILOT.md](COPILOT.md) |
-| Jules | [JULES.md](JULES.md) |
-| Roadmap | [ROADMAP.md](ROADMAP.md) |
-| Todo | [TODO.md](TODO.md) |
-| Changelog | [CHANGELOG.md](CHANGELOG.md) |
-| Security | [SECURITY.md](SECURITY.md) |
+| Guide       | Path                         |
+| ----------- | ---------------------------- |
+| Agent rules | [AGENTS.md](AGENTS.md)       |
+| Claude Code | [CLAUDE.md](CLAUDE.md)       |
+| Codex       | [CODEX.md](CODEX.md)         |
+| Copilot     | [COPILOT.md](COPILOT.md)     |
+| Jules       | [JULES.md](JULES.md)         |
+| Roadmap     | [ROADMAP.md](ROADMAP.md)     |
+| Todo        | [TODO.md](TODO.md)           |
+| Changelog   | [CHANGELOG.md](CHANGELOG.md) |
+| Security    | [SECURITY.md](SECURITY.md)   |
 
 [![npm version](https://img.shields.io/npm/v/@phcdevworks/spectre-shell-signals.svg)](https://www.npmjs.com/package/@phcdevworks/spectre-shell-signals)
 [![CI](https://img.shields.io/github/actions/workflow/status/phcdevworks/spectre-shell-signals/ci.yml?branch=main&label=CI)](https://github.com/phcdevworks/spectre-shell-signals/actions/workflows/ci.yml)
 [![License](https://img.shields.io/github/license/phcdevworks/spectre-shell-signals)](LICENSE)
 [![Node](https://img.shields.io/node/v/@phcdevworks/spectre-shell-signals)](https://nodejs.org)
 
-Small synchronous reactive primitives for Spectre packages. The package provides `signal`, `computed`, and `effect` without tying Spectre runtime code to a UI framework.
+Small reactive primitives for Spectre packages. The package provides `signal`,
+`computed`, `effect`, `asyncEffect`, and `batch` without tying Spectre runtime
+code to a UI framework.
 
 Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks) — composable, zero-dependency packages for client-side shell applications.
 
@@ -71,6 +73,8 @@ Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks
 - Mutable signals through a `.value` getter and setter, and a `.peek()` method for untracked reads.
 - Lazily evaluated computed values with dependency tracking.
 - Synchronous effects with cleanup registration.
+- Cancelable async effects with synchronous dependency tracking.
+- Batched subscriber notification across multiple signal writes.
 - Explicit disposal for computed values and effects.
 - A deliberately small public API for shared Spectre runtime state.
 

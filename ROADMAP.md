@@ -13,12 +13,12 @@ this file does not restate delivered work.
 
 ## Delivered Phases
 
-| Phase | Summary | Shipped in |
-| --- | --- | --- |
-| 1 | Foundation — `signal`, `computed`, `effect`, private `Node`/tracking internals, dual ESM/CJS build, `npm run check` gate, CI on Node 22/24 | 1.0.0 |
-| 2 | Mature operations — `signal.peek()`, `batch()`, `EffectOptions.onError`, computed stability audit, ecosystem manifest, 35-case test suite | 1.1.0 |
-| 3 | Integration & adoption — `docs/integration/` for spectre-tokens/spectre-ui/spectre-ui-astro, integration guide, versioning policy, `check:ecosystem` | 1.2.0 |
-| 4 P0 | `asyncEffect()` — cancelable async effect variant, sync-only dependency tracking, per-run `AbortSignal`. Triggered by a proven downstream need; see `docs/decisions/async-effect-support.md` | Unreleased |
+| Phase | Summary                                                                                                                                                                                      | Shipped in |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| 1     | Foundation — `signal`, `computed`, `effect`, private `Node`/tracking internals, dual ESM/CJS build, `npm run check` gate, CI on Node 22/24                                                   | 1.0.0      |
+| 2     | Mature operations — `signal.peek()`, `batch()`, `EffectOptions.onError`, computed stability audit, ecosystem manifest, 35-case test suite                                                    | 1.1.0      |
+| 3     | Integration & adoption — `docs/integration/` for spectre-tokens/spectre-ui/spectre-ui-astro, integration guide, versioning policy, `check:ecosystem`                                         | 1.2.0      |
+| 4 P0  | `asyncEffect()` — cancelable async effect variant, sync-only dependency tracking, per-run `AbortSignal`. Triggered by a proven downstream need; see `docs/decisions/async-effect-support.md` | 1.3.0      |
 
 ---
 

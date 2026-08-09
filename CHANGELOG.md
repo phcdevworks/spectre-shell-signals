@@ -4,6 +4,12 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-08-09
+
+**Release Title:** Phase 4 - Async Effect Support
+
+Contract change type: additive
+
 ### Added
 
 - Added `asyncEffect(fn, options?)` — an additive async-capable effect
@@ -108,7 +114,8 @@ Release Title: Phase 1 - Initial Reactive Primitives Foundation
 - **Tooling**: Added TypeScript build output with `tsup`, Vitest coverage for reactive semantics, and CI validation for build, test, and type-check workflows.
 - **Documentation**: Added package README, contribution guidance, and repository metadata aligned to the scoped package and its narrow reactivity-only ownership.
 
-[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.2.0...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v0.0.1...v1.0.0

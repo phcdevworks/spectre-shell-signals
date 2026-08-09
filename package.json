@@ -1,7 +1,7 @@
 {
   "name": "@phcdevworks/spectre-shell-signals",
-  "version": "1.2.0",
-  "description": "@phcdevworks/spectre-shell-signals is the reactive primitives package of the Spectre system. It provides signal, computed, and effect without tying Spectre runtime code to a UI framework.",
+  "version": "1.3.0",
+  "description": "@phcdevworks/spectre-shell-signals is the reactive primitives package of the Spectre system. It provides signal, computed, effect, asyncEffect, and batch without tying Spectre runtime code to a UI framework.",
   "keywords": [
     "phcdevworks",
     "spectre",
