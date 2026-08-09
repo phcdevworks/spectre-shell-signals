@@ -1,137 +1,44 @@
 # Spectre Shell Signals Roadmap
 
 `@phcdevworks/spectre-shell-signals` is the minimal reactive-primitives package
-for the Spectre shell system. It exposes `signal`, `computed`, `effect`, `batch`,
-and directly related types — and nothing else. The scope is intentionally tiny
-and must stay that way.
+for the Spectre shell system. It exposes `signal`, `computed`, `effect`,
+`asyncEffect`, `batch`, and directly related types — and nothing else. The
+scope is intentionally tiny and must stay that way.
+
+This document tracks what's next. For what already shipped and why, see
+[CHANGELOG.md](CHANGELOG.md) (release-by-release detail) and git history —
+this file does not restate delivered work.
 
 ---
 
-## 1. Phase 1 — Foundation — Delivered
+## Delivered Phases
 
-All foundation work is complete as of v1.0.0.
-
-### Foundation delivered
-
-- `signal<T>` with tracked reads and guarded writes.
-- `computed<T>` with lazy derivation, caching, and explicit `dispose()`.
-- `effect()` with dependency tracking, synchronous cleanup, and a stop function.
-- `Node` subscriber registry and `tracking.ts` activeObserver stack as private
-  internals — not exported.
-- Public types: `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`,
-  `CleanupRegistrar`, `StopEffect`.
-- Dual ESM/CJS output via tsup. TypeScript 6 with strict mode.
-- `npm run check` gate: typecheck, lint, build, and test.
-- CI on Node 22 and 24.
-- README, CONTRIBUTING, ROADMAP, and AI-agent coordination docs.
-
-### Permanent constraints
-
-- `src/internals/` remains private. `Node` and `tracking.ts` are never exported.
-- The synchronous reactive model is the contract. No async scheduler is added
-  speculatively.
-- This package does not own DOM binding, framework adapters, stores, or
-  persistence.
+| Phase | Summary | Shipped in |
+| --- | --- | --- |
+| 1 | Foundation — `signal`, `computed`, `effect`, private `Node`/tracking internals, dual ESM/CJS build, `npm run check` gate, CI on Node 22/24 | 1.0.0 |
+| 2 | Mature operations — `signal.peek()`, `batch()`, `EffectOptions.onError`, computed stability audit, ecosystem manifest, 35-case test suite | 1.1.0 |
+| 3 | Integration & adoption — `docs/integration/` for spectre-tokens/spectre-ui/spectre-ui-astro, integration guide, versioning policy, `check:ecosystem` | 1.2.0 |
+| 4 P0 | `asyncEffect()` — cancelable async effect variant, sync-only dependency tracking, per-run `AbortSignal`. Triggered by a proven downstream need; see `docs/decisions/async-effect-support.md` | Unreleased |
 
 ---
 
-## 2. Phase 2 — Mature Operations — Delivered
+## What's Next
 
-All Phase 2 work is complete as of v1.1.0.
-
-### Ergonomics and ecosystem delivered
-
-- **`signal.peek()`** — untracked read. Reads current value without registering
-  a dependency, so the caller does not re-run when the signal changes.
-- **`batch(fn)`** — deferred subscriber notification. Effects in diamond-dependency
-  graphs run once per batch rather than once per signal write. Nested calls defer
-  until the outermost batch ends.
-- **`EffectOptions.onError`** — optional error handler for `effect()`. When
-  provided, errors thrown inside the effect callback are passed to `onError`
-  instead of propagating. The effect stays active and re-runs on the next
-  dependency change.
-- **Computed stability audit** — confirmed and tested that no-op signal writes do
-  not re-derive downstream computed values or re-run downstream effects.
-- **Ecosystem manifest** — `spectre.manifest.json` declares this package's role,
-  layer, exports, and allowed dependency targets. `check:ecosystem` validates it
-  in the full check gate.
-- **35-case test suite** — covers all ergonomic additions alongside the full
-  Phase 1 behavioral contract.
-- v1.1.0 published to npm.
+No active phase is currently open. New work opens on demand, when a
+downstream consumer surfaces a concrete need — see [TODO.md](TODO.md).
 
 ---
 
-## 3. Phase 3 — Integration & Adoption — Delivered
-
-All Phase 3 work is complete. Integration documentation and versioning policy
-are written; the ecosystem manifest is wired into the check gate. These items
-are queued for the v1.2.0 release.
-
-### What was delivered
-
-- **Integration docs** — `docs/integration/` covers all three downstream targets:
-  `spectre-tokens` (static vs. reactive token assessment), `spectre-ui` (signal
-  consumption inside UI components), and `spectre-ui-astro` (island hydration and
-  `StopEffect` teardown).
-- **Integration guide** — `docs/integration/guide.md` covers the full consuming-
-  package pattern: install, shared signal instances, `computed` and `effect` in
-  component context, cleanup, and Astro-specific teardown notes.
-- **Versioning policy** — `docs/versioning-policy.md` documents the semver
-  contract and downstream coordination protocol for major releases.
-- **Ecosystem manifest** — `spectre.manifest.json` + `check:ecosystem` in the
-  full check gate.
-
-### Released: v1.2.0
-
-Published 2026-07-21. No implementation work is pending.
-
----
-
-## 4. Phase 4 — Ecosystem Hardening (demand-driven)
-
-These are only pursued when a concrete consuming-package need is proven.
-Do not start speculatively.
-
-### Async effect support — Delivered
-
-**Adoption trigger**: a downstream integration has a reactive async workflow
-that cannot be expressed by scheduling async calls inside a synchronous
-`effect()`. Triggered 2026-08-09; see
-`docs/decisions/async-effect-support.md` for the revisit record.
-
-Delivered as `asyncEffect()` in v1.3.0: an additive async variant that does
-not change the synchronous `effect()` contract. Dependencies are tracked
-only in the synchronous portion of the callback (before the first `await`);
-each run gets a fresh `AbortSignal`, aborted on re-run and on `stop()`.
-
-### DevTools hook
-
-**Adoption trigger**: debugging reactive dependency graphs becomes a concrete
-pain point reported by a downstream package maintainer. Theoretical value does
-not count.
-
-When triggered: opt-in, tree-shakeable inspection hook; zero cost when not
-activated.
-
----
-
-## 5. Explicitly Out of Scope
+## Explicitly Out of Scope
 
 - Stores, atoms, selectors, or app-wide state containers
 - Framework adapters (React, Vue, Solid, Astro-specific hooks)
 - Persistence, localStorage, or sessionStorage helpers
-- Async resources or query layers
+- A full async resource/query layer (loading/error/caching state, request
+  deduplication) — `asyncEffect()` is a cancelable-effect primitive, not a
+  data-fetching layer
 - Event buses or observable streams
 - Middleware, plugins, or scheduler complexity
 - DOM binding helpers or rendering lifecycle
-
----
-
-## 6. Recommended Execution Order
-
-1. ~~Phase 1~~ ✓
-2. ~~Phase 2~~ ✓
-3. ~~Phase 3~~ ✓
-4. ~~Release v1.2.0~~ ✓ — published 2026-07-21.
-5. ~~Phase 4 P0 — async effects~~ ✓ — `asyncEffect()`, targeting v1.3.0.
-6. Phase 4 P1 — DevTools hook only when adoption trigger is met.
+- `src/internals/` (`Node`, `tracking.ts`) is never exported, including as a
+  DevTools facade, unless `docs/decisions/devtools-hook.md`'s criteria are met
