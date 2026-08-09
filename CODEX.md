@@ -92,9 +92,9 @@ Before cutting a release:
 4. Create the git tag: `git tag v<version>` (matching `package.json`
    exactly), then push the commit and tag.
 5. Publish the GitHub Release from that tag: `gh release create v<version>
-   --title "v<version>: <short title>" --notes-file` (extract the new version's
-   changelog section, or `--notes` inline for a short release). Do not include
-   roadmap phase labels in GitHub Release titles.
+   --title "<short title>" --notes-file` (extract the new version's changelog
+   section, or `--notes` inline for a short release). Do not include version,
+   tag, or roadmap phase labels in GitHub Release titles.
 6. `npm publish` is **not** run by Codex — that stays with Bradley Potts.
 7. Summarize changed files, validation status, public behavior impact, and
    any unresolved risk for Bradley Potts, including the npm publish step
