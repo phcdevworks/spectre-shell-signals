@@ -90,17 +90,19 @@ Published 2026-07-21. No implementation work is pending.
 ## 4. Phase 4 — Ecosystem Hardening (demand-driven)
 
 These are only pursued when a concrete consuming-package need is proven.
-Do not start either speculatively.
+Do not start speculatively.
 
-### Async effect support
+### Async effect support — Delivered
 
 **Adoption trigger**: a downstream integration has a reactive async workflow
 that cannot be expressed by scheduling async calls inside a synchronous
-`effect()`. If synchronous `effect()` can handle the use case (even awkwardly),
-this is not triggered.
+`effect()`. Triggered 2026-08-09; see
+`docs/decisions/async-effect-support.md` for the revisit record.
 
-When triggered: additive async variant that does not change the synchronous
-`effect()` contract; zero impact on consumers not using the async variant.
+Delivered as `asyncEffect()` in v1.3.0: an additive async variant that does
+not change the synchronous `effect()` contract. Dependencies are tracked
+only in the synchronous portion of the callback (before the first `await`);
+each run gets a fresh `AbortSignal`, aborted on re-run and on `stop()`.
 
 ### DevTools hook
 
@@ -131,4 +133,5 @@ activated.
 2. ~~Phase 2~~ ✓
 3. ~~Phase 3~~ ✓
 4. ~~Release v1.2.0~~ ✓ — published 2026-07-21.
-5. Phase 4 — async effects / DevTools only when adoption trigger is met.
+5. ~~Phase 4 P0 — async effects~~ ✓ — `asyncEffect()`, targeting v1.3.0.
+6. Phase 4 P1 — DevTools hook only when adoption trigger is met.

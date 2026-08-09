@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { batch, computed, effect, signal } from '../src'
+import { asyncEffect, batch, computed, effect, signal } from '../src'
 
 describe('@phcdevworks/spectre-shell-signals', () => {
   it('reads and writes signal values through .value', () => {
@@ -544,5 +544,135 @@ describe('effect error boundary', () => {
     stop()
 
     expect(events).toEqual(['run:0', 'cleanup:0', 'cleanup:1'])
+  })
+})
+
+describe('asyncEffect', () => {
+  it('tracks dependencies read synchronously before the first await', async () => {
+    const count = signal(0)
+    const seen: number[] = []
+
+    const stop = asyncEffect(async ({ signal: abortSignal }) => {
+      const v = count.value
+      await Promise.resolve()
+      if (abortSignal.aborted) return
+      seen.push(v)
+    })
+
+    await Promise.resolve()
+    count.value = 1
+    await Promise.resolve()
+
+    expect(seen).toEqual([0, 1])
+    stop()
+  })
+
+  it('aborts the in-flight run signal when a dependency change triggers a re-run', () => {
+    const count = signal(0)
+    let capturedSignal: AbortSignal | undefined
+
+    const stop = asyncEffect(({ signal: abortSignal }) => {
+      void count.value
+      capturedSignal = abortSignal
+    })
+
+    const firstSignal = capturedSignal
+    count.value = 1
+
+    expect(firstSignal?.aborted).toBe(true)
+    expect(capturedSignal).not.toBe(firstSignal)
+    expect(capturedSignal?.aborted).toBe(false)
+    stop()
+  })
+
+  it('aborts the active run signal on stop', () => {
+    let capturedSignal: AbortSignal | undefined
+
+    const stop = asyncEffect(({ signal: abortSignal }) => {
+      capturedSignal = abortSignal
+    })
+
+    stop()
+
+    expect(capturedSignal?.aborted).toBe(true)
+  })
+
+  it('runs cleanup before re-run and on disposal', () => {
+    const count = signal(0)
+    const events: string[] = []
+
+    const stop = asyncEffect(({ onCleanup }) => {
+      const v = count.value
+      onCleanup(() => events.push(`cleanup:${v}`))
+      events.push(`run:${v}`)
+    })
+
+    count.value = 1
+    stop()
+
+    expect(events).toEqual(['run:0', 'cleanup:0', 'run:1', 'cleanup:1'])
+  })
+
+  it('propagates a synchronous throw by default', () => {
+    expect(() =>
+      asyncEffect(() => {
+        throw new Error('boom')
+      })
+    ).toThrowError('boom')
+  })
+
+  it('routes a synchronous throw to onError when provided', () => {
+    const errors: unknown[] = []
+
+    const stop = asyncEffect(
+      () => {
+        throw new Error('boom')
+      },
+      { onError: (err) => errors.push(err) }
+    )
+
+    expect(errors).toHaveLength(1)
+    expect((errors[0] as Error).message).toBe('boom')
+    stop()
+  })
+
+  it('routes an async rejection to onError', async () => {
+    const errors: unknown[] = []
+
+    const stop = asyncEffect(
+      async () => {
+        await Promise.resolve()
+        throw new Error('async boom')
+      },
+      { onError: (err) => errors.push(err) }
+    )
+
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(errors).toHaveLength(1)
+    expect((errors[0] as Error).message).toBe('async boom')
+    stop()
+  })
+
+  it('does not report a rejection from a run that was superseded by a re-run', async () => {
+    const count = signal(0)
+    const errors: unknown[] = []
+
+    const stop = asyncEffect(
+      async () => {
+        const v = count.value
+        await Promise.resolve()
+        if (v === 0) throw new Error('stale')
+      },
+      { onError: (err) => errors.push(err) }
+    )
+
+    count.value = 1
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(errors).toEqual([])
+    stop()
   })
 })

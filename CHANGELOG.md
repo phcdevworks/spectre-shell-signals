@@ -4,6 +4,17 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+### Added
+
+- Added `asyncEffect(fn, options?)` — an additive async-capable effect
+  variant for reactive bodies that perform cancelable async work (e.g.
+  `fetch`). Dependencies are tracked only in the synchronous portion of the
+  callback, before the first `await`. Each run receives a fresh `AbortSignal`
+  that is aborted automatically on re-run and on `stop()`. Exported types:
+  `AsyncEffectCallback`, `AsyncEffectContext`, `AsyncEffectOptions`. The
+  synchronous `effect()` contract is unchanged. See
+  `docs/decisions/async-effect-support.md` for the design rationale.
+
 ## [1.2.0] - 2026-07-21
 
 Release Title: Phase 3 - Integration and Adoption Release

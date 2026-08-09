@@ -1,7 +1,7 @@
 # Decision: Async Effect Support
 
-**Status:** Not adopted  
-**Date:** 2026-06-02  
+**Status:** Adopted (v1.3.0)
+**Date:** 2026-06-02 (revisited 2026-08-09)
 **Scope:** `spectre-shell-signals` reactive primitive layer
 
 ## Question
@@ -62,3 +62,28 @@ Reconsider only if:
    cleanup, and subscription rules) is presented for review.
 
 Demand-driven, not speculative.
+
+## Revisit: 2026-08-09
+
+A concrete downstream requirement was raised for an effect variant that can
+run cancelable async work (e.g. `fetch`) tied to reactive dependencies,
+without threading ad hoc `AbortController` bookkeeping through every call
+site by hand. `asyncEffect()` was added in v1.3.0 to close that gap while
+resolving the two correctness concerns raised above directly:
+
+- **Correctness/subscription ambiguity** — resolved by making the tracked
+  window explicit and narrow: only synchronous reads, before the first
+  `await`, register a dependency. Reads after an `await` belong to a resumed
+  continuation and are documented as untracked. This is the same rule the
+  original workaround already relied on implicitly; `asyncEffect` just gives
+  it a name and a supported shape.
+- **Cleanup/cancellation timing** — resolved by giving every run its own
+  `AbortSignal`, aborted automatically on re-run and on `stop()`, so
+  cancellation is built into the primitive rather than being an
+  application-level `AbortController` the caller must wire up and remember
+  to abort in every code path.
+
+This stays additive: `effect()`'s synchronous contract is unchanged, and
+`asyncEffect` does not introduce resource caching, request deduplication,
+loading/error state, or any other data-fetching-layer concern — those remain
+out of scope and belong in a consuming package.

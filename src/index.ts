@@ -1,3 +1,9 @@
+export {
+  asyncEffect,
+  type AsyncEffectCallback,
+  type AsyncEffectContext,
+  type AsyncEffectOptions,
+} from './asyncEffect'
 export { batch } from './batch'
 export { computed, type Computed } from './computed'
 export {

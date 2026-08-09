@@ -105,14 +105,17 @@ Versioning policy documented. Ready to release as v1.2.0.
 Do not start these until a concrete consuming-package need is proven. The
 adoption trigger for each item is listed explicitly — do not infer demand.
 
-### P0: Async Effect Support
+### P0: Async Effect Support — Completed
 
-- [ ] Add async-capable effect variant
+- [x] Add async-capable effect variant
   - **Trigger**: a downstream integration (spectre-ui-astro, spectre-shell, or
     a consuming app) has a reactive async workflow that cannot be expressed by
     scheduling async calls inside a synchronous `effect()`.
   - Acceptance: the synchronous `effect()` contract is unchanged; async variant
     is additive and does not affect the base reactive model.
+  - Delivered: `asyncEffect()` — synchronous-only dependency tracking (before
+    the first `await`), per-run `AbortSignal` aborted on re-run/`stop()`. See
+    `src/asyncEffect.ts` and `docs/decisions/async-effect-support.md`.
 
 ### P1: DevTools Hook
 

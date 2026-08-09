@@ -61,7 +61,7 @@ Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks
 
 ## When Not To Use This Package
 
-- You need a global store, atoms, selectors, or async resource primitives.
+- You need a global store, atoms, selectors, or a full async resource/query layer (loading/error/caching state, request deduplication).
 - You need framework-specific hooks such as `useSignal` for React or Vue.
 - You need persistence, devtools, observables, event buses, or middleware.
 - You need cross-component state coordination patterns beyond sharing signal instances.
@@ -104,7 +104,8 @@ doubled.dispose()
 - `computed(fn)` returns a cached computed value with `dispose()`.
 - `effect(fn, options?)` runs immediately, reruns when tracked dependencies change, and returns a stop function. Pass `{ onError }` to handle errors without stopping the effect.
 - `batch(fn)` defers subscriber notification until `fn` returns, so effects run once per batch rather than once per write.
-- Types include `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`, `EffectOptions`, `CleanupRegistrar`, and `StopEffect`.
+- `asyncEffect(fn, options?)` runs immediately, reruns when tracked dependencies change, and returns a stop function. Dependencies must be read synchronously, before the first `await`. Each run gets a fresh `AbortSignal`, aborted when the effect re-runs or stops. Pass `{ onError }` to handle errors without stopping the effect.
+- Types include `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`, `EffectOptions`, `CleanupRegistrar`, `StopEffect`, `AsyncEffectCallback`, `AsyncEffectContext`, and `AsyncEffectOptions`.
 
 ### `signal.peek()`
 
@@ -142,6 +143,35 @@ stop()
 ```
 
 Without `onError`, errors propagate synchronously to the caller — the initial run throws from `effect()`, and re-run errors throw from the signal setter.
+
+### `asyncEffect()`
+
+`asyncEffect` is for effect bodies that need to perform async work (e.g. a
+`fetch` call) while still participating in the reactive graph. Only the
+synchronous portion of the callback — before the first `await` — is tracked;
+reads after an `await` belong to a resumed continuation and are not tracked,
+so read every dependency you need before awaiting anything.
+
+```ts
+const id = signal(1)
+
+const stop = asyncEffect(async ({ signal: abortSignal, onCleanup }) => {
+  const currentId = id.value // tracked: read before the first await
+  const response = await fetch(`/api/items/${currentId}`, { signal: abortSignal })
+  if (abortSignal.aborted) return
+  const item = await response.json()
+  console.log(item)
+})
+
+id.value = 2 // aborts the in-flight request, re-runs with currentId = 2
+stop() // aborts the active request and runs cleanup
+```
+
+Each run receives a fresh `AbortSignal` that is aborted when the effect
+re-runs or is stopped — pass it to `fetch` or any cancelable API so stale
+work does not race a newer run. Rejections from a run whose signal has since
+been aborted are swallowed rather than reported to `onError`, since they
+belong to a superseded run.
 
 ## Ecosystem
 

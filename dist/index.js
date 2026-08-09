@@ -39,16 +39,6 @@ function endBatch() {
   }
 }
 
-// src/batch.ts
-function batch(fn) {
-  startBatch();
-  try {
-    fn();
-  } finally {
-    endBatch();
-  }
-}
-
 // src/internals/node.ts
 var Node = class {
   constructor() {
@@ -69,6 +59,111 @@ var Node = class {
     }
   }
 };
+
+// src/asyncEffect.ts
+var AsyncEffectRunner = class {
+  constructor(callback, options = {}) {
+    this.callback = callback;
+    this.options = options;
+    this.nodes = /* @__PURE__ */ new Set();
+    this.cleanups = [];
+    this.active = true;
+    this.running = false;
+    this.queued = false;
+    this.controller = null;
+    this.run();
+  }
+  notify() {
+    if (!this.active || this.queued) {
+      return;
+    }
+    if (isBatching()) {
+      this.queued = true;
+      queueEffect(() => {
+        this.queued = false;
+        if (this.active) {
+          this.run();
+        }
+      });
+      return;
+    }
+    this.run();
+  }
+  stop() {
+    if (!this.active) {
+      return;
+    }
+    this.active = false;
+    clearTracking(this);
+    this.controller?.abort();
+    this.runCleanup();
+  }
+  run() {
+    if (!this.active) {
+      return;
+    }
+    if (this.running) {
+      throw new Error("Effects cannot synchronously trigger themselves.");
+    }
+    this.running = true;
+    this.runCleanup();
+    clearTracking(this);
+    this.controller?.abort();
+    const controller = new AbortController();
+    this.controller = controller;
+    try {
+      const result = withTracking(
+        this,
+        () => this.callback({
+          signal: controller.signal,
+          onCleanup: (cleanup) => {
+            this.cleanups.push(cleanup);
+          }
+        })
+      );
+      if (result && typeof result.then === "function") {
+        result.catch((err) => {
+          if (controller.signal.aborted) {
+            return;
+          }
+          this.reportError(err);
+        });
+      }
+    } catch (err) {
+      this.reportError(err);
+    } finally {
+      this.running = false;
+    }
+  }
+  reportError(err) {
+    if (this.options.onError) {
+      this.options.onError(err);
+    } else {
+      throw err;
+    }
+  }
+  runCleanup() {
+    const cleanups = this.cleanups;
+    this.cleanups = [];
+    for (let index = cleanups.length - 1; index >= 0; index -= 1) {
+      cleanups[index]?.();
+    }
+  }
+};
+function asyncEffect(fn, options) {
+  const runner = new AsyncEffectRunner(fn, options);
+  return () => runner.stop();
+}
+
+// src/batch.ts
+function batch(fn) {
+  startBatch();
+  try {
+    fn();
+  } finally {
+    endBatch();
+  }
+}
 
 // src/computed.ts
 var ComputedImpl = class {
@@ -215,6 +310,6 @@ function signal(initialValue) {
   return new SignalImpl(initialValue);
 }
 
-export { batch, computed, effect, signal };
+export { asyncEffect, batch, computed, effect, signal };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map
