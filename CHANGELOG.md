@@ -6,7 +6,7 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [1.3.0] - 2026-08-09
 
-**Release Title:** Phase 4 - Async Effect Support
+**Release Title:** Async Effect Support
 
 Contract change type: additive
 
@@ -23,7 +23,7 @@ Contract change type: additive
 
 ## [1.2.0] - 2026-07-21
 
-Release Title: Phase 3 - Integration and Adoption Release
+Release Title: Integration and Adoption Release
 
 Contract change type: additive
 
@@ -69,7 +69,7 @@ Contract change type: additive
 
 ## [1.1.0] - 2026-06-04
 
-Release Title: Phase 2 - Reactive Ergonomics Release
+Release Title: Reactive Ergonomics Release
 
 ### Added
 
@@ -83,7 +83,7 @@ Release Title: Phase 2 - Reactive Ergonomics Release
 
 ## [1.0.0] - 2026-04-25
 
-Release Title: Phase 1 - Stable Reactive Primitives Release
+Release Title: Stable Reactive Primitives Release
 
 ### Added
 
@@ -104,7 +104,7 @@ Release Title: Phase 1 - Stable Reactive Primitives Release
 
 ## [0.0.1] - 2026-04-13
 
-Release Title: Phase 1 - Initial Reactive Primitives Foundation
+Release Title: Initial Reactive Primitives Foundation
 
 ### Added
 

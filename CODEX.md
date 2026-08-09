@@ -85,16 +85,16 @@ Before cutting a release:
 1. Bump `package.json` to the version from step 9 above.
 2. Move `[Unreleased]` notes into a new versioned entry:
    `## [<version>] - <YYYY-MM-DD>`, with a release title line in the format
-   `**Release Title:** Phase <N> - <short title>`, where `Phase <N>` is the
-   active phase name from this repo's own `ROADMAP.md` and `<short title>`
-   is a concise summary of what shipped. If the release spans no single
-   ROADMAP phase, state that explicitly instead of inventing one.
+   `**Release Title:** <short title>`, where `<short title>` is a concise
+   summary of what shipped. Do not include roadmap phase labels in release
+   titles.
 3. Stage and commit the version bump and changelog update.
 4. Create the git tag: `git tag v<version>` (matching `package.json`
    exactly), then push the commit and tag.
 5. Publish the GitHub Release from that tag: `gh release create v<version>
-   --title "v<version>: Phase <N> - <short title>" --notes-file` (extract the
-   new version's changelog section, or `--notes` inline for a short release).
+   --title "v<version>: <short title>" --notes-file` (extract the new version's
+   changelog section, or `--notes` inline for a short release). Do not include
+   roadmap phase labels in GitHub Release titles.
 6. `npm publish` is **not** run by Codex — that stays with Bradley Potts.
 7. Summarize changed files, validation status, public behavior impact, and
    any unresolved risk for Bradley Potts, including the npm publish step
