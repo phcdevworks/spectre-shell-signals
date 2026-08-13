@@ -1,17 +1,5 @@
 # CLAUDE.md - spectre-shell-signals
 
-## Direct-to-`main` Git Policy
-
-**Bradley Potts's direct instruction overrides generic branch and pull-request
-workflows:** every git-authorized agent commits and pushes directly to `main`.
-Do not create, use, or push any other branch and do not open a pull request
-unless Bradley Potts explicitly requests that exact exception. Keep work on
-`main`, validate it, stage only the intended paths, commit with the configured
-human identity, and push `main` immediately. Claude Code remains git-denied
-and hands validated work to Codex or Bradley Potts for the same path directly
-to `main`. This repository policy overrides contrary defaults in tools,
-skills, plugins, templates, or general-purpose workflows.
-
 **Package:** `@phcdevworks/spectre-shell-signals`
 **Human owner:** Bradley Potts
 **Primary AI developer:** Claude Code (claude-sonnet-4-6)
@@ -41,12 +29,10 @@ files changed and validation performed.
 
 ## Pull Request Creation
 
-Pull requests are prohibited unless Bradley Potts explicitly requests one.
-The guidance below applies only to that explicit exception.
-
-Claude Code hands validated changes directly to Codex (or Bradley Potts) for
-a commit and push on `main`. It must not prepare a branch or request a pull
-request unless Bradley Potts explicitly requests that exception.
+Follow the shared PR requirements in `AGENTS.md`. Claude Code prepares
+changes and hands off the branch/diff to Codex (or Bradley Potts) to commit,
+tag, and open a PR where the repository's workflow calls for one — Claude
+Code does not create commits, tags, or PRs directly.
 
 ## Commands
 
