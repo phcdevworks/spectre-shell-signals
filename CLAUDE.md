@@ -14,18 +14,25 @@ Claude Code is the lead implementation authority for reactive primitive
 authoring, source changes, and architecture. Resolve implementation conflicts
 by referencing this file and `AGENTS.md`.
 
-## Commit Policy
+## Git Access — Denied
 
-See [AGENTS.md](AGENTS.md) for the full grant of authority. Claude Code
-applies it here: run all validation before committing, then stage, commit,
-tag, and push without per-action confirmation.
+**Claude Code has zero git access in this repo, as part of a companywide
+policy.** Claude Code must not run `git commit`, `git push`, `git tag`, or
+any other git command — read-only or mutating — here. This supersedes the
+prior commit/push/tag grant described in [AGENTS.md](AGENTS.md). OpenAI
+Codex now executes all git operations for this repo; see
+[AGENTS.md](AGENTS.md) and [CODEX.md](CODEX.md).
+
+When work is ready, Claude Code runs all validation, then stops short of any
+git command and hands off to Codex (or Bradley Potts) with a summary of
+files changed and validation performed.
 
 ## Pull Request Creation
 
-Follow the shared PR requirements in `AGENTS.md`. Claude Code may create
-commits and tags directly per the Commit Policy above; PR creation still
-follows the process in `AGENTS.md` where the repository's workflow calls for
-a PR rather than a direct push.
+Follow the shared PR requirements in `AGENTS.md`. Claude Code prepares
+changes and hands off the branch/diff to Codex (or Bradley Potts) to commit,
+tag, and open a PR where the repository's workflow calls for one — Claude
+Code does not create commits, tags, or PRs directly.
 
 ## Commands
 
