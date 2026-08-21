@@ -92,14 +92,20 @@ Before cutting a release:
    `## [<version>] - <YYYY-MM-DD>`, with a release title line in the format
    `**Release Title:** <short title>`, where `<short title>` is a concise
    summary of what shipped. Do not include roadmap phase labels in release
-   titles.
+   titles. Confirm a `Contract change type: <additive|semantic change|breaking>`
+   classification line is present and accurate for the release.
 3. Stage and commit the version bump and changelog update.
 4. Create the git tag: `git tag v<version>` (matching `package.json`
    exactly), then push the commit and tag.
 5. Publish the GitHub Release from that tag: `gh release create v<version>
-   --title "<short title>" --notes-file` (extract the new version's changelog
-   section, or `--notes` inline for a short release). Do not include version,
-   tag, or roadmap phase labels in GitHub Release titles.
+   --title "<short title>" --notes-file`. The notes file must contain the
+   full versioned `CHANGELOG.md` entry verbatim except for the version
+   heading and `Release Title` line, which GitHub already displays. Preserve
+   the `Contract change type:` line, section headings, and every bullet.
+   Never summarize, condense, paraphrase, add to, or omit the remaining
+   changelog content — `--notes` inline freeform text is never used, even for
+   a short release. Do not include version, tag, or roadmap phase labels in
+   GitHub Release titles.
 6. `npm publish` is **not** run by Codex — that stays with Bradley Potts.
 7. Summarize changed files, validation status, public behavior impact, and
    any unresolved risk for Bradley Potts, including the npm publish step
