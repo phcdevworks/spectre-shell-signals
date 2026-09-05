@@ -4,29 +4,9 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
-## [1.4.1] - 2026-09-05
-
-**Release Title:** Release Tooling and CI Maintenance
-
-Contract change type: fix
-
-### Fixed
-
-- Allow release proposals to select patch versions with the `fix` classification
-  and reject malformed classification values. Run the TypeScript release script
-  with native type stripping and cover the CLI with regression tests.
-
-### Changed
-
-- Upgrade CI checkout and runtime setup actions to 7.0.1 and 7.0.0 respectively.
-- Upgrade ESLint to 10.10.0 and Vitest to 5.0.0 without changing the supported
-  runtime range or reactive primitive exports.
-- Align contributor and agent guidance with the shipped async effect API,
-  direct-to-main workflow, and standing release authority.
-
 ## [1.4.0] - 2026-09-05
 
-**Release Title:** Effect Recovery and Cleanup Safety
+**Release Title:** Effect Recovery and Tooling Maintenance
 
 Contract change type: semantic change
 
@@ -39,6 +19,18 @@ Contract change type: semantic change
   dependency changes can retry. Async runs are aborted before cleanup on re-run.
 - Execute late async cleanup registrations immediately when their originating
   run has stopped or been replaced, preventing leaked or misassigned cleanup.
+- Allow release proposals to select patch versions with the `fix` classification
+  and reject malformed classification values. Run the TypeScript release script
+  with native type stripping and cover the CLI with regression tests.
+
+### Changed
+
+- Upgrade CI checkout and runtime setup actions to 7.0.1 and 7.0.0 respectively.
+- Upgrade ESLint to 10.10.0 and Vitest to 5.0.0 without changing the supported
+  runtime range or reactive primitive exports.
+- Refresh the transitive PostCSS lockfile resolution from 8.5.26 to 8.5.28.
+- Align contributor and agent guidance with the shipped async effect API,
+  direct-to-main workflow, and standing release authority.
 
 ## [1.3.0] - 2026-08-09
 
