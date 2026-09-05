@@ -146,6 +146,14 @@ count.value = 2 // logs 2 normally
 stop()
 ```
 
+Cleanup callbacks run in reverse registration order, including when one throws.
+The first cleanup error is reported through `onError`, or thrown if no handler is
+provided. A failed cleanup skips that re-run's body; the effect can run again on
+the next dependency change. Stopping still disposes the effect if cleanup fails.
+
+When a batched effect throws, the remaining queued effects still run before the
+first error is rethrown.
+
 Without `onError`, errors propagate synchronously to the caller — the initial run throws from `effect()`, and re-run errors throw from the signal setter.
 
 ### `asyncEffect()`
@@ -170,6 +178,10 @@ const stop = asyncEffect(async ({ signal: abortSignal, onCleanup }) => {
 id.value = 2 // aborts the in-flight request, re-runs with currentId = 2
 stop() // aborts the active request and runs cleanup
 ```
+
+Cleanup registered after an async run has been stopped or replaced executes
+immediately. Cleanup belongs to the run that registered it, even when registered
+after an `await`.
 
 Each run receives a fresh `AbortSignal` that is aborted when the effect
 re-runs or is stopped — pass it to `fetch` or any cancelable API so stale

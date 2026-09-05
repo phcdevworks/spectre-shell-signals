@@ -63,7 +63,15 @@ class AsyncEffectRunner implements TrackingObserver {
     this.active = false
     clearTracking(this)
     this.controller?.abort()
-    this.runCleanup()
+    try {
+      this.runCleanup()
+    } catch (err) {
+      if (this.options.onError) {
+        this.options.onError(err)
+      } else {
+        throw err
+      }
+    }
   }
 
   private run(): void {
@@ -76,19 +84,22 @@ class AsyncEffectRunner implements TrackingObserver {
     }
 
     this.running = true
-    this.runCleanup()
-    clearTracking(this)
-    this.controller?.abort()
-
-    const controller = new AbortController()
-    this.controller = controller
-
     try {
+      this.controller?.abort()
+      this.runCleanup()
+      clearTracking(this)
+
+      const controller = new AbortController()
+      this.controller = controller
       const result = withTracking(this, () =>
         this.callback({
           signal: controller.signal,
           onCleanup: (cleanup) => {
-            this.cleanups.push(cleanup)
+            if (controller.signal.aborted) {
+              cleanup()
+            } else {
+              this.cleanups.push(cleanup)
+            }
           },
         })
       )
@@ -120,8 +131,16 @@ class AsyncEffectRunner implements TrackingObserver {
     const cleanups = this.cleanups
     this.cleanups = []
 
+    const errors: unknown[] = []
     for (let index = cleanups.length - 1; index >= 0; index -= 1) {
-      cleanups[index]?.()
+      try {
+        cleanups[index]?.()
+      } catch (err) {
+        errors.push(err)
+      }
+    }
+    if (errors.length > 0) {
+      throw errors[0]
     }
   }
 }

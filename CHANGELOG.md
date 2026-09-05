@@ -4,6 +4,18 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+Contract change type: semantic change
+
+### Fixed
+
+- Drain remaining batched effects before rethrowing the first error, so a failing
+  effect cannot permanently strand other queued effects.
+- Drain all effect cleanup callbacks before reporting the first error, route
+  cleanup failures through `onError`, and restore runner state so subsequent
+  dependency changes can retry. Async runs are aborted before cleanup on re-run.
+- Execute late async cleanup registrations immediately when their originating
+  run has stopped or been replaced, preventing leaked or misassigned cleanup.
+
 ## [1.3.0] - 2026-08-09
 
 **Release Title:** Async Effect Support

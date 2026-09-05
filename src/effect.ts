@@ -59,7 +59,15 @@ class EffectRunner implements TrackingObserver {
 
     this.active = false
     clearTracking(this)
-    this.runCleanup()
+    try {
+      this.runCleanup()
+    } catch (err) {
+      if (this.options.onError) {
+        this.options.onError(err)
+      } else {
+        throw err
+      }
+    }
   }
 
   private run(): void {
@@ -72,10 +80,9 @@ class EffectRunner implements TrackingObserver {
     }
 
     this.running = true
-    this.runCleanup()
-    clearTracking(this)
-
     try {
+      this.runCleanup()
+      clearTracking(this)
       withTracking(this, () =>
         this.callback((cleanup) => {
           this.cleanups.push(cleanup)
@@ -96,8 +103,16 @@ class EffectRunner implements TrackingObserver {
     const cleanups = this.cleanups
     this.cleanups = []
 
+    const errors: unknown[] = []
     for (let index = cleanups.length - 1; index >= 0; index -= 1) {
-      cleanups[index]?.()
+      try {
+        cleanups[index]?.()
+      } catch (err) {
+        errors.push(err)
+      }
+    }
+    if (errors.length > 0) {
+      throw errors[0]
     }
   }
 }

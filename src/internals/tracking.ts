@@ -53,8 +53,16 @@ export function endBatch(): void {
   if (--batchDepth === 0) {
     const snapshot = Array.from(pendingEffects)
     pendingEffects.clear()
+    const errors: unknown[] = []
     for (const flush of snapshot) {
-      flush()
+      try {
+        flush()
+      } catch (err) {
+        errors.push(err)
+      }
+    }
+    if (errors.length > 0) {
+      throw errors[0]
     }
   }
 }

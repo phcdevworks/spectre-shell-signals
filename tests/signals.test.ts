@@ -676,3 +676,134 @@ describe('asyncEffect', () => {
     stop()
   })
 })
+
+describe.each([
+  ['effect', effect],
+  [
+    'asyncEffect',
+    (fn: Parameters<typeof effect>[0], options?: Parameters<typeof effect>[1]) =>
+      asyncEffect(({ onCleanup }) => fn(onCleanup), options),
+  ],
+] as const)('%s failure recovery', (_name, createEffect) => {
+  it('flushes remaining batched effects after an error and keeps them reactive', () => {
+    const count = signal(0)
+    const seen: number[] = []
+    const failure = new Error('batch failure')
+    const stops = [
+      createEffect(() => {
+        if (count.value === 1) throw failure
+      }),
+      createEffect(() => {
+        if (count.value === 1) throw new Error('second failure')
+      }),
+      createEffect(() => {
+        seen.push(count.value)
+      }),
+    ]
+
+    expect(() =>
+      batch(() => {
+        count.value = 1
+      })
+    ).toThrow(failure)
+    expect(seen).toEqual([0, 1])
+    count.value = 2
+    batch(() => {
+      count.value = 3
+    })
+    expect(seen).toEqual([0, 1, 2, 3])
+    stops.forEach((stop) => stop())
+  })
+
+  it.each([false, true])('recovers from cleanup failure with onError=%s', (handled) => {
+    const count = signal(0)
+    const seen: number[] = []
+    const cleaned: string[] = []
+    const failure = new Error('cleanup failure')
+    const onError = vi.fn()
+    const stop = createEffect(
+      (onCleanup) => {
+        seen.push(count.value)
+        if (count.value === 0) {
+          onCleanup(() => {
+            cleaned.push('first')
+          })
+          onCleanup(() => {
+            cleaned.push('second')
+            throw failure
+          })
+        }
+      },
+      handled ? { onError } : undefined
+    )
+
+    const update = () => {
+      count.value = 1
+    }
+    if (handled) {
+      expect(update).not.toThrow()
+      expect(onError).toHaveBeenCalledExactlyOnceWith(failure)
+    } else {
+      expect(update).toThrow(failure)
+    }
+    expect(cleaned).toEqual(['second', 'first'])
+    expect(() => {
+      count.value = 2
+    }).not.toThrow()
+    expect(seen).toEqual([0, 2])
+    stop()
+  })
+
+  it.each([false, true])('drains cleanup on stop with onError=%s', (handled) => {
+    const failure = new Error('stop failure')
+    const cleaned = vi.fn()
+    const onError = vi.fn()
+    const stop = createEffect(
+      (onCleanup) => {
+        onCleanup(cleaned)
+        onCleanup(() => {
+          throw failure
+        })
+      },
+      handled ? { onError } : undefined
+    )
+
+    if (handled) {
+      expect(stop).not.toThrow()
+      expect(onError).toHaveBeenCalledExactlyOnceWith(failure)
+    } else {
+      expect(stop).toThrow(failure)
+    }
+    expect(stop).not.toThrow()
+    expect(cleaned).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('async cleanup ownership', () => {
+  it.each(['stop', 'rerun'] as const)(
+    'immediately cleans late registrations after %s',
+    async (action) => {
+      const count = signal(0)
+      const cleaned: number[] = []
+      let resume!: () => void
+      const gate = new Promise<void>((resolve) => {
+        resume = resolve
+      })
+      const stop = asyncEffect(async ({ onCleanup }) => {
+        const value = count.value
+        if (value === 0) await gate
+        onCleanup(() => {
+          cleaned.push(value)
+        })
+      })
+
+      if (action === 'stop') stop()
+      else count.value = 1
+      resume()
+      await gate
+      expect(cleaned).toEqual([0])
+      stop()
+      expect(cleaned).toEqual(action === 'stop' ? [0] : [0, 1])
+    }
+  )
+})
