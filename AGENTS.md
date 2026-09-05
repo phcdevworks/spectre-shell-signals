@@ -222,7 +222,7 @@ local reactive state, derived values, and reactive effects — a tiny, predictab
 reactivity layer that other Spectre packages and compatible applications can build
 on without inheriting a full state-management framework.
 
-The reactive foundation (`signal`, `computed`, `effect`, `batch`) is stable and
+The reactive foundation (`signal`, `computed`, `effect`, `asyncEffect`, `batch`) is stable and
 published. The current focus is integration: getting these primitives actively
 consumed by `spectre-tokens`, `spectre-ui`, and `spectre-ui-astro`. Work in this
 repository should serve that integration goal — hardening the contract, improving
@@ -232,7 +232,7 @@ This package must stay narrow, explicit, portable, and easy to reason about.
 
 ## Core Rules
 
-1. Keep the public API tiny: `signal`, `computed`, `effect`, `batch`, and directly
+1. Keep the public API tiny: `signal`, `computed`, `effect`, `asyncEffect`, `batch`, and directly
    related types only.
 2. Prefer explicit behavior over magical behavior.
 3. Prefer readable internals over abstraction-heavy architecture.

@@ -36,10 +36,11 @@ At the start of any Codex session:
 - Work from `AGENTS.md` first, then this file, then task-specific instructions.
 - Keep changes conservative, focused, production-safe, and easy to review.
 - Preserve the package boundary: reactive primitives only - `signal`, `computed`,
-  `effect`.
+  `effect`, `asyncEffect`, and `batch`.
 - Do not broaden architecture or introduce new product scope.
-- Commit and push within Codex's own scope of work; do not merge PRs,
-  publish packages, or cut releases.
+- Commit and push directly to `main` within Codex's scope of work. Cut
+  release-ready releases under the standing authority in `AGENTS.md`.
+  npm publishing remains Bradley Potts's responsibility.
 
 ## Codex Owns
 
@@ -59,7 +60,7 @@ At the start of any Codex session:
 - Test strategy or test authorship as the lead owner.
 - Architecture decisions inside the reactive-primitives boundary.
 - Dependency-update ownership, except when coordinating a release.
-- Deployment, publishing, or release execution.
+- Deployment or npm publishing.
 
 If a production issue requires code changes, Codex should identify the risk,
 verify the failure, and hand implementation to Claude Code. Codex may make a
@@ -73,8 +74,8 @@ Before cutting a release:
 1. Confirm `npm run check` passes (typecheck + lint + build + test +
    check:version-sync + check:ecosystem).
 2. Confirm CI is green on the release commit or branch.
-3. Verify `README.md` matches the public API: `signal`, `computed`, `effect`, and
-   exported types.
+3. Verify `README.md` matches the public API: `signal`, `computed`, `effect`,
+   `asyncEffect`, `batch`, and exported types.
 4. Verify `CHANGELOG.md` follows Keep a Changelog and has no unattributed
    release entries.
 5. Verify `package.json` semver matches the release intent.
@@ -92,13 +93,13 @@ Before cutting a release:
    `## [<version>] - <YYYY-MM-DD>`, with a release title line in the format
    `**Release Title:** <short title>`, where `<short title>` is a concise
    summary of what shipped. Do not include roadmap phase labels in release
-   titles. Confirm a `Contract change type: <additive|semantic change|breaking>`
+   titles. Confirm a `Contract change type: <fix|additive|semantic change|breaking>`
    classification line is present and accurate for the release.
 3. Stage and commit the version bump and changelog update.
 4. Create the git tag: `git tag v<version>` (matching `package.json`
    exactly), then push the commit and tag.
-5. Publish the GitHub Release from that tag: `gh release create v<version>
-   --title "<short title>" --notes-file`. The notes file must contain the
+5. Publish the GitHub Release from that tag using `gh release create` with
+   `--title "<short title>"` and `--notes-file <path>`. The notes file must contain the
    full versioned `CHANGELOG.md` entry verbatim except for the version
    heading and `Release Title` line, which GitHub already displays. Preserve
    the `Contract change type:` line, section headings, and every bullet.
@@ -124,8 +125,9 @@ or overwrite changes it did not make. Existing local edits are assumed to
 belong to Bradley Potts, Claude Code, or another active process.
 
 Codex validates changes, then stages, commits, and pushes them within its own
-scope of work. Codex does not publish or merge PRs; those stay gated per
-"Role" above.
+scope of work directly to `main`. Codex creates tags and GitHub Releases under
+the standing release authority; npm publishing stays with Bradley Potts.
+Pull requests require Bradley's explicit exception.
 
 ## Handoff Format
 

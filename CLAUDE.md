@@ -40,10 +40,9 @@ files changed and validation performed.
 
 ## Pull Request Creation
 
-Follow the shared PR requirements in `AGENTS.md`. Claude Code prepares
-changes and hands off the branch/diff to Codex (or Bradley Potts) to commit,
-tag, and open a PR where the repository's workflow calls for one — Claude
-Code does not create commits, tags, or PRs directly.
+Follow the shared PR requirements in `AGENTS.md`. Claude Code hands validated changes to Codex or Bradley Potts for commit and
+immediate push directly to `main`. A PR requires Bradley's explicit exception.
+Claude Code does not execute git operations.
 
 ## Commands
 
@@ -70,12 +69,14 @@ src/
   signal.ts             # Signal<T> - mutable reactive value
   computed.ts           # Computed<T> - lazy derived value with disposal
   effect.ts             # effect() - reactive side-effect with cleanup
+  asyncEffect.ts        # asyncEffect() - cancelable effects with synchronous tracking
   batch.ts              # batch() - deferred subscriber notification
   internals/
     node.ts             # Node - subscriber registry per reactive source
     tracking.ts         # activeObserver stack, withTracking, clearTracking
 tests/
-  signals.test.ts       # full behavioral test suite (35 tests)
+  release.test.ts       # release proposal CLI tests
+  signals.test.ts       # reactive primitive contract tests
 ```
 
 **Reactive model**: every `.value` read inside a tracked context (effect or
@@ -92,11 +93,13 @@ export them.
 signal<T>(initialValue: T): Signal<T>
 computed<T>(fn: () => T): Computed<T>
 effect(fn: EffectCallback, options?: EffectOptions): StopEffect
+asyncEffect(fn: AsyncEffectCallback, options?: AsyncEffectOptions): StopEffect
 batch(fn: () => void): void
 ```
 
 Exported types: `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`,
-`EffectOptions`, `CleanupRegistrar`, `StopEffect`.
+`EffectOptions`, `CleanupRegistrar`, `StopEffect`, `AsyncEffectCallback`,
+`AsyncEffectContext`, `AsyncEffectOptions`.
 
 Before adding any export, ask:
 

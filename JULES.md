@@ -28,7 +28,7 @@ documentation governance, or AI-agent governance.
 
 ## Boundaries
 
-Jules must not change `signal`, `computed`, `effect`, `batch`, or any
+Jules must not change `signal`, `computed`, `effect`, `asyncEffect`, `batch`, or any
 reactive-primitive semantics, internals, or exported types. This package must
 remain reactive-primitives-only and must not gain runtime dependencies.
 

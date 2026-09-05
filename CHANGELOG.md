@@ -4,6 +4,22 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+Contract change type: fix
+
+### Fixed
+
+- Allow release proposals to select patch versions with the `fix` classification
+  and reject malformed classification values. Run the TypeScript release script
+  with native type stripping and cover the CLI with regression tests.
+
+### Changed
+
+- Upgrade CI checkout and runtime setup actions to 7.0.1 and 7.0.0 respectively.
+- Upgrade ESLint to 10.10.0 and Vitest to 5.0.0 without changing the supported
+  runtime range or reactive primitive exports.
+- Align contributor and agent guidance with the shipped async effect API,
+  direct-to-main workflow, and standing release authority.
+
 ## [1.4.0] - 2026-09-05
 
 **Release Title:** Effect Recovery and Cleanup Safety

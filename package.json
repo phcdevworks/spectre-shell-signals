@@ -58,7 +58,7 @@
     "build": "tsup --config tsup.config.ts",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "release:propose": "jiti scripts/propose-version.ts",
+    "release:propose": "node --experimental-strip-types scripts/propose-version.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:md": "prettier --write \"**/*.md\"",
@@ -81,13 +81,13 @@
     "@typescript-eslint/eslint-plugin": "^8.69.0",
     "@typescript-eslint/parser": "^8.69.0",
     "@typescript/native": "npm:typescript@^7.0.2",
-    "eslint": "^10.9.1",
+    "eslint": "^10.10.0",
     "jiti": "^2.7.0",
     "prettier": "^3.9.6",
     "tsup": "^8.5.1",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-eslint": "^8.69.0",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.0"
   },
   "allowScripts": {
     "esbuild@0.27.7": true

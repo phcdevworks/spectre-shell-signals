@@ -7,12 +7,12 @@ Thanks for helping improve `@phcdevworks/spectre-shell-signals`. This package ow
 1. Install dependencies with `npm install`.
 2. Make the smallest focused change that solves the problem.
 3. Update README or changelog notes when public behavior changes.
-4. Run `npm run check` before opening a pull request.
+4. Run `npm run check`, then commit and push directly to `main` when authorized.
 
 ## Project Standards
 
 - Keep config files in TypeScript when the tool supports it.
-- Keep the public API limited to `signal`, `computed`, `effect`, `batch`, and their types.
+- Keep the public API limited to `signal`, `computed`, `effect`, `asyncEffect`, `batch`, and their types.
 - Preserve synchronous dependency tracking semantics.
 - Add or update tests before changing cleanup, disposal, or notification behavior.
 
@@ -28,7 +28,7 @@ npm run check:ecosystem
 npm run check
 ```
 
-`npm run check` is the full gate: typecheck, lint, build, test, README version-sync, and ecosystem validation. All must pass before opening a pull request.
+`npm run check` is the full gate: typecheck, lint, build, test, README version-sync, and ecosystem validation. All must pass before a commit or handoff.
 
 ## Versioning
 
@@ -38,7 +38,8 @@ Spectre packages are coordinated on major releases.
 
 ## Pull Requests
 
-Describe the reactive behavior changed, call out compatibility risks, and include the commands you ran. Populate all sections of the PR template.
+Pull requests require an explicit exception from Bradley Potts; the default
+workflow is directly to `main`. For an authorized PR, describe the reactive behavior changed, call out compatibility risks, and include the commands you ran. Populate all sections of the PR template.
 
 ## Code of Conduct
 

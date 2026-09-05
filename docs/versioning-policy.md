@@ -6,18 +6,19 @@ This package follows [Semantic Versioning 2.0.0](https://semver.org/): `MAJOR.MI
 
 ## What Counts as Breaking (MAJOR)
 
-A change requires a major version bump if it can change the observable behavior
-or type signature of any export listed in the [Public API](../README.md):
-`signal`, `computed`, `effect`, `batch`, and their exported types (`Signal`,
+A change requires a major version bump if it incompatibly changes the observable
+behavior or type signature of any export listed in the [Public API](../README.md):
+`signal`, `computed`, `effect`, `asyncEffect`, `batch`, and their exported types (`Signal`,
 `Computed`, `EffectCallback`, `EffectCleanup`, `EffectOptions`,
-`CleanupRegistrar`, `StopEffect`).
+`CleanupRegistrar`, `StopEffect`, `AsyncEffectCallback`, `AsyncEffectContext`,
+`AsyncEffectOptions`).
 
 Examples:
 
 - Removing or renaming an export.
 - Changing a function signature (parameters, return type, generic constraints).
-- Changing reactive semantics — when subscribers are notified, when computed
-  values recompute, cleanup ordering, disposal behavior, batching guarantees.
+- Breaking reactive guarantees — when subscribers are notified, when computed
+  values recompute, cleanup ordering, disposal behavior, or batching guarantees.
 - Raising the minimum supported Node.js or TypeScript version.
 - Changing the package's module format in a way that breaks existing consumers
   (ESM/CJS export map changes).
@@ -57,8 +58,18 @@ be reflected in `CHANGELOG.md` so consumers can audit what changed.
 
 ## Process
 
+The release proposal accepts `Contract change type:` classifications:
+
+- `fix`: patch release for compatible fixes, tooling, or documentation updates.
+- `additive`: minor release for compatible additions.
+- `semantic change`: minor release for compatible behavioral corrections.
+- `breaking`: major release for incompatible changes, including semantic changes
+  that violate an existing guarantee.
+
+The classification describes compatibility, not just whether code changed.
+
 1. Land changes with `[Unreleased]` changelog entries describing user-visible
-   impact and classifying it as breaking, feature, or fix.
+   impact and using one of the classifications above.
 2. Run `npm run release:propose` to get an advisory semver bump suggestion
    based on the `[Unreleased]` section.
 3. Bradley Potts has final version authority — the proposal is advisory, not

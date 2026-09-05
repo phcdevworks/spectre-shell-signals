@@ -8,12 +8,15 @@ const changelogPath = join(repoRoot, 'CHANGELOG.md')
 const packagePath = join(repoRoot, 'package.json')
 
 const CLASSIFICATION_PREFIX = 'Contract change type:'
-const ALLOWED = ['additive', 'semantic change', 'breaking']
+const ALLOWED = ['fix', 'additive', 'semantic change', 'breaking']
 
 const changelog = readFileSync(changelogPath, 'utf8')
 const unreleasedSection = changelog.split('## [Unreleased]')[1]?.split('\n## [')[0] ?? ''
 
-const classificationPattern = new RegExp(`${CLASSIFICATION_PREFIX}\\s*(${ALLOWED.join('|')})`, 'i')
+const classificationPattern = new RegExp(
+  `^${CLASSIFICATION_PREFIX}[ \t]*(${ALLOWED.join('|')})[ \t]*$`,
+  'im'
+)
 const match = unreleasedSection.match(classificationPattern)
 
 if (!match) {
