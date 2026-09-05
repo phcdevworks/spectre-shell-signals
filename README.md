@@ -16,7 +16,7 @@ primitive foundation for the Spectre stack, integrated by `spectre-tokens`,
 | Project team           | `project-shell`                      |
 | Repository role        | Spectre reactive primitives          |
 | Package/artifact       | `@phcdevworks/spectre-shell-signals` |
-| Current version/status | 1.4.0                                |
+| Current version/status | 1.4.1                                |
 
 ## Standard Workflow
 

@@ -4,6 +4,10 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-09-05
+
+**Release Title:** Release Tooling and CI Maintenance
+
 Contract change type: fix
 
 ### Fixed
