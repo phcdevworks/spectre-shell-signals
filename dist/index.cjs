@@ -35,8 +35,16 @@ function endBatch() {
   if (--batchDepth === 0) {
     const snapshot = Array.from(pendingEffects);
     pendingEffects.clear();
+    const errors = [];
     for (const flush of snapshot) {
-      flush();
+      try {
+        flush();
+      } catch (err) {
+        errors.push(err);
+      }
+    }
+    if (errors.length > 0) {
+      throw errors[0];
     }
   }
 }
@@ -98,7 +106,15 @@ var AsyncEffectRunner = class {
     this.active = false;
     clearTracking(this);
     this.controller?.abort();
-    this.runCleanup();
+    try {
+      this.runCleanup();
+    } catch (err) {
+      if (this.options.onError) {
+        this.options.onError(err);
+      } else {
+        throw err;
+      }
+    }
   }
   run() {
     if (!this.active) {
@@ -108,18 +124,22 @@ var AsyncEffectRunner = class {
       throw new Error("Effects cannot synchronously trigger themselves.");
     }
     this.running = true;
-    this.runCleanup();
-    clearTracking(this);
-    this.controller?.abort();
-    const controller = new AbortController();
-    this.controller = controller;
     try {
+      this.controller?.abort();
+      this.runCleanup();
+      clearTracking(this);
+      const controller = new AbortController();
+      this.controller = controller;
       const result = withTracking(
         this,
         () => this.callback({
           signal: controller.signal,
           onCleanup: (cleanup) => {
-            this.cleanups.push(cleanup);
+            if (controller.signal.aborted) {
+              cleanup();
+            } else {
+              this.cleanups.push(cleanup);
+            }
           }
         })
       );
@@ -147,8 +167,16 @@ var AsyncEffectRunner = class {
   runCleanup() {
     const cleanups = this.cleanups;
     this.cleanups = [];
+    const errors = [];
     for (let index = cleanups.length - 1; index >= 0; index -= 1) {
-      cleanups[index]?.();
+      try {
+        cleanups[index]?.();
+      } catch (err) {
+        errors.push(err);
+      }
+    }
+    if (errors.length > 0) {
+      throw errors[0];
     }
   }
 };
@@ -245,7 +273,15 @@ var EffectRunner = class {
     }
     this.active = false;
     clearTracking(this);
-    this.runCleanup();
+    try {
+      this.runCleanup();
+    } catch (err) {
+      if (this.options.onError) {
+        this.options.onError(err);
+      } else {
+        throw err;
+      }
+    }
   }
   run() {
     if (!this.active) {
@@ -255,9 +291,9 @@ var EffectRunner = class {
       throw new Error("Effects cannot synchronously trigger themselves.");
     }
     this.running = true;
-    this.runCleanup();
-    clearTracking(this);
     try {
+      this.runCleanup();
+      clearTracking(this);
       withTracking(
         this,
         () => this.callback((cleanup) => {
@@ -277,8 +313,16 @@ var EffectRunner = class {
   runCleanup() {
     const cleanups = this.cleanups;
     this.cleanups = [];
+    const errors = [];
     for (let index = cleanups.length - 1; index >= 0; index -= 1) {
-      cleanups[index]?.();
+      try {
+        cleanups[index]?.();
+      } catch (err) {
+        errors.push(err);
+      }
+    }
+    if (errors.length > 0) {
+      throw errors[0];
     }
   }
 };

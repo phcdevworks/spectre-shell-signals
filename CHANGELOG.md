@@ -4,6 +4,10 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-09-05
+
+**Release Title:** Effect Recovery and Cleanup Safety
+
 Contract change type: semantic change
 
 ### Fixed
