@@ -46,13 +46,15 @@ reviews:
       enabled: true
   path_instructions:
     - path: 'AGENTS.md'
-      instructions: 'Verify the four-agent operating model stays intact: Claude Code leads implementation; OpenAI Codex owns documentation, releases, production stabilization, repo hygiene, changelog/release-note support, and config standardization; GitHub Copilot is advisory; Google Jules handles small automated maintenance.'
+      instructions: 'Verify the five-agent operating model stays intact: Claude Code leads implementation; OpenAI Codex owns documentation, releases, production stabilization, repo hygiene, changelog/release-note support, and config standardization; GitHub Copilot is advisory; Google Jules handles small automated maintenance; xAI Grok (including Grok Bot) provides general development assistance and may commit and push its own work, but never tags, releases, merges, or publishes.'
     - path: 'CLAUDE.md'
       instructions: 'Verify Claude Code remains the lead developer and primary implementation owner without taking release, publish, or automated maintenance ownership.'
     - path: 'CODEX.md'
       instructions: 'Verify Codex stays focused on documentation, releases, production stabilization, repo hygiene, changelog/release-note support, and config standardization without taking Claude Code implementation ownership.'
     - path: 'JULES.md'
       instructions: 'Verify Jules remains limited to bounded automated maintenance and never changes signal, computed, or effect semantics, adds new runtime exports, or broadens primitive-reactivity scope.'
+    - path: 'GROK.md'
+      instructions: 'Verify Grok remains a general development assistant: it commits and pushes its own work only after the repository validation gate passes, never tags, releases, merges, or publishes, and never adds an AI co-author trailer.'
     - path: '.codex/**'
       instructions: 'Codex support files should strengthen release readiness, documentation consistency, production stabilization, repo hygiene, changelog/release-note support, and config cleanup while preserving Claude Code as implementation lead.'
     - path: '.github/copilot-instructions.md'

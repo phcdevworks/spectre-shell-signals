@@ -807,3 +807,308 @@ describe('async cleanup ownership', () => {
     }
   )
 })
+
+describe('propagation consistency', () => {
+  it('never shows an effect a stale computed alongside its fresh source', () => {
+    const count = signal(1)
+    const doubled = computed(() => count.value * 2)
+    const seen: string[] = []
+
+    effect(() => {
+      seen.push(`${count.value}/${doubled.value}`)
+    })
+
+    count.value = 2
+
+    expect(seen).toEqual(['1/2', '2/4'])
+  })
+
+  it('runs a diamond-dependency effect once per unbatched write', () => {
+    const source = signal(1)
+    const left = computed(() => source.value * 2)
+    const right = computed(() => source.value * 3)
+    const seen: string[] = []
+
+    effect(() => {
+      seen.push(`${left.value}/${right.value}`)
+    })
+
+    source.value = 2
+
+    expect(seen).toEqual(['2/3', '4/6'])
+  })
+
+  it('recomputes a shared computed once per write in a diamond', () => {
+    const source = signal(1)
+    const compute = vi.fn(() => source.value + 1)
+    const base = computed(compute)
+    const left = computed(() => base.value * 2)
+    const right = computed(() => base.value * 3)
+
+    effect(() => {
+      void left.value
+      void right.value
+    })
+
+    expect(compute).toHaveBeenCalledTimes(1)
+
+    source.value = 2
+
+    expect(compute).toHaveBeenCalledTimes(2)
+  })
+
+  it('does not re-run effects when a computed recomputes to an equal value', () => {
+    const count = signal(2)
+    const isEven = computed(() => count.value % 2 === 0)
+    const seen: boolean[] = []
+
+    effect(() => {
+      seen.push(isEven.value)
+    })
+
+    count.value = 4
+    count.value = 6
+    expect(seen).toEqual([true])
+
+    count.value = 7
+    expect(seen).toEqual([true, false])
+  })
+
+  it('stops propagation at an unchanged computed in a chain', () => {
+    const count = signal(1)
+    const isPositive = computed(() => count.value > 0)
+    const downstream = vi.fn(() => (isPositive.value ? 'yes' : 'no'))
+    const label = computed(downstream)
+    const seen: string[] = []
+
+    effect(() => {
+      seen.push(label.value)
+    })
+
+    count.value = 2
+    count.value = 3
+
+    expect(seen).toEqual(['yes'])
+    expect(downstream).toHaveBeenCalledTimes(1)
+  })
+
+  it('still re-runs when another dependency changes beside an unchanged computed', () => {
+    const count = signal(2)
+    const isEven = computed(() => count.value % 2 === 0)
+    const seen: string[] = []
+
+    effect(() => {
+      seen.push(`${count.value}:${isEven.value}`)
+    })
+
+    count.value = 4
+
+    expect(seen).toEqual(['2:true', '4:true'])
+  })
+
+  it('does not re-run an asyncEffect when a computed recomputes to an equal value', () => {
+    const count = signal(2)
+    const isEven = computed(() => count.value % 2 === 0)
+    const runs = vi.fn()
+
+    asyncEffect(() => {
+      void isEven.value
+      runs()
+    })
+
+    count.value = 4
+
+    expect(runs).toHaveBeenCalledTimes(1)
+  })
+
+  it('re-runs an effect after a throwing computed recovers', () => {
+    const count = signal(0)
+    const checked = computed(() => {
+      if (count.value === 1) {
+        throw new Error('bad value')
+      }
+      return count.value * 10
+    })
+    const seen: number[] = []
+    const errors: unknown[] = []
+
+    effect(
+      () => {
+        seen.push(checked.value)
+      },
+      { onError: (err) => errors.push(err) }
+    )
+
+    count.value = 1
+    expect(errors).toHaveLength(1)
+
+    count.value = 2
+    expect(seen).toEqual([0, 20])
+  })
+})
+
+function subscriberCount(source: object): number {
+  return (source as { node: { subscribers: Set<unknown> } }).node.subscribers.size
+}
+
+describe('computed subscription lifecycle', () => {
+  it('does not subscribe to sources while unobserved', () => {
+    const count = signal(1)
+    const doubled = computed(() => count.value * 2)
+
+    expect(doubled.value).toBe(2)
+    expect(subscriberCount(count)).toBe(0)
+
+    count.value = 5
+    expect(doubled.value).toBe(10)
+    expect(subscriberCount(count)).toBe(0)
+  })
+
+  it('reuses the cached value of an unobserved computed until a source changes', () => {
+    const count = signal(1)
+    const compute = vi.fn(() => count.value * 2)
+    const doubled = computed(compute)
+
+    void doubled.value
+    void doubled.value
+    expect(compute).toHaveBeenCalledTimes(1)
+
+    count.value = 2
+    void doubled.value
+    void doubled.value
+    expect(compute).toHaveBeenCalledTimes(2)
+  })
+
+  it('releases source subscriptions through a chain when the last effect stops', () => {
+    const count = signal(1)
+    const doubled = computed(() => count.value * 2)
+    const label = computed(() => `n=${doubled.value}`)
+    const seen: string[] = []
+
+    const stop = effect(() => {
+      seen.push(label.value)
+    })
+
+    expect(subscriberCount(count)).toBe(1)
+    expect(subscriberCount(doubled)).toBe(1)
+
+    stop()
+
+    expect(subscriberCount(count)).toBe(0)
+    expect(subscriberCount(doubled)).toBe(0)
+    expect(subscriberCount(label)).toBe(0)
+
+    count.value = 2
+    expect(label.value).toBe('n=4')
+    expect(seen).toEqual(['n=2'])
+  })
+
+  it('keeps sources subscribed while any observer remains', () => {
+    const count = signal(1)
+    const doubled = computed(() => count.value * 2)
+    const first: number[] = []
+    const second: number[] = []
+
+    const stopFirst = effect(() => {
+      first.push(doubled.value)
+    })
+    effect(() => {
+      second.push(doubled.value)
+    })
+
+    stopFirst()
+    count.value = 2
+
+    expect(first).toEqual([2])
+    expect(second).toEqual([2, 4])
+    expect(subscriberCount(count)).toBe(1)
+  })
+
+  it('reacts again after an unobserved computed becomes observed', () => {
+    const count = signal(1)
+    const doubled = computed(() => count.value * 2)
+
+    void doubled.value
+    count.value = 2
+
+    const seen: number[] = []
+    effect(() => {
+      seen.push(doubled.value)
+    })
+
+    count.value = 3
+
+    expect(seen).toEqual([4, 6])
+  })
+
+  it('unsubscribes from dependencies dropped by a re-run', () => {
+    const useA = signal(true)
+    const a = signal(1)
+    const b = signal(2)
+    const picked = computed(() => (useA.value ? a.value : b.value))
+
+    effect(() => {
+      void picked.value
+    })
+
+    expect(subscriberCount(a)).toBe(1)
+    expect(subscriberCount(b)).toBe(0)
+
+    useA.value = false
+
+    expect(subscriberCount(a)).toBe(0)
+    expect(subscriberCount(b)).toBe(1)
+  })
+
+  it('does not resubscribe an effect stopped during its own run', () => {
+    const count = signal(0)
+    let stop: () => void = () => {}
+
+    stop = effect(() => {
+      if (count.value > 0) {
+        stop()
+        void count.value
+      }
+    })
+
+    count.value = 1
+
+    expect(subscriberCount(count)).toBe(0)
+  })
+})
+
+describe('computed write guard', () => {
+  it('throws when a computed writes a signal', () => {
+    const count = signal(0)
+    const other = signal(0)
+    const leaky = computed(() => {
+      other.value = count.value + 1
+      return count.value
+    })
+
+    expect(() => leaky.value).toThrow('Signals cannot be written inside a computed.')
+    expect(other.value).toBe(0)
+  })
+
+  it('throws even when the written value is unchanged', () => {
+    const count = signal(0)
+    const leaky = computed(() => {
+      count.value = 0
+      return 1
+    })
+
+    expect(() => leaky.value).toThrow('Signals cannot be written inside a computed.')
+  })
+
+  it('still allows effects to write signals', () => {
+    const count = signal(1)
+    const mirror = signal(0)
+
+    effect(() => {
+      mirror.value = count.value
+    })
+
+    count.value = 2
+    expect(mirror.value).toBe(2)
+  })
+})

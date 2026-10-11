@@ -14,17 +14,60 @@ function withTracking(observer, fn) {
     activeObserver = previous;
   }
 }
-function clearTracking(observer) {
-  for (const node of observer.nodes) {
-    node.subscribers.delete(observer);
-  }
+function runTracked(observer, fn) {
+  const previousNodes = Array.from(observer.nodes.keys());
   observer.nodes.clear();
+  try {
+    return withTracking(observer, fn);
+  } finally {
+    for (const node of previousNodes) {
+      if (!observer.nodes.has(node)) {
+        node.unsubscribe(observer);
+      }
+    }
+  }
+}
+function clearTracking(observer) {
+  unsubscribeTracked(observer);
+  observer.nodes.clear();
+}
+function subscribeTracked(observer) {
+  for (const node of observer.nodes.keys()) {
+    node.subscribe(observer);
+  }
+}
+function unsubscribeTracked(observer) {
+  for (const node of observer.nodes.keys()) {
+    node.unsubscribe(observer);
+  }
+}
+var writeVersion = 0;
+function getWriteVersion() {
+  return writeVersion;
+}
+function assertWritable() {
+  if (activeObserver?.derived) {
+    throw new Error("Signals cannot be written inside a computed.");
+  }
+}
+function recordWrite() {
+  writeVersion++;
+}
+function dependenciesChanged(observer) {
+  for (const [node, seenVersion] of observer.nodes) {
+    try {
+      node.refresh();
+    } catch {
+      return true;
+    }
+    if (node.version !== seenVersion) {
+      return true;
+    }
+  }
+  return false;
 }
 var batchDepth = 0;
 var pendingEffects = /* @__PURE__ */ new Set();
-function isBatching() {
-  return batchDepth > 0;
-}
 function queueEffect(flush) {
   pendingEffects.add(flush);
 }
@@ -51,16 +94,40 @@ function endBatch() {
 
 // src/internals/node.ts
 var Node = class {
-  constructor() {
+  constructor(hooks = {}) {
+    this.hooks = hooks;
     this.subscribers = /* @__PURE__ */ new Set();
+    this.version = 0;
+  }
+  refresh() {
+    this.hooks.refresh?.();
   }
   track() {
     const observer = getActiveObserver();
     if (!observer) {
       return;
     }
+    observer.nodes.set(this, this.version);
+    if (observer.watched) {
+      this.subscribe(observer);
+    }
+  }
+  subscribe(observer) {
+    if (this.subscribers.has(observer)) {
+      return;
+    }
     this.subscribers.add(observer);
-    observer.nodes.add(this);
+    if (this.subscribers.size === 1) {
+      this.hooks.watch?.();
+    }
+  }
+  unsubscribe(observer) {
+    if (!this.subscribers.delete(observer)) {
+      return;
+    }
+    if (this.subscribers.size === 0) {
+      this.hooks.unwatch?.();
+    }
   }
   trigger() {
     const subscribers = Array.from(this.subscribers);
@@ -75,7 +142,8 @@ var AsyncEffectRunner = class {
   constructor(callback, options = {}) {
     this.callback = callback;
     this.options = options;
-    this.nodes = /* @__PURE__ */ new Set();
+    this.nodes = /* @__PURE__ */ new Map();
+    this.derived = false;
     this.cleanups = [];
     this.active = true;
     this.running = false;
@@ -83,21 +151,20 @@ var AsyncEffectRunner = class {
     this.controller = null;
     this.run();
   }
+  get watched() {
+    return this.active;
+  }
   notify() {
     if (!this.active || this.queued) {
       return;
     }
-    if (isBatching()) {
-      this.queued = true;
-      queueEffect(() => {
-        this.queued = false;
-        if (this.active) {
-          this.run();
-        }
-      });
-      return;
-    }
-    this.run();
+    this.queued = true;
+    queueEffect(() => {
+      this.queued = false;
+      if (this.active && dependenciesChanged(this)) {
+        this.run();
+      }
+    });
   }
   stop() {
     if (!this.active) {
@@ -127,10 +194,9 @@ var AsyncEffectRunner = class {
     try {
       this.controller?.abort();
       this.runCleanup();
-      clearTracking(this);
       const controller = new AbortController();
       this.controller = controller;
-      const result = withTracking(
+      const result = runTracked(
         this,
         () => this.callback({
           signal: controller.signal,
@@ -199,36 +265,72 @@ function batch(fn) {
 var ComputedImpl = class {
   constructor(computeValue) {
     this.computeValue = computeValue;
-    this.nodes = /* @__PURE__ */ new Set();
-    this.node = new Node();
+    this.nodes = /* @__PURE__ */ new Map();
+    this.derived = true;
+    this.node = new Node({
+      refresh: () => this.refresh(),
+      watch: () => subscribeTracked(this),
+      unwatch: () => {
+        unsubscribeTracked(this);
+        this.notified = false;
+      }
+    });
+    this.initialized = false;
     this.dirty = true;
+    this.notified = false;
     this.evaluating = false;
+    this.checkedAtWrite = -1;
+  }
+  get watched() {
+    return this.node.subscribers.size > 0;
   }
   get value() {
-    this.node.track();
-    if (this.dirty) {
-      this.recompute();
+    try {
+      this.refresh();
+    } finally {
+      this.node.track();
     }
     return this.cachedValue;
   }
   notify() {
-    if (this.dirty) {
+    if (this.notified) {
       return;
     }
-    this.dirty = true;
+    this.notified = true;
     this.node.trigger();
   }
   dispose() {
     clearTracking(this);
   }
-  recompute() {
+  refresh() {
     if (this.evaluating) {
       throw new Error("Circular computed dependencies are not supported.");
     }
-    this.evaluating = true;
-    clearTracking(this);
+    if (!this.dirty && !this.isStale()) {
+      return;
+    }
     try {
-      this.cachedValue = withTracking(this, this.computeValue);
+      if (this.dirty || dependenciesChanged(this)) {
+        this.recompute();
+      }
+      this.checkedAtWrite = getWriteVersion();
+    } finally {
+      this.notified = false;
+    }
+  }
+  isStale() {
+    return this.watched ? this.notified : this.checkedAtWrite !== getWriteVersion();
+  }
+  recompute() {
+    this.evaluating = true;
+    this.dirty = true;
+    try {
+      const nextValue = runTracked(this, this.computeValue);
+      if (!this.initialized || !Object.is(this.cachedValue, nextValue)) {
+        this.cachedValue = nextValue;
+        this.initialized = true;
+        this.node.version++;
+      }
       this.dirty = false;
     } finally {
       this.evaluating = false;
@@ -244,28 +346,28 @@ var EffectRunner = class {
   constructor(callback, options = {}) {
     this.callback = callback;
     this.options = options;
-    this.nodes = /* @__PURE__ */ new Set();
+    this.nodes = /* @__PURE__ */ new Map();
+    this.derived = false;
     this.cleanups = [];
     this.active = true;
     this.running = false;
     this.queued = false;
     this.run();
   }
+  get watched() {
+    return this.active;
+  }
   notify() {
     if (!this.active || this.queued) {
       return;
     }
-    if (isBatching()) {
-      this.queued = true;
-      queueEffect(() => {
-        this.queued = false;
-        if (this.active) {
-          this.run();
-        }
-      });
-      return;
-    }
-    this.run();
+    this.queued = true;
+    queueEffect(() => {
+      this.queued = false;
+      if (this.active && dependenciesChanged(this)) {
+        this.run();
+      }
+    });
   }
   stop() {
     if (!this.active) {
@@ -293,8 +395,7 @@ var EffectRunner = class {
     this.running = true;
     try {
       this.runCleanup();
-      clearTracking(this);
-      withTracking(
+      runTracked(
         this,
         () => this.callback((cleanup) => {
           this.cleanups.push(cleanup);
@@ -342,11 +443,19 @@ var SignalImpl = class {
     return this.currentValue;
   }
   set value(nextValue) {
+    assertWritable();
     if (Object.is(this.currentValue, nextValue)) {
       return;
     }
     this.currentValue = nextValue;
-    this.node.trigger();
+    this.node.version++;
+    recordWrite();
+    startBatch();
+    try {
+      this.node.trigger();
+    } finally {
+      endBatch();
+    }
   }
   peek() {
     return this.currentValue;

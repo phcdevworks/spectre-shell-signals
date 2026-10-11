@@ -1,4 +1,12 @@
-import { clearTracking, type TrackingObserver, withTracking } from './internals/tracking'
+import {
+  clearTracking,
+  dependenciesChanged,
+  getWriteVersion,
+  runTracked,
+  subscribeTracked,
+  type TrackingObserver,
+  unsubscribeTracked,
+} from './internals/tracking'
 import { Node } from './internals/node'
 
 export interface Computed<T> {
@@ -7,31 +15,46 @@ export interface Computed<T> {
 }
 
 class ComputedImpl<T> implements Computed<T>, TrackingObserver {
-  readonly nodes = new Set<Node>()
-  readonly node = new Node()
+  readonly nodes = new Map<Node, number>()
+  readonly derived = true
+  readonly node = new Node({
+    refresh: () => this.refresh(),
+    watch: () => subscribeTracked(this),
+    unwatch: () => {
+      unsubscribeTracked(this)
+      this.notified = false
+    },
+  })
 
   private cachedValue!: T
+  private initialized = false
   private dirty = true
+  private notified = false
   private evaluating = false
+  private checkedAtWrite = -1
 
   constructor(private readonly computeValue: () => T) {}
 
-  get value(): T {
-    this.node.track()
+  get watched(): boolean {
+    return this.node.subscribers.size > 0
+  }
 
-    if (this.dirty) {
-      this.recompute()
+  get value(): T {
+    try {
+      this.refresh()
+    } finally {
+      this.node.track()
     }
 
     return this.cachedValue
   }
 
   notify(): void {
-    if (this.dirty) {
+    if (this.notified) {
       return
     }
 
-    this.dirty = true
+    this.notified = true
     this.node.trigger()
   }
 
@@ -39,16 +62,40 @@ class ComputedImpl<T> implements Computed<T>, TrackingObserver {
     clearTracking(this)
   }
 
-  private recompute(): void {
+  private refresh(): void {
     if (this.evaluating) {
       throw new Error('Circular computed dependencies are not supported.')
     }
 
-    this.evaluating = true
-    clearTracking(this)
+    if (!this.dirty && !this.isStale()) {
+      return
+    }
 
     try {
-      this.cachedValue = withTracking(this, this.computeValue)
+      if (this.dirty || dependenciesChanged(this)) {
+        this.recompute()
+      }
+      this.checkedAtWrite = getWriteVersion()
+    } finally {
+      this.notified = false
+    }
+  }
+
+  private isStale(): boolean {
+    return this.watched ? this.notified : this.checkedAtWrite !== getWriteVersion()
+  }
+
+  private recompute(): void {
+    this.evaluating = true
+    this.dirty = true
+
+    try {
+      const nextValue = runTracked(this, this.computeValue)
+      if (!this.initialized || !Object.is(this.cachedValue, nextValue)) {
+        this.cachedValue = nextValue
+        this.initialized = true
+        this.node.version++
+      }
       this.dirty = false
     } finally {
       this.evaluating = false

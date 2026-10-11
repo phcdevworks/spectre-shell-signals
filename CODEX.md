@@ -38,8 +38,9 @@ At the start of any Codex session:
 - Preserve the package boundary: reactive primitives only - `signal`, `computed`,
   `effect`, `asyncEffect`, and `batch`.
 - Do not broaden architecture or introduce new product scope.
-- Commit and push directly to `main` within Codex's scope of work. Cut
-  release-ready releases under the standing authority in `AGENTS.md`.
+- Commit and push directly to `main` within Codex's scope of work. Cut a
+  release only when Bradley Potts says to get this repo ready for release;
+  a commit request commits and pushes only.
   npm publishing remains Bradley Potts's responsibility.
 
 ## Codex Owns
@@ -125,8 +126,8 @@ or overwrite changes it did not make. Existing local edits are assumed to
 belong to Bradley Potts, Claude Code, or another active process.
 
 Codex validates changes, then stages, commits, and pushes them within its own
-scope of work directly to `main`. Codex creates tags and GitHub Releases under
-the standing release authority; npm publishing stays with Bradley Potts.
+scope of work directly to `main`. Codex creates tags and GitHub Releases only
+when Bradley Potts says to get this repo ready for release; npm publishing stays with Bradley Potts.
 Pull requests require Bradley's explicit exception.
 
 ## Handoff Format

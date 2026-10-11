@@ -1,6 +1,6 @@
 {
   "name": "@phcdevworks/spectre-shell-signals",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "@phcdevworks/spectre-shell-signals is the communication layer of the Spectre application shell. It provides shared reactive signals for coordinating state and events across independently developed modules.",
   "keywords": [
     "phcdevworks",
@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/phcdevworks/spectre-shell-signals#readme",
   "type": "module",
-  "packageManager": "npm@12.0.2",
+  "packageManager": "npm@12.2.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -77,17 +77,17 @@
   },
   "devDependencies": {
     "@phcdevworks/spectre-manifest": "^1.2.0",
-    "@types/node": "^26.6.2",
-    "@typescript-eslint/eslint-plugin": "^8.70.0",
-    "@typescript-eslint/parser": "^8.70.0",
+    "@types/node": "^26.6.5",
+    "@typescript-eslint/eslint-plugin": "^8.71.1",
+    "@typescript-eslint/parser": "^8.71.1",
     "@typescript/native": "npm:typescript@^7.0.2",
-    "eslint": "^10.11.0",
+    "eslint": "^10.12.0",
     "jiti": "^2.7.0",
-    "prettier": "^3.9.8",
+    "prettier": "^3.9.10",
     "tsup": "^8.5.1",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
-    "typescript-eslint": "^8.70.0",
-    "vitest": "^5.0.1"
+    "typescript-eslint": "^8.71.1",
+    "vitest": "^5.0.3"
   },
   "allowScripts": {
     "esbuild@0.27.7": true

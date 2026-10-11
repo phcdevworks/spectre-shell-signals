@@ -16,7 +16,7 @@ primitive foundation for the Spectre stack, integrated by `spectre-tokens`,
 | Project team           | `project-shell`                      |
 | Repository role        | Spectre reactive primitives          |
 | Package/artifact       | `@phcdevworks/spectre-shell-signals` |
-| Current version/status | 1.4.0                                |
+| Current version/status | 1.5.0                                |
 
 ## Standard Workflow
 
@@ -36,6 +36,7 @@ primitive foundation for the Spectre stack, integrated by `spectre-tokens`,
 | Codex       | [CODEX.md](CODEX.md)         |
 | Copilot     | [COPILOT.md](COPILOT.md)     |
 | Jules       | [JULES.md](JULES.md)         |
+| Grok        | [GROK.md](GROK.md)           |
 | Roadmap     | [ROADMAP.md](ROADMAP.md)     |
 | Todo        | [TODO.md](TODO.md)           |
 | Changelog   | [CHANGELOG.md](CHANGELOG.md) |
@@ -72,10 +73,14 @@ Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks
 
 - Mutable signals through a `.value` getter and setter, and a `.peek()` method for untracked reads.
 - Lazily evaluated computed values with dependency tracking.
+- Glitch-free propagation: effects never observe a mix of fresh and stale
+  values, and a computed that recomputes to an equal (`Object.is`) value does
+  not re-run its dependents.
 - Synchronous effects with cleanup registration.
 - Cancelable async effects with synchronous dependency tracking.
 - Batched subscriber notification across multiple signal writes.
-- Explicit disposal for computed values and effects.
+- Automatic release of computed subscriptions once nothing observes them;
+  explicit `stop()` for effects.
 - A deliberately small public API for shared Spectre runtime state.
 
 ## Installation
@@ -99,13 +104,12 @@ const stop = effect((onCleanup) => {
 
 count.value = 2
 stop()
-doubled.dispose()
 ```
 
 ## API
 
 - `signal(initialValue)` returns a mutable signal with `.value` (tracked read/write) and `.peek()` (untracked read).
-- `computed(fn)` returns a cached computed value with `dispose()`.
+- `computed(fn)` returns a cached, read-only derived value. It subscribes to its sources only while an effect or another observed computed reads it, so no manual disposal is required; `dispose()` remains available to release subscriptions early. Writing a signal inside `fn` throws.
 - `effect(fn, options?)` runs immediately, reruns when tracked dependencies change, and returns a stop function. Pass `{ onError }` to handle errors without stopping the effect.
 - `batch(fn)` defers subscriber notification until `fn` returns, so effects run once per batch rather than once per write.
 - `asyncEffect(fn, options?)` runs immediately, reruns when tracked dependencies change, and returns a stop function. Dependencies must be read synchronously, before the first `await`. Each run gets a fresh `AbortSignal`, aborted when the effect re-runs or stops. Pass `{ onError }` to handle errors without stopping the effect.
@@ -226,7 +230,7 @@ Useful scripts:
 
 AI-agent coordination starts in [AGENTS.md](./AGENTS.md), with companion
 guidance in [CLAUDE.md](./CLAUDE.md), [CODEX.md](./CODEX.md),
-[COPILOT.md](./COPILOT.md), [JULES.md](./JULES.md), and
+[COPILOT.md](./COPILOT.md), [JULES.md](./JULES.md), [GROK.md](./GROK.md), and
 [.github/copilot-instructions.md](./.github/copilot-instructions.md).
 
 ### Troubleshooting

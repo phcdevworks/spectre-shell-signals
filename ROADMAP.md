@@ -19,13 +19,14 @@ this file does not restate delivered work.
 | 2     | Mature operations — `signal.peek()`, `batch()`, `EffectOptions.onError`, computed stability audit, ecosystem manifest, 35-case test suite                                                    | 1.1.0      |
 | 3     | Integration & adoption — `docs/integration/` for spectre-tokens/spectre-ui/spectre-ui-astro, integration guide, versioning policy, `check:ecosystem`                                         | 1.2.0      |
 | 4 P0  | `asyncEffect()` — cancelable async effect variant, sync-only dependency tracking, per-run `AbortSignal`. Triggered by a proven downstream need; see `docs/decisions/async-effect-support.md` | 1.3.0      |
+| 5     | Propagation correctness — glitch-free mark-then-flush propagation, computed equality cutoff, automatic computed unsubscription, write guard inside `computed`; no new exports                | 1.5.0      |
 
 ---
 
 ## What's Next
 
-No active phase is currently open. New work opens on demand, when a
-downstream consumer surfaces a concrete need — see [TODO.md](TODO.md).
+No active phase is currently open. Plan the next one proactively, without
+waiting for a downstream request — see [TODO.md](TODO.md).
 
 ---
 

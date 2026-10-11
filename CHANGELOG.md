@@ -4,8 +4,35 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-10-12
+
+**Release Title:** Propagation Correctness
+
+Contract change type: semantic change
+
+### Fixed
+
+- Make propagation glitch-free. A signal write first marks every dependent,
+  then flushes effects, so an effect that reads a signal and a computed
+  derived from it, or two computeds over one source (a diamond), runs once per
+  write with consistent values. Previously this held only inside `batch()`;
+  unbatched writes could run an effect with a stale computed and then run it
+  again.
+- Stop propagation at unchanged computeds. A computed that recomputes to an
+  `Object.is`-equal value no longer re-runs dependent effects or computeds,
+  matching the equality check `signal` already applies to writes.
+- Release computed subscriptions automatically. A computed subscribes to its
+  sources only while an effect or another observed computed reads it, and
+  unsubscribes through the whole chain when its last observer stops, so
+  unobserved computeds no longer leak until `dispose()`. Unobserved reads stay
+  correct by checking source versions on access. Effects that switch
+  dependencies now unsubscribe from the ones they dropped.
+
 ### Changed
 
+- Writing a signal inside a `computed` now throws
+  `Signals cannot be written inside a computed.` Computeds are pure
+  derivations; move writes into an `effect`.
 - Standardized the package summary against the approved PHCDevworks product
   description.
 
@@ -147,7 +174,9 @@ Release Title: Initial Reactive Primitives Foundation
 - **Tooling**: Added TypeScript build output with `tsup`, Vitest coverage for reactive semantics, and CI validation for build, test, and type-check workflows.
 - **Documentation**: Added package README, contribution guidance, and repository metadata aligned to the scoped package and its narrow reactivity-only ownership.
 
-[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.3.0...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.4.0...v1.5.0
+[1.4.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.0.0...v1.1.0

@@ -30,6 +30,7 @@ skills, plugins, templates, or general-purpose workflows.
 | ChatGPT | Strategy, coordination, prompt design, and external review | Support only |
 | GitHub Copilot | Development assistance | [COPILOT.md](COPILOT.md) |
 | Google Jules | Bounded automated maintenance | [JULES.md](JULES.md) |
+| xAI Grok       | Development assistance | [GROK.md](GROK.md)       |
 
 **Claude Code has zero git access in this repository, no exceptions**,
 effective 2026-08-13 by explicit direction from Bradley Potts. Claude Code
@@ -47,10 +48,10 @@ own guide ([CODEX.md](CODEX.md), [COPILOT.md](COPILOT.md),
 [JULES.md](JULES.md)). OpenAI Codex additionally now executes git operations
 for Claude Code's handed-off work in this repo. **OpenAI Codex** additionally
 has release authority:
-Codex cuts releases autonomously — version bump, changelog versioning,
-`v<version>` git tag, and GitHub Release publish via `gh` — for every
-release-ready `CHANGELOG.md [Unreleased]` section, without waiting for
-per-release approval; see `CODEX.md` "Release-Readiness Checklist" for the
+Codex cuts a release — version bump, changelog versioning, `v<version>` git
+tag, and GitHub Release publish via `gh` — only when Bradley Potts says to get
+this repo ready for release; a plain commit request commits and pushes only,
+with no version bump, tag, or release; see `CODEX.md` "Release-Readiness Checklist" for the
 full procedure. **npm publishing remains Bradley Potts's sole authority** —
 no agent runs `npm publish`. Bradley Potts retains ultimate ownership and
 can revoke or narrow any of this at any time. This grant covers git and
@@ -58,8 +59,14 @@ release operations within each agent's own scope of work as defined above —
 it does not expand what any agent is authorized to decide otherwise.
 ChatGPT has no repository access and is excluded.
 
+**xAI Grok (including Grok Bot, the same agent running automatically) has
+commit and push authority** here, effective 2026-09-26 by explicit direction
+from Bradley Potts — see [GROK.md](GROK.md) "Git Authority." Grok commits and
+pushes its own work only: it does not create or push tags, cut releases, merge
+pull requests, or publish packages.
+
 **A commit is not finished until it is pushed.** Every agent with git
-authority (OpenAI Codex, GitHub Copilot, Google Jules) must push immediately
+authority (OpenAI Codex, GitHub Copilot, Google Jules, xAI Grok) must push immediately
 after committing (`git push`, including any needed `-u`/tags) as part of the
 same action — never leave a commit sitting local only. This closes a
 recurring gap where an agent commits and stops short of pushing, leaving work
@@ -67,7 +74,7 @@ stranded on the machine.
 
 **Commit authorship is human-only.** No agent adds itself (or any other AI)
 as a commit author or co-author — no `Co-Authored-By: Claude`/`Codex`/
-`Copilot`/`Jules` trailer, no author-field changes, in this repository. The
+`Copilot`/`Jules`/`Grok` trailer, no author-field changes, in this repository. The
 git author/committer stays Bradley Potts (or the configured human git user)
 on every commit, regardless of which agent performed the work. Push and tag
 authority above does not extend to authorship attribution.
@@ -116,6 +123,7 @@ package of the Spectre shell system.
 | `CLAUDE.md`                        | Claude Code                  | Lead-development guide for implementation, architecture, and tests |
 | `CODEX.md`                         | OpenAI Codex                 | Release-readiness, production stabilization, and config posture    |
 | `JULES.md`                         | Google Jules                 | Bounded automated maintenance guidance                              |
+| `GROK.md`                          | xAI Grok                     | Development assistance and git authority                            |
 | `COPILOT.md`                       | GitHub Copilot               | Role summary and development boundaries for GitHub Copilot         |
 | `.github/copilot-instructions.md`  | GitHub Copilot               | In-editor suggestion boundaries                                     |
 | `.claude/settings.json`            | Claude Code runtime           | Local command denies for commit, push, tag, merge, and publish     |

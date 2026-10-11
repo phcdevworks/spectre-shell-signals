@@ -1,10 +1,10 @@
 import {
   type CleanupRegistrar,
   clearTracking,
-  isBatching,
+  dependenciesChanged,
   queueEffect,
+  runTracked,
   type TrackingObserver,
-  withTracking,
 } from './internals/tracking'
 
 export type { CleanupRegistrar }
@@ -19,7 +19,8 @@ export interface EffectOptions {
 }
 
 class EffectRunner implements TrackingObserver {
-  readonly nodes = new Set<Node>()
+  readonly nodes = new Map<Node, number>()
+  readonly derived = false
 
   private cleanups: EffectCleanup[] = []
   private active = true
@@ -33,23 +34,22 @@ class EffectRunner implements TrackingObserver {
     this.run()
   }
 
+  get watched(): boolean {
+    return this.active
+  }
+
   notify(): void {
     if (!this.active || this.queued) {
       return
     }
 
-    if (isBatching()) {
-      this.queued = true
-      queueEffect(() => {
-        this.queued = false
-        if (this.active) {
-          this.run()
-        }
-      })
-      return
-    }
-
-    this.run()
+    this.queued = true
+    queueEffect(() => {
+      this.queued = false
+      if (this.active && dependenciesChanged(this)) {
+        this.run()
+      }
+    })
   }
 
   stop(): void {
@@ -82,8 +82,7 @@ class EffectRunner implements TrackingObserver {
     this.running = true
     try {
       this.runCleanup()
-      clearTracking(this)
-      withTracking(this, () =>
+      runTracked(this, () =>
         this.callback((cleanup) => {
           this.cleanups.push(cleanup)
         })

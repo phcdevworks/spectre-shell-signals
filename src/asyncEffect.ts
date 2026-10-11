@@ -1,10 +1,10 @@
 import {
   type CleanupRegistrar,
   clearTracking,
-  isBatching,
+  dependenciesChanged,
   queueEffect,
+  runTracked,
   type TrackingObserver,
-  withTracking,
 } from './internals/tracking'
 import { Node } from './internals/node'
 import type { EffectCleanup, StopEffect } from './effect'
@@ -21,7 +21,8 @@ export interface AsyncEffectOptions {
 }
 
 class AsyncEffectRunner implements TrackingObserver {
-  readonly nodes = new Set<Node>()
+  readonly nodes = new Map<Node, number>()
+  readonly derived = false
 
   private cleanups: EffectCleanup[] = []
   private active = true
@@ -36,23 +37,22 @@ class AsyncEffectRunner implements TrackingObserver {
     this.run()
   }
 
+  get watched(): boolean {
+    return this.active
+  }
+
   notify(): void {
     if (!this.active || this.queued) {
       return
     }
 
-    if (isBatching()) {
-      this.queued = true
-      queueEffect(() => {
-        this.queued = false
-        if (this.active) {
-          this.run()
-        }
-      })
-      return
-    }
-
-    this.run()
+    this.queued = true
+    queueEffect(() => {
+      this.queued = false
+      if (this.active && dependenciesChanged(this)) {
+        this.run()
+      }
+    })
   }
 
   stop(): void {
@@ -87,11 +87,10 @@ class AsyncEffectRunner implements TrackingObserver {
     try {
       this.controller?.abort()
       this.runCleanup()
-      clearTracking(this)
 
       const controller = new AbortController()
       this.controller = controller
-      const result = withTracking(this, () =>
+      const result = runTracked(this, () =>
         this.callback({
           signal: controller.signal,
           onCleanup: (cleanup) => {
