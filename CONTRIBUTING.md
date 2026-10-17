@@ -12,7 +12,7 @@ Thanks for helping improve `@phcdevworks/spectre-shell-signals`. This package ow
 ## Project Standards
 
 - Keep config files in TypeScript when the tool supports it.
-- Keep the public API limited to `signal`, `computed`, `effect`, `asyncEffect`, `batch`, and their types.
+- Keep the public API limited to `signal`, `computed`, `effect`, `asyncEffect`, `batch`, `untracked`, and their types.
 - Preserve synchronous dependency tracking semantics.
 - Add or update tests before changing cleanup, disposal, or notification behavior.
 

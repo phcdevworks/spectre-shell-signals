@@ -1,6 +1,6 @@
 {
   "name": "@phcdevworks/spectre-shell-signals",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "@phcdevworks/spectre-shell-signals is the communication layer of the Spectre application shell. It provides shared reactive signals for coordinating state and events across independently developed modules.",
   "keywords": [
     "phcdevworks",
@@ -64,6 +64,7 @@
     "format:md": "prettier --write \"**/*.md\"",
     "format:md:check": "prettier --check \"**/*.md\"",
     "test": "vitest run",
+    "bench": "npm run build && vitest bench --run --reporter=verbose",
     "check:ecosystem": "spectre-manifest-validate spectre.manifest.json && spectre-manifest-check spectre.manifest.json .",
     "check:version-sync": "node --experimental-strip-types scripts/check-readme-version.ts",
     "check": "npm run typecheck && npm run lint && npm run build && npm run test && npm run check:version-sync && npm run check:ecosystem",
@@ -76,20 +77,20 @@
     "typescript": "^5.0 || ^6.0 || ^7.0"
   },
   "devDependencies": {
-    "@phcdevworks/spectre-manifest": "^1.2.0",
+    "@phcdevworks/spectre-manifest": "^2.0.0",
     "@types/node": "^26.6.5",
-    "@typescript-eslint/eslint-plugin": "^8.71.1",
-    "@typescript-eslint/parser": "^8.71.1",
+    "@typescript-eslint/eslint-plugin": "^8.71.2",
+    "@typescript-eslint/parser": "^8.71.2",
     "@typescript/native": "npm:typescript@^7.0.2",
-    "eslint": "^10.12.0",
+    "eslint": "^10.13.0",
     "jiti": "^2.7.0",
     "prettier": "^3.9.10",
-    "tsup": "^8.5.1",
+    "tsup": "^9.0.0",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
-    "typescript-eslint": "^8.71.1",
-    "vitest": "^5.0.3"
+    "typescript-eslint": "^8.71.2",
+    "vitest": "^5.0.5"
   },
   "allowScripts": {
-    "esbuild@0.27.7": true
+    "esbuild@0.28.2": true
   }
 }

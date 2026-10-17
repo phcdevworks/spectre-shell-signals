@@ -36,7 +36,7 @@ At the start of any Codex session:
 - Work from `AGENTS.md` first, then this file, then task-specific instructions.
 - Keep changes conservative, focused, production-safe, and easy to review.
 - Preserve the package boundary: reactive primitives only - `signal`, `computed`,
-  `effect`, `asyncEffect`, and `batch`.
+  `effect`, `asyncEffect`, `batch`, and `untracked`.
 - Do not broaden architecture or introduce new product scope.
 - Commit and push directly to `main` within Codex's scope of work. Cut a
   release only when Bradley Potts says to get this repo ready for release;
@@ -76,7 +76,7 @@ Before cutting a release:
    check:version-sync + check:ecosystem).
 2. Confirm CI is green on the release commit or branch.
 3. Verify `README.md` matches the public API: `signal`, `computed`, `effect`,
-   `asyncEffect`, `batch`, and exported types.
+   `asyncEffect`, `batch`, `untracked`, and exported types.
 4. Verify `CHANGELOG.md` follows Keep a Changelog and has no unattributed
    release entries.
 5. Verify `package.json` semver matches the release intent.

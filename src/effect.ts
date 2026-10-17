@@ -8,11 +8,15 @@ import {
 } from './internals/tracking'
 
 export type { CleanupRegistrar }
+import { supportsDispose } from './internals/dispose'
 import { Node } from './internals/node'
 
 export type EffectCleanup = () => void
 export type EffectCallback = (onCleanup: CleanupRegistrar) => void
-export type StopEffect = () => void
+export interface StopEffect {
+  (): void
+  [Symbol.dispose](): void
+}
 
 export interface EffectOptions {
   onError?: (err: unknown) => void
@@ -116,7 +120,15 @@ class EffectRunner implements TrackingObserver {
   }
 }
 
+export function createStopEffect(stop: () => void): StopEffect {
+  const handle = stop as StopEffect
+  if (supportsDispose) {
+    handle[Symbol.dispose] = stop
+  }
+  return handle
+}
+
 export function effect(fn: EffectCallback, options?: EffectOptions): StopEffect {
   const runner = new EffectRunner(fn, options)
-  return () => runner.stop()
+  return createStopEffect(() => runner.stop())
 }

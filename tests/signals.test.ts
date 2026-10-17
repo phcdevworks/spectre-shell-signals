@@ -1,6 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { asyncEffect, batch, computed, effect, signal } from '../src'
+import {
+  asyncEffect,
+  batch,
+  computed,
+  effect,
+  type ReadonlySignal,
+  signal,
+  untracked,
+} from '../src'
 
 describe('@phcdevworks/spectre-shell-signals', () => {
   it('reads and writes signal values through .value', () => {
@@ -1110,5 +1118,234 @@ describe('computed write guard', () => {
 
     count.value = 2
     expect(mirror.value).toBe(2)
+  })
+})
+
+describe('untracked', () => {
+  it('returns the callback result without subscribing the active effect', () => {
+    const count = signal(0)
+    const runs: number[] = []
+
+    effect(() => {
+      runs.push(untracked(() => count.value))
+    })
+
+    count.value = 1
+
+    expect(runs).toEqual([0])
+  })
+
+  it('restores tracking after the callback returns', () => {
+    const ignored = signal(0)
+    const tracked = signal(0)
+    const runs: number[] = []
+
+    effect(() => {
+      untracked(() => ignored.value)
+      runs.push(tracked.value)
+    })
+
+    ignored.value = 1
+    tracked.value = 1
+
+    expect(runs).toEqual([0, 1])
+  })
+
+  it('does not track computed reads inside a computed', () => {
+    const base = signal(1)
+    const doubled = computed(() => base.value * 2)
+    const flag = signal(0)
+    const spy = vi.fn(() => flag.value + untracked(() => doubled.value))
+    const total = computed(spy)
+    const runs: number[] = []
+
+    effect(() => {
+      runs.push(total.value)
+    })
+
+    base.value = 2
+    expect(runs).toEqual([2])
+
+    flag.value = 1
+    expect(runs).toEqual([2, 5])
+    expect(spy).toHaveBeenCalledTimes(2)
+  })
+
+  it('keeps forbidding signal writes inside a computed', () => {
+    const count = signal(0)
+    const leaky = computed(() =>
+      untracked(() => {
+        count.value = 1
+        return count.value
+      })
+    )
+
+    expect(() => leaky.value).toThrow('Signals cannot be written inside a computed.')
+    expect(count.value).toBe(0)
+  })
+
+  it('allows signal writes inside an effect', () => {
+    const count = signal(1)
+    const mirror = signal(0)
+
+    effect(() => {
+      const next = count.value
+      untracked(() => {
+        mirror.value = next
+      })
+    })
+
+    count.value = 2
+
+    expect(mirror.value).toBe(2)
+  })
+
+  it('works outside any tracking context', () => {
+    expect(untracked(() => 42)).toBe(42)
+  })
+})
+
+describe('computed.peek()', () => {
+  it('reads the current value without subscribing the active effect', () => {
+    const count = signal(1)
+    const doubled = computed(() => count.value * 2)
+    const runs: number[] = []
+
+    effect(() => {
+      runs.push(doubled.peek())
+    })
+
+    count.value = 2
+
+    expect(runs).toEqual([2])
+    expect(doubled.peek()).toBe(4)
+  })
+
+  it('recomputes a stale value and caches it', () => {
+    const count = signal(1)
+    const spy = vi.fn(() => count.value * 2)
+    const doubled = computed(spy)
+
+    expect(doubled.peek()).toBe(2)
+    count.value = 3
+    expect(doubled.peek()).toBe(6)
+    expect(doubled.peek()).toBe(6)
+    expect(spy).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('custom equality', () => {
+  it('skips signal writes the equals function reports as equal', () => {
+    const initial = { id: 1, label: 'a' }
+    const item = signal(initial, { equals: (previous, next) => previous.id === next.id })
+    const runs: string[] = []
+
+    effect(() => {
+      runs.push(item.value.label)
+    })
+
+    item.value = { id: 1, label: 'b' }
+    expect(item.value).toBe(initial)
+    expect(runs).toEqual(['a'])
+
+    item.value = { id: 2, label: 'c' }
+    expect(runs).toEqual(['a', 'c'])
+  })
+
+  it('stops computed propagation when the equals function reports equal', () => {
+    const items = signal([1, 2, 3])
+    const evens = computed(() => items.value.filter((value) => value % 2 === 0), {
+      equals: (previous, next) =>
+        previous.length === next.length && previous.every((value, index) => value === next[index]),
+    })
+    const runs: number[][] = []
+
+    effect(() => {
+      runs.push(evens.value)
+    })
+
+    const first = evens.value
+    items.value = [1, 2, 5]
+    expect(evens.value).toBe(first)
+    expect(runs).toHaveLength(1)
+
+    items.value = [2, 4]
+    expect(runs).toEqual([[2], [2, 4]])
+  })
+
+  it('does not call computed equals for the first evaluation', () => {
+    const equals = vi.fn(() => false)
+    const value = computed(() => 1, { equals })
+
+    expect(value.value).toBe(1)
+    expect(equals).not.toHaveBeenCalled()
+  })
+})
+
+describe('ReadonlySignal', () => {
+  it('accepts signals and computeds as read-only views', () => {
+    const count = signal(1)
+    const doubled = computed(() => count.value * 2)
+    const views: ReadonlySignal<number>[] = [count, doubled]
+
+    // @ts-expect-error read-only views cannot be written
+    views[0]!.value = 3
+
+    expect(views.map((view) => view.peek())).toEqual([3, 6])
+  })
+})
+
+describe('Symbol.dispose', () => {
+  it('stops an effect through its stop handle', () => {
+    const count = signal(0)
+    const runs: number[] = []
+    const stop = effect((onCleanup) => {
+      runs.push(count.value)
+      onCleanup(() => runs.push(-1))
+    })
+
+    stop[Symbol.dispose]()
+    count.value = 1
+
+    expect(runs).toEqual([0, -1])
+  })
+
+  it('stops an effect at the end of a using block', () => {
+    const count = signal(0)
+    const runs: number[] = []
+
+    {
+      using _stop = effect(() => {
+        runs.push(count.value)
+      })
+      count.value = 1
+    }
+    count.value = 2
+
+    expect(runs).toEqual([0, 1])
+  })
+
+  it('aborts an async effect through its stop handle', () => {
+    let abortSignal: AbortSignal | undefined
+    const stop = asyncEffect(({ signal: runSignal }) => {
+      abortSignal = runSignal
+    })
+
+    stop[Symbol.dispose]()
+
+    expect(abortSignal?.aborted).toBe(true)
+  })
+
+  it('disposes a computed', () => {
+    const count = signal(1)
+    const spy = vi.fn(() => count.value * 2)
+    const doubled = computed(spy)
+
+    expect(doubled.value).toBe(2)
+    doubled[Symbol.dispose]()
+    count.value = 2
+
+    expect(doubled.value).toBe(2)
+    expect(spy).toHaveBeenCalledTimes(1)
   })
 })

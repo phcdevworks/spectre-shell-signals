@@ -8,8 +8,8 @@ This package follows [Semantic Versioning 2.0.0](https://semver.org/): `MAJOR.MI
 
 A change requires a major version bump if it incompatibly changes the observable
 behavior or type signature of any export listed in the [Public API](../README.md):
-`signal`, `computed`, `effect`, `asyncEffect`, `batch`, and their exported types (`Signal`,
-`Computed`, `EffectCallback`, `EffectCleanup`, `EffectOptions`,
+`signal`, `computed`, `effect`, `asyncEffect`, `batch`, `untracked`, and their exported types
+(`Signal`, `ReadonlySignal`, `SignalOptions`, `Computed`, `ComputedOptions`, `EffectCallback`, `EffectCleanup`, `EffectOptions`,
 `CleanupRegistrar`, `StopEffect`, `AsyncEffectCallback`, `AsyncEffectContext`,
 `AsyncEffectOptions`).
 

@@ -1,10 +1,14 @@
 interface CleanupRegistrar {
     (cleanup: () => void): void;
 }
+declare function untracked<T>(fn: () => T): T;
 
 type EffectCleanup = () => void;
 type EffectCallback = (onCleanup: CleanupRegistrar) => void;
-type StopEffect = () => void;
+interface StopEffect {
+    (): void;
+    [Symbol.dispose](): void;
+}
 interface EffectOptions {
     onError?: (err: unknown) => void;
 }
@@ -22,17 +26,27 @@ declare function asyncEffect(fn: AsyncEffectCallback, options?: AsyncEffectOptio
 
 declare function batch(fn: () => void): void;
 
-interface Computed<T> {
+interface ReadonlySignal<T> {
     readonly value: T;
-    dispose(): void;
-}
-declare function computed<T>(fn: () => T): Computed<T>;
-
-interface Signal<T> {
-    get value(): T;
-    set value(nextValue: T);
     peek(): T;
 }
-declare function signal<T>(initialValue: T): Signal<T>;
+interface Signal<T> extends ReadonlySignal<T> {
+    get value(): T;
+    set value(nextValue: T);
+}
+interface SignalOptions<T> {
+    equals?: (previous: T, next: T) => boolean;
+}
+declare function signal<T>(initialValue: T, options?: SignalOptions<T>): Signal<T>;
 
-export { type AsyncEffectCallback, type AsyncEffectContext, type AsyncEffectOptions, type CleanupRegistrar, type Computed, type EffectCallback, type EffectCleanup, type EffectOptions, type Signal, type StopEffect, asyncEffect, batch, computed, effect, signal };
+interface Computed<T> extends ReadonlySignal<T> {
+    dispose(): void;
+    [Symbol.dispose](): void;
+}
+interface ComputedOptions<T> {
+    equals?: (previous: T, next: T) => boolean;
+}
+declare function computed<T>(fn: () => T, options?: ComputedOptions<T>): Computed<T>;
+
+export { asyncEffect, batch, computed, effect, signal, untracked };
+export type { AsyncEffectCallback, AsyncEffectContext, AsyncEffectOptions, CleanupRegistrar, Computed, ComputedOptions, EffectCallback, EffectCleanup, EffectOptions, ReadonlySignal, Signal, SignalOptions, StopEffect };

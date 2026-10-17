@@ -7,11 +7,17 @@ import {
   type TrackingObserver,
   unsubscribeTracked,
 } from './internals/tracking'
+import { supportsDispose } from './internals/dispose'
 import { Node } from './internals/node'
+import type { ReadonlySignal } from './signal'
 
-export interface Computed<T> {
-  readonly value: T
+export interface Computed<T> extends ReadonlySignal<T> {
   dispose(): void
+  [Symbol.dispose](): void
+}
+
+export interface ComputedOptions<T> {
+  equals?: (previous: T, next: T) => boolean
 }
 
 class ComputedImpl<T> implements Computed<T>, TrackingObserver {
@@ -32,8 +38,14 @@ class ComputedImpl<T> implements Computed<T>, TrackingObserver {
   private notified = false
   private evaluating = false
   private checkedAtWrite = -1
+  private readonly equals: (previous: T, next: T) => boolean
 
-  constructor(private readonly computeValue: () => T) {}
+  constructor(
+    private readonly computeValue: () => T,
+    options: ComputedOptions<T>
+  ) {
+    this.equals = options.equals ?? Object.is
+  }
 
   get watched(): boolean {
     return this.node.subscribers.size > 0
@@ -49,6 +61,11 @@ class ComputedImpl<T> implements Computed<T>, TrackingObserver {
     return this.cachedValue
   }
 
+  peek(): T {
+    this.refresh()
+    return this.cachedValue
+  }
+
   notify(): void {
     if (this.notified) {
       return
@@ -61,6 +78,8 @@ class ComputedImpl<T> implements Computed<T>, TrackingObserver {
   dispose(): void {
     clearTracking(this)
   }
+
+  declare [Symbol.dispose]: () => void
 
   private refresh(): void {
     if (this.evaluating) {
@@ -91,7 +110,7 @@ class ComputedImpl<T> implements Computed<T>, TrackingObserver {
 
     try {
       const nextValue = runTracked(this, this.computeValue)
-      if (!this.initialized || !Object.is(this.cachedValue, nextValue)) {
+      if (!this.initialized || !this.equals(this.cachedValue, nextValue)) {
         this.cachedValue = nextValue
         this.initialized = true
         this.node.version++
@@ -103,6 +122,10 @@ class ComputedImpl<T> implements Computed<T>, TrackingObserver {
   }
 }
 
-export function computed<T>(fn: () => T): Computed<T> {
-  return new ComputedImpl(fn)
+if (supportsDispose) {
+  ComputedImpl.prototype[Symbol.dispose] = ComputedImpl.prototype.dispose
+}
+
+export function computed<T>(fn: () => T, options: ComputedOptions<T> = {}): Computed<T> {
+  return new ComputedImpl(fn, options)
 }

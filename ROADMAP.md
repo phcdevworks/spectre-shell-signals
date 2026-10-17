@@ -2,7 +2,7 @@
 
 `@phcdevworks/spectre-shell-signals` is the minimal reactive-primitives package
 for the Spectre shell system. It exposes `signal`, `computed`, `effect`,
-`asyncEffect`, `batch`, and directly related types — and nothing else. The
+`asyncEffect`, `batch`, `untracked`, and directly related types — and nothing else. The
 scope is intentionally tiny and must stay that way.
 
 This document tracks what's next. For what already shipped and why, see
@@ -20,6 +20,7 @@ this file does not restate delivered work.
 | 3     | Integration & adoption — `docs/integration/` for spectre-tokens/spectre-ui/spectre-ui-astro, integration guide, versioning policy, `check:ecosystem`                                         | 1.2.0      |
 | 4 P0  | `asyncEffect()` — cancelable async effect variant, sync-only dependency tracking, per-run `AbortSignal`. Triggered by a proven downstream need; see `docs/decisions/async-effect-support.md` | 1.3.0      |
 | 5     | Propagation correctness — glitch-free mark-then-flush propagation, computed equality cutoff, automatic computed unsubscription, write guard inside `computed`; no new exports                | 1.5.0      |
+| 6     | Precision controls — `untracked()`, `Computed.peek()`, custom `equals`, `ReadonlySignal`, `Symbol.dispose` on handles and computeds, `npm run bench` suite and allocation cuts               | Unreleased |
 
 ---
 

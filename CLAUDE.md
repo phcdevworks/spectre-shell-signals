@@ -52,6 +52,7 @@ npm run typecheck    # TypeScript check, no emit
 npm run lint         # ESLint
 npm run build        # tsup -> dist/ (ESM + CJS + .d.ts)
 npm run test         # vitest run (one-shot)
+npm run bench        # build, then vitest bench against dist/
 npm run check        # typecheck + lint + build + test + check:version-sync + check:ecosystem (the full gate)
 npm run format       # prettier --write
 npm run clean        # rm -rf dist
@@ -72,9 +73,11 @@ src/
   asyncEffect.ts        # asyncEffect() - cancelable effects with synchronous tracking
   batch.ts              # batch() - deferred subscriber notification
   internals/
+    dispose.ts          # Symbol.dispose runtime support flag
     node.ts             # Node - subscriber registry per reactive source
-    tracking.ts         # activeObserver stack, withTracking, clearTracking
+    tracking.ts         # activeObserver stack, withTracking, untracked, clearTracking
 tests/
+  propagation.bench.ts  # propagation benchmarks (run against dist/)
   release.test.ts       # release proposal CLI tests
   signals.test.ts       # reactive primitive contract tests
 ```
@@ -90,14 +93,16 @@ export them.
 ## Public API
 
 ```ts
-signal<T>(initialValue: T): Signal<T>
-computed<T>(fn: () => T): Computed<T>
+signal<T>(initialValue: T, options?: SignalOptions<T>): Signal<T>
+computed<T>(fn: () => T, options?: ComputedOptions<T>): Computed<T>
 effect(fn: EffectCallback, options?: EffectOptions): StopEffect
 asyncEffect(fn: AsyncEffectCallback, options?: AsyncEffectOptions): StopEffect
 batch(fn: () => void): void
+untracked<T>(fn: () => T): T
 ```
 
-Exported types: `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`,
+Exported types: `Signal`, `ReadonlySignal`, `SignalOptions`, `Computed`,
+`ComputedOptions`, `EffectCallback`, `EffectCleanup`,
 `EffectOptions`, `CleanupRegistrar`, `StopEffect`, `AsyncEffectCallback`,
 `AsyncEffectContext`, `AsyncEffectOptions`.
 

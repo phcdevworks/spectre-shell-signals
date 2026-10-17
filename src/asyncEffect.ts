@@ -7,7 +7,7 @@ import {
   type TrackingObserver,
 } from './internals/tracking'
 import { Node } from './internals/node'
-import type { EffectCleanup, StopEffect } from './effect'
+import { createStopEffect, type EffectCleanup, type StopEffect } from './effect'
 
 export interface AsyncEffectContext {
   onCleanup: CleanupRegistrar
@@ -146,5 +146,5 @@ class AsyncEffectRunner implements TrackingObserver {
 
 export function asyncEffect(fn: AsyncEffectCallback, options?: AsyncEffectOptions): StopEffect {
   const runner = new AsyncEffectRunner(fn, options)
-  return () => runner.stop()
+  return createStopEffect(() => runner.stop())
 }

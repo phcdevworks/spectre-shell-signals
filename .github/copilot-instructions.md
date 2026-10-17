@@ -23,7 +23,7 @@ to the work described below. Full roster and authority table:
 
 When suggesting edits, keep changes small and aligned with this package:
 
-- Preserve reactive-primitives-only scope: `signal`, `computed`, `effect`, `asyncEffect`, `batch`.
+- Preserve reactive-primitives-only scope: `signal`, `computed`, `effect`, `asyncEffect`, `batch`, `untracked`.
 - Do not suggest stores, framework adapters, router helpers, persistence, async resource layers, event buses, or devtools surface area.
 - Preserve synchronous semantics and existing naming/style patterns.
 - Prefer focused changes over broad rewrites.

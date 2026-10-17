@@ -20,5 +20,5 @@
     "ignoreDeprecations": "6.0"
   },
   "include": ["src", "tests", "scripts"],
-  "exclude": ["node_modules", "dist", "tsup.config.ts", "vitest.config.ts"]
+  "exclude": ["node_modules", "dist", "tsup.config.ts", "vitest.config.ts", "tests/**/*.bench.ts"]
 }

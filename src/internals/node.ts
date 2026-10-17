@@ -53,9 +53,7 @@ export class Node {
   }
 
   trigger(): void {
-    const subscribers = Array.from(this.subscribers)
-
-    for (const subscriber of subscribers) {
+    for (const subscriber of this.subscribers) {
       subscriber.notify()
     }
   }

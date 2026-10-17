@@ -16,7 +16,7 @@ primitive foundation for the Spectre stack, integrated by `spectre-tokens`,
 | Project team           | `project-shell`                      |
 | Repository role        | Spectre reactive primitives          |
 | Package/artifact       | `@phcdevworks/spectre-shell-signals` |
-| Current version/status | 1.5.0                                |
+| Current version/status | 1.6.0                                |
 
 ## Standard Workflow
 
@@ -48,7 +48,7 @@ primitive foundation for the Spectre stack, integrated by `spectre-tokens`,
 [![Node](https://img.shields.io/node/v/@phcdevworks/spectre-shell-signals)](https://nodejs.org)
 
 Small reactive primitives for Spectre packages. The package provides `signal`,
-`computed`, `effect`, `asyncEffect`, and `batch` without tying Spectre runtime
+`computed`, `effect`, `asyncEffect`, `batch`, and `untracked` without tying Spectre runtime
 code to a UI framework.
 
 Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks) — composable, zero-dependency packages for client-side shell applications.
@@ -72,7 +72,9 @@ Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks
 ## Capabilities
 
 - Mutable signals through a `.value` getter and setter, and a `.peek()` method for untracked reads.
-- Lazily evaluated computed values with dependency tracking.
+- Lazily evaluated computed values with dependency tracking and their own `.peek()`.
+- `untracked(fn)` for reading reactive values without subscribing.
+- Optional custom equality for signals and computeds.
 - Glitch-free propagation: effects never observe a mix of fresh and stale
   values, and a computed that recomputes to an equal (`Object.is`) value does
   not re-run its dependents.
@@ -80,7 +82,7 @@ Part of the [PHCDevworks Spectre shell ecosystem](https://github.com/phcdevworks
 - Cancelable async effects with synchronous dependency tracking.
 - Batched subscriber notification across multiple signal writes.
 - Automatic release of computed subscriptions once nothing observes them;
-  explicit `stop()` for effects.
+  explicit `stop()` for effects, and `Symbol.dispose` support for `using`.
 - A deliberately small public API for shared Spectre runtime state.
 
 ## Installation
@@ -108,12 +110,13 @@ stop()
 
 ## API
 
-- `signal(initialValue)` returns a mutable signal with `.value` (tracked read/write) and `.peek()` (untracked read).
-- `computed(fn)` returns a cached, read-only derived value. It subscribes to its sources only while an effect or another observed computed reads it, so no manual disposal is required; `dispose()` remains available to release subscriptions early. Writing a signal inside `fn` throws.
+- `signal(initialValue, options?)` returns a mutable signal with `.value` (tracked read/write) and `.peek()` (untracked read). Pass `{ equals }` to replace the default `Object.is` check that skips unchanged writes.
+- `computed(fn, options?)` returns a cached, read-only derived value with `.value` (tracked read) and `.peek()` (untracked read). Pass `{ equals }` to replace the default `Object.is` check that stops propagation when a recompute produces an equal value. It subscribes to its sources only while an effect or another observed computed reads it, so no manual disposal is required; `dispose()` remains available to release subscriptions early. Writing a signal inside `fn` throws.
 - `effect(fn, options?)` runs immediately, reruns when tracked dependencies change, and returns a stop function. Pass `{ onError }` to handle errors without stopping the effect.
 - `batch(fn)` defers subscriber notification until `fn` returns, so effects run once per batch rather than once per write.
+- `untracked(fn)` runs `fn` and returns its result without registering any reads as dependencies of the surrounding effect or computed. Writing a signal inside a computed still throws, even within `untracked`.
 - `asyncEffect(fn, options?)` runs immediately, reruns when tracked dependencies change, and returns a stop function. Dependencies must be read synchronously, before the first `await`. Each run gets a fresh `AbortSignal`, aborted when the effect re-runs or stops. Pass `{ onError }` to handle errors without stopping the effect.
-- Types include `Signal`, `Computed`, `EffectCallback`, `EffectCleanup`, `EffectOptions`, `CleanupRegistrar`, `StopEffect`, `AsyncEffectCallback`, `AsyncEffectContext`, and `AsyncEffectOptions`.
+- Types include `Signal`, `ReadonlySignal`, `SignalOptions`, `Computed`, `ComputedOptions`, `EffectCallback`, `EffectCleanup`, `EffectOptions`, `CleanupRegistrar`, `StopEffect`, `AsyncEffectCallback`, `AsyncEffectContext`, and `AsyncEffectOptions`.
 
 ### `signal.peek()`
 
@@ -129,6 +132,67 @@ effect(() => {
   }
 })
 ```
+
+### `untracked()`
+
+`untracked` is `peek()` for a whole block: reads of signals, computeds, and
+helper functions inside it do not subscribe the surrounding observer.
+
+```ts
+const user = signal({ name: 'Ada' })
+const locale = signal('en')
+
+effect(() => {
+  // re-runs when `user` changes, but NOT when `locale` changes
+  const name = user.value.name
+  console.log(untracked(() => format(name, locale.value)))
+})
+```
+
+### Custom equality
+
+By default, a write that is `Object.is`-equal to the current value is ignored,
+and a computed that recomputes to an `Object.is`-equal value does not re-run its
+dependents. Pass `equals` to define "unchanged" for structured values. A write
+reported as equal is skipped entirely and the previous value is kept.
+
+```ts
+const items = signal([1, 2, 3])
+const evens = computed(() => items.value.filter((n) => n % 2 === 0), {
+  equals: (previous, next) =>
+    previous.length === next.length && previous.every((n, i) => n === next[i]),
+})
+
+items.value = [1, 2, 5] // evens is still [2]; its dependents do not re-run
+```
+
+### `ReadonlySignal`
+
+`ReadonlySignal<T>` is a type-only read view (`.value` and `.peek()`) that both
+`Signal<T>` and `Computed<T>` satisfy. Use it to expose state from a module
+without letting callers write to it.
+
+```ts
+const count = signal(0)
+export const currentCount: ReadonlySignal<number> = count
+```
+
+### Disposal with `using`
+
+Effect stop handles and computeds implement `Symbol.dispose`, so they can be
+scoped with `using`:
+
+```ts
+{
+  using stop = effect(() => console.log(count.value))
+  count.value = 1
+} // effect stopped here
+```
+
+Calling `stop()` or `dispose()` directly still works. `Symbol.dispose` is
+attached only on runtimes that define it (Node 22+, current browsers, or a
+polyfill); the types require TypeScript 5.2+ with the `esnext.disposable` lib or
+`@types/node`.
 
 ### Effect error boundary
 
@@ -223,6 +287,7 @@ Useful scripts:
 - `npm run typecheck` validates TypeScript without emitting files.
 - `npm run lint` runs ESLint.
 - `npm run test` runs the Vitest suite once.
+- `npm run bench` builds the package and runs the propagation benchmarks against `dist`.
 - `npm run build` emits ESM, CJS, and declarations to `dist`.
 - `npm run check:version-sync` confirms the README "Current version/status" row matches `package.json`.
 - `npm run check:ecosystem` validates `spectre.manifest.json` against the ecosystem contract.

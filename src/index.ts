@@ -5,7 +5,7 @@ export {
   type AsyncEffectOptions,
 } from './asyncEffect'
 export { batch } from './batch'
-export { computed, type Computed } from './computed'
+export { computed, type Computed, type ComputedOptions } from './computed'
 export {
   effect,
   type CleanupRegistrar,
@@ -14,4 +14,5 @@ export {
   type EffectOptions,
   type StopEffect,
 } from './effect'
-export { signal, type Signal } from './signal'
+export { signal, type ReadonlySignal, type Signal, type SignalOptions } from './signal'
+export { untracked } from './internals/tracking'

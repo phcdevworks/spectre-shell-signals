@@ -12,6 +12,7 @@ export interface TrackingObserver {
 }
 
 let activeObserver: TrackingObserver | null = null
+let insideDerived = false
 
 export function getActiveObserver(): TrackingObserver | null {
   return activeObserver
@@ -25,6 +26,20 @@ export function withTracking<T>(observer: TrackingObserver, fn: () => T): T {
     return fn()
   } finally {
     activeObserver = previous
+  }
+}
+
+export function untracked<T>(fn: () => T): T {
+  const previous = activeObserver
+  const previousInsideDerived = insideDerived
+  insideDerived ||= previous?.derived === true
+  activeObserver = null
+
+  try {
+    return fn()
+  } finally {
+    activeObserver = previous
+    insideDerived = previousInsideDerived
   }
 }
 
@@ -67,7 +82,7 @@ export function getWriteVersion(): number {
 }
 
 export function assertWritable(): void {
-  if (activeObserver?.derived) {
+  if (activeObserver ? activeObserver.derived : insideDerived) {
     throw new Error('Signals cannot be written inside a computed.')
   }
 }
@@ -104,19 +119,25 @@ export function startBatch(): void {
 }
 
 export function endBatch(): void {
-  if (--batchDepth === 0) {
-    const snapshot = Array.from(pendingEffects)
-    pendingEffects.clear()
-    const errors: unknown[] = []
-    for (const flush of snapshot) {
-      try {
-        flush()
-      } catch (err) {
-        errors.push(err)
+  if (--batchDepth !== 0 || pendingEffects.size === 0) {
+    return
+  }
+
+  const snapshot = Array.from(pendingEffects)
+  pendingEffects.clear()
+  let failed = false
+  let firstError: unknown
+  for (const flush of snapshot) {
+    try {
+      flush()
+    } catch (err) {
+      if (!failed) {
+        failed = true
+        firstError = err
       }
     }
-    if (errors.length > 0) {
-      throw errors[0]
-    }
+  }
+  if (failed) {
+    throw firstError
   }
 }

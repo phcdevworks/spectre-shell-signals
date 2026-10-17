@@ -4,6 +4,36 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-10-17
+
+**Release Title:** Reactive Control and Equality
+
+Contract change type: additive
+
+### Added
+
+- `untracked(fn)` runs `fn` without registering its reads as dependencies of
+  the surrounding effect or computed. Writing a signal inside a computed still
+  throws inside `untracked`.
+- `Computed.peek()` reads a computed's current value without subscribing,
+  matching `Signal.peek()`.
+- `signal(value, { equals })` and `computed(fn, { equals })` accept a custom
+  equality function in place of `Object.is`, so structured values can skip
+  unchanged writes and stop propagation on equal recomputes.
+- `ReadonlySignal<T>` type: a read-only view satisfied by both `Signal<T>` and
+  `Computed<T>`. New `SignalOptions` and `ComputedOptions` types.
+- Effect and async effect stop handles and computeds implement
+  `Symbol.dispose`, enabling `using`. Attached only on runtimes that define
+  `Symbol.dispose`.
+- `npm run bench` propagation benchmarks, run against the built `dist`.
+
+### Changed
+
+- Signal writes no longer allocate when nothing is queued to flush, and
+  notification iterates subscribers without copying them. Unobserved writes
+  benchmark about 2x faster; deep computed chains and batched writes about 10%
+  faster.
+
 ## [1.5.0] - 2026-10-12
 
 **Release Title:** Propagation Correctness
@@ -174,7 +204,8 @@ Release Title: Initial Reactive Primitives Foundation
 - **Tooling**: Added TypeScript build output with `tsup`, Vitest coverage for reactive semantics, and CI validation for build, test, and type-check workflows.
 - **Documentation**: Added package README, contribution guidance, and repository metadata aligned to the scoped package and its narrow reactivity-only ownership.
 
-[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.5.0...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.2.0...v1.3.0

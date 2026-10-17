@@ -1,5 +1,6 @@
 // src/internals/tracking.ts
 var activeObserver = null;
+var insideDerived = false;
 function getActiveObserver() {
   return activeObserver;
 }
@@ -10,6 +11,18 @@ function withTracking(observer, fn) {
     return fn();
   } finally {
     activeObserver = previous;
+  }
+}
+function untracked(fn) {
+  const previous = activeObserver;
+  const previousInsideDerived = insideDerived;
+  insideDerived ||= previous?.derived === true;
+  activeObserver = null;
+  try {
+    return fn();
+  } finally {
+    activeObserver = previous;
+    insideDerived = previousInsideDerived;
   }
 }
 function runTracked(observer, fn) {
@@ -44,7 +57,7 @@ function getWriteVersion() {
   return writeVersion;
 }
 function assertWritable() {
-  if (activeObserver?.derived) {
+  if (activeObserver ? activeObserver.derived : insideDerived) {
     throw new Error("Signals cannot be written inside a computed.");
   }
 }
@@ -73,20 +86,25 @@ function startBatch() {
   batchDepth++;
 }
 function endBatch() {
-  if (--batchDepth === 0) {
-    const snapshot = Array.from(pendingEffects);
-    pendingEffects.clear();
-    const errors = [];
-    for (const flush of snapshot) {
-      try {
-        flush();
-      } catch (err) {
-        errors.push(err);
+  if (--batchDepth !== 0 || pendingEffects.size === 0) {
+    return;
+  }
+  const snapshot = Array.from(pendingEffects);
+  pendingEffects.clear();
+  let failed = false;
+  let firstError;
+  for (const flush of snapshot) {
+    try {
+      flush();
+    } catch (err) {
+      if (!failed) {
+        failed = true;
+        firstError = err;
       }
     }
-    if (errors.length > 0) {
-      throw errors[0];
-    }
+  }
+  if (failed) {
+    throw firstError;
   }
 }
 
@@ -128,12 +146,112 @@ var Node = class {
     }
   }
   trigger() {
-    const subscribers = Array.from(this.subscribers);
-    for (const subscriber of subscribers) {
+    for (const subscriber of this.subscribers) {
       subscriber.notify();
     }
   }
 };
+
+// src/internals/dispose.ts
+var supportsDispose = typeof Symbol.dispose === "symbol";
+
+// src/effect.ts
+var EffectRunner = class {
+  constructor(callback, options = {}) {
+    this.callback = callback;
+    this.options = options;
+    this.nodes = /* @__PURE__ */ new Map();
+    this.derived = false;
+    this.cleanups = [];
+    this.active = true;
+    this.running = false;
+    this.queued = false;
+    this.run();
+  }
+  get watched() {
+    return this.active;
+  }
+  notify() {
+    if (!this.active || this.queued) {
+      return;
+    }
+    this.queued = true;
+    queueEffect(() => {
+      this.queued = false;
+      if (this.active && dependenciesChanged(this)) {
+        this.run();
+      }
+    });
+  }
+  stop() {
+    if (!this.active) {
+      return;
+    }
+    this.active = false;
+    clearTracking(this);
+    try {
+      this.runCleanup();
+    } catch (err) {
+      if (this.options.onError) {
+        this.options.onError(err);
+      } else {
+        throw err;
+      }
+    }
+  }
+  run() {
+    if (!this.active) {
+      return;
+    }
+    if (this.running) {
+      throw new Error("Effects cannot synchronously trigger themselves.");
+    }
+    this.running = true;
+    try {
+      this.runCleanup();
+      runTracked(
+        this,
+        () => this.callback((cleanup) => {
+          this.cleanups.push(cleanup);
+        })
+      );
+    } catch (err) {
+      if (this.options.onError) {
+        this.options.onError(err);
+      } else {
+        throw err;
+      }
+    } finally {
+      this.running = false;
+    }
+  }
+  runCleanup() {
+    const cleanups = this.cleanups;
+    this.cleanups = [];
+    const errors = [];
+    for (let index = cleanups.length - 1; index >= 0; index -= 1) {
+      try {
+        cleanups[index]?.();
+      } catch (err) {
+        errors.push(err);
+      }
+    }
+    if (errors.length > 0) {
+      throw errors[0];
+    }
+  }
+};
+function createStopEffect(stop) {
+  const handle = stop;
+  if (supportsDispose) {
+    handle[Symbol.dispose] = stop;
+  }
+  return handle;
+}
+function effect(fn, options) {
+  const runner = new EffectRunner(fn, options);
+  return createStopEffect(() => runner.stop());
+}
 
 // src/asyncEffect.ts
 var AsyncEffectRunner = class {
@@ -246,7 +364,7 @@ var AsyncEffectRunner = class {
 };
 function asyncEffect(fn, options) {
   const runner = new AsyncEffectRunner(fn, options);
-  return () => runner.stop();
+  return createStopEffect(() => runner.stop());
 }
 
 // src/batch.ts
@@ -261,7 +379,7 @@ function batch(fn) {
 
 // src/computed.ts
 var ComputedImpl = class {
-  constructor(computeValue) {
+  constructor(computeValue, options) {
     this.computeValue = computeValue;
     this.nodes = /* @__PURE__ */ new Map();
     this.derived = true;
@@ -278,6 +396,7 @@ var ComputedImpl = class {
     this.notified = false;
     this.evaluating = false;
     this.checkedAtWrite = -1;
+    this.equals = options.equals ?? Object.is;
   }
   get watched() {
     return this.node.subscribers.size > 0;
@@ -288,6 +407,10 @@ var ComputedImpl = class {
     } finally {
       this.node.track();
     }
+    return this.cachedValue;
+  }
+  peek() {
+    this.refresh();
     return this.cachedValue;
   }
   notify() {
@@ -324,7 +447,7 @@ var ComputedImpl = class {
     this.dirty = true;
     try {
       const nextValue = runTracked(this, this.computeValue);
-      if (!this.initialized || !Object.is(this.cachedValue, nextValue)) {
+      if (!this.initialized || !this.equals(this.cachedValue, nextValue)) {
         this.cachedValue = nextValue;
         this.initialized = true;
         this.node.version++;
@@ -335,106 +458,19 @@ var ComputedImpl = class {
     }
   }
 };
-function computed(fn) {
-  return new ComputedImpl(fn);
+if (supportsDispose) {
+  ComputedImpl.prototype[Symbol.dispose] = ComputedImpl.prototype.dispose;
 }
-
-// src/effect.ts
-var EffectRunner = class {
-  constructor(callback, options = {}) {
-    this.callback = callback;
-    this.options = options;
-    this.nodes = /* @__PURE__ */ new Map();
-    this.derived = false;
-    this.cleanups = [];
-    this.active = true;
-    this.running = false;
-    this.queued = false;
-    this.run();
-  }
-  get watched() {
-    return this.active;
-  }
-  notify() {
-    if (!this.active || this.queued) {
-      return;
-    }
-    this.queued = true;
-    queueEffect(() => {
-      this.queued = false;
-      if (this.active && dependenciesChanged(this)) {
-        this.run();
-      }
-    });
-  }
-  stop() {
-    if (!this.active) {
-      return;
-    }
-    this.active = false;
-    clearTracking(this);
-    try {
-      this.runCleanup();
-    } catch (err) {
-      if (this.options.onError) {
-        this.options.onError(err);
-      } else {
-        throw err;
-      }
-    }
-  }
-  run() {
-    if (!this.active) {
-      return;
-    }
-    if (this.running) {
-      throw new Error("Effects cannot synchronously trigger themselves.");
-    }
-    this.running = true;
-    try {
-      this.runCleanup();
-      runTracked(
-        this,
-        () => this.callback((cleanup) => {
-          this.cleanups.push(cleanup);
-        })
-      );
-    } catch (err) {
-      if (this.options.onError) {
-        this.options.onError(err);
-      } else {
-        throw err;
-      }
-    } finally {
-      this.running = false;
-    }
-  }
-  runCleanup() {
-    const cleanups = this.cleanups;
-    this.cleanups = [];
-    const errors = [];
-    for (let index = cleanups.length - 1; index >= 0; index -= 1) {
-      try {
-        cleanups[index]?.();
-      } catch (err) {
-        errors.push(err);
-      }
-    }
-    if (errors.length > 0) {
-      throw errors[0];
-    }
-  }
-};
-function effect(fn, options) {
-  const runner = new EffectRunner(fn, options);
-  return () => runner.stop();
+function computed(fn, options = {}) {
+  return new ComputedImpl(fn, options);
 }
 
 // src/signal.ts
 var SignalImpl = class {
-  constructor(currentValue) {
+  constructor(currentValue, options) {
     this.currentValue = currentValue;
     this.node = new Node();
+    this.equals = options.equals ?? Object.is;
   }
   get value() {
     this.node.track();
@@ -442,7 +478,7 @@ var SignalImpl = class {
   }
   set value(nextValue) {
     assertWritable();
-    if (Object.is(this.currentValue, nextValue)) {
+    if (this.equals(this.currentValue, nextValue)) {
       return;
     }
     this.currentValue = nextValue;
@@ -459,10 +495,10 @@ var SignalImpl = class {
     return this.currentValue;
   }
 };
-function signal(initialValue) {
-  return new SignalImpl(initialValue);
+function signal(initialValue, options = {}) {
+  return new SignalImpl(initialValue, options);
 }
 
-export { asyncEffect, batch, computed, effect, signal };
+export { asyncEffect, batch, computed, effect, signal, untracked };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

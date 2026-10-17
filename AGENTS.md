@@ -14,23 +14,23 @@ skills, plugins, templates, or general-purpose workflows.
 
 ## Repository Snapshot
 
-| Field | Value |
-|-------|-------|
-| Project team | `project-shell` |
-| Repository role | Spectre reactive primitives |
+| Field            | Value                                |
+| ---------------- | ------------------------------------ |
+| Project team     | `project-shell`                      |
+| Repository role  | Spectre reactive primitives          |
 | Package/artifact | `@phcdevworks/spectre-shell-signals` |
-| Validation gate | `npm run check` |
+| Validation gate  | `npm run check`                      |
 
 ## Standard Authority Model
 
-| Agent | Role | Authority |
-|-------|------|-----------|
-| Claude Code | Lead implementation and validation. **No git access.** | [CLAUDE.md](CLAUDE.md) |
-| OpenAI Codex | Documentation, release readiness, stabilization, and repo hygiene. Also executes all git operations for Claude Code's handed-off work | [CODEX.md](CODEX.md) |
-| ChatGPT | Strategy, coordination, prompt design, and external review | Support only |
-| GitHub Copilot | Development assistance | [COPILOT.md](COPILOT.md) |
-| Google Jules | Bounded automated maintenance | [JULES.md](JULES.md) |
-| xAI Grok       | Development assistance | [GROK.md](GROK.md)       |
+| Agent          | Role                                                                                                                                  | Authority                |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| Claude Code    | Lead implementation and validation. **No git access.**                                                                                | [CLAUDE.md](CLAUDE.md)   |
+| OpenAI Codex   | Documentation, release readiness, stabilization, and repo hygiene. Also executes all git operations for Claude Code's handed-off work | [CODEX.md](CODEX.md)     |
+| ChatGPT        | Strategy, coordination, prompt design, and external review                                                                            | Support only             |
+| GitHub Copilot | Development assistance                                                                                                                | [COPILOT.md](COPILOT.md) |
+| Google Jules   | Bounded automated maintenance                                                                                                         | [JULES.md](JULES.md)     |
+| xAI Grok       | Development assistance                                                                                                                | [GROK.md](GROK.md)       |
 
 **Claude Code has zero git access in this repository, no exceptions**,
 effective 2026-08-13 by explicit direction from Bradley Potts. Claude Code
@@ -79,7 +79,6 @@ git author/committer stays Bradley Potts (or the configured human git user)
 on every commit, regardless of which agent performed the work. Push and tag
 authority above does not extend to authorship attribution.
 
-
 ## Cross-Repo Access
 
 This repo may be worked on standalone or alongside any combination of other
@@ -92,7 +91,7 @@ every file in this repo. When this repo is present alongside other
 PHCDevworks repos (company root or sibling `project-*` areas), the same full
 read/write access extends to those repos too — there is no per-repo access
 restriction anywhere in this workspace. What differs repo-to-repo is not
-*access*, it's *editorial ownership*: each repo's own `CLAUDE.md`/`AGENTS.md`
+_access_, it's _editorial ownership_: each repo's own `CLAUDE.md`/`AGENTS.md`
 still governs what changes make sense there (design-token authority, layer
 boundaries, etc.) — being able to open and edit a file is not the same as it
 being this repo's job to change it.
@@ -117,18 +116,18 @@ package of the Spectre shell system.
 
 ## Instruction Map
 
-| File                               | Audience                     | Purpose                                                              |
-| ---------------------------------- | ----------------------------- | ----------------------------------------------------------------- |
-| `AGENTS.md`                        | All agents, especially Codex | Central role model, coordination rules, verification gate          |
-| `CLAUDE.md`                        | Claude Code                  | Lead-development guide for implementation, architecture, and tests |
-| `CODEX.md`                         | OpenAI Codex                 | Release-readiness, production stabilization, and config posture    |
-| `JULES.md`                         | Google Jules                 | Bounded automated maintenance guidance                              |
-| `GROK.md`                          | xAI Grok                     | Development assistance and git authority                            |
-| `COPILOT.md`                       | GitHub Copilot               | Role summary and development boundaries for GitHub Copilot         |
-| `.github/copilot-instructions.md`  | GitHub Copilot               | In-editor suggestion boundaries                                     |
-| `.claude/settings.json`            | Claude Code runtime           | Local command denies for commit, push, tag, merge, and publish     |
-| `.coderabbit.yaml`                 | CodeRabbit                    | Automated review checks aligned with package boundaries            |
-| `.github/dependabot.yml`           | Dependabot / Jules handoff    | Dependency-update cadence for automated maintenance                |
+| File                              | Audience                     | Purpose                                                            |
+| --------------------------------- | ---------------------------- | ------------------------------------------------------------------ |
+| `AGENTS.md`                       | All agents, especially Codex | Central role model, coordination rules, verification gate          |
+| `CLAUDE.md`                       | Claude Code                  | Lead-development guide for implementation, architecture, and tests |
+| `CODEX.md`                        | OpenAI Codex                 | Release-readiness, production stabilization, and config posture    |
+| `JULES.md`                        | Google Jules                 | Bounded automated maintenance guidance                             |
+| `GROK.md`                         | xAI Grok                     | Development assistance and git authority                           |
+| `COPILOT.md`                      | GitHub Copilot               | Role summary and development boundaries for GitHub Copilot         |
+| `.github/copilot-instructions.md` | GitHub Copilot               | In-editor suggestion boundaries                                    |
+| `.claude/settings.json`           | Claude Code runtime          | Local command denies for commit, push, tag, merge, and publish     |
+| `.coderabbit.yaml`                | CodeRabbit                   | Automated review checks aligned with package boundaries            |
+| `.github/dependabot.yml`          | Dependabot / Jules handoff   | Dependency-update cadence for automated maintenance                |
 
 ## Confidential External Identities
 
@@ -158,7 +157,7 @@ Roadmap Self-Expansion." Applied to this repo:
   (scaffolds against it) may append reactive-primitive requests (e.g. a new
   export needed for `spectre-tokens`/`spectre-ui`/`spectre-ui-astro`
   integration) to this repo's own `TODO.md` under `## Requested by
-  Downstream`, dated and linked back to the requesting repo's
+Downstream`, dated and linked back to the requesting repo's
   TODO.md/ROADMAP.md. Keep that section visible and separate from
   self-planned reactive-primitives work.
 - This repo's own [ROADMAP.md](ROADMAP.md) may be proactively expanded with new
@@ -230,7 +229,7 @@ local reactive state, derived values, and reactive effects — a tiny, predictab
 reactivity layer that other Spectre packages and compatible applications can build
 on without inheriting a full state-management framework.
 
-The reactive foundation (`signal`, `computed`, `effect`, `asyncEffect`, `batch`) is stable and
+The reactive foundation (`signal`, `computed`, `effect`, `asyncEffect`, `batch`, `untracked`) is stable and
 published. The current focus is integration: getting these primitives actively
 consumed by `spectre-tokens`, `spectre-ui`, and `spectre-ui-astro`. Work in this
 repository should serve that integration goal — hardening the contract, improving
@@ -240,7 +239,7 @@ This package must stay narrow, explicit, portable, and easy to reason about.
 
 ## Core Rules
 
-1. Keep the public API tiny: `signal`, `computed`, `effect`, `asyncEffect`, `batch`, and directly
+1. Keep the public API tiny: `signal`, `computed`, `effect`, `asyncEffect`, `batch`, `untracked`, and directly
    related types only.
 2. Prefer explicit behavior over magical behavior.
 3. Prefer readable internals over abstraction-heavy architecture.
