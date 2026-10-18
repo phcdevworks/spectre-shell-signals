@@ -1,6 +1,6 @@
 {
   "name": "@phcdevworks/spectre-shell-signals",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "@phcdevworks/spectre-shell-signals is the communication layer of the Spectre application shell. It provides shared reactive signals for coordinating state and events across independently developed modules.",
   "keywords": [
     "phcdevworks",
@@ -67,7 +67,8 @@
     "bench": "npm run build && vitest bench --run --reporter=verbose",
     "check:ecosystem": "spectre-manifest-validate spectre.manifest.json && spectre-manifest-check spectre.manifest.json .",
     "check:version-sync": "node --experimental-strip-types scripts/check-readme-version.ts",
-    "check": "npm run typecheck && npm run lint && npm run build && npm run test && npm run check:version-sync && npm run check:ecosystem",
+    "check:consumer-types": "tsc -p tests/consumer/tsconfig.es2022.json && tsc -p tests/consumer/tsconfig.esnext.json",
+    "check": "npm run typecheck && npm run lint && npm run build && npm run check:consumer-types && npm run test && npm run check:version-sync && npm run check:ecosystem",
     "prepublishOnly": "npm run check"
   },
   "publishConfig": {

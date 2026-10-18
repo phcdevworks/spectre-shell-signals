@@ -22,6 +22,7 @@ Thanks for helping improve `@phcdevworks/spectre-shell-signals`. This package ow
 npm run typecheck
 npm run lint
 npm run build
+npm run check:consumer-types
 npm run test
 npm run check:version-sync
 npm run check:ecosystem

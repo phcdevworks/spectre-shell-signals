@@ -16,3 +16,11 @@ export {
 } from './effect'
 export { signal, type ReadonlySignal, type Signal, type SignalOptions } from './signal'
 export { untracked } from './internals/tracking'
+
+// Public types use Symbol.dispose; declaring it keeps consumers on pre-ESNext libs compiling.
+// Matches the lib.esnext.disposable declaration, so the two merge cleanly.
+declare global {
+  interface SymbolConstructor {
+    readonly dispose: unique symbol
+  }
+}

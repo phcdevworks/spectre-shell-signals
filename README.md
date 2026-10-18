@@ -16,7 +16,7 @@ primitive foundation for the Spectre stack, integrated by `spectre-tokens`,
 | Project team           | `project-shell`                      |
 | Repository role        | Spectre reactive primitives          |
 | Package/artifact       | `@phcdevworks/spectre-shell-signals` |
-| Current version/status | 1.6.0                                |
+| Current version/status | 1.6.1                                |
 
 ## Standard Workflow
 
@@ -289,6 +289,7 @@ Useful scripts:
 - `npm run test` runs the Vitest suite once.
 - `npm run bench` builds the package and runs the propagation benchmarks against `dist`.
 - `npm run build` emits ESM, CJS, and declarations to `dist`.
+- `npm run check:consumer-types` type-checks the built declarations from ES2022 and ESNext consumer projects without `skipLibCheck`.
 - `npm run check:version-sync` confirms the README "Current version/status" row matches `package.json`.
 - `npm run check:ecosystem` validates `spectre.manifest.json` against the ecosystem contract.
 - `npm run check` runs the standard package verification flow.

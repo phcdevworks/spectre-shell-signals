@@ -48,5 +48,11 @@ interface ComputedOptions<T> {
 }
 declare function computed<T>(fn: () => T, options?: ComputedOptions<T>): Computed<T>;
 
+declare global {
+    interface SymbolConstructor {
+        readonly dispose: unique symbol;
+    }
+}
+
 export { asyncEffect, batch, computed, effect, signal, untracked };
 export type { AsyncEffectCallback, AsyncEffectContext, AsyncEffectOptions, CleanupRegistrar, Computed, ComputedOptions, EffectCallback, EffectCleanup, EffectOptions, ReadonlySignal, Signal, SignalOptions, StopEffect };

@@ -4,6 +4,26 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-10-18
+
+**Release Title:** TypeScript Declaration Compatibility
+
+Contract change type: fix
+
+### Fixed
+
+- Published declarations now compile for TypeScript consumers whose `lib` is
+  older than ESNext and who do not set `skipLibCheck`. 1.6.0's types used
+  `[Symbol.dispose]` without declaring it; the package now ships a global
+  `SymbolConstructor.dispose` declaration that merges with
+  `lib.esnext.disposable`.
+
+### Added
+
+- `npm run check:consumer-types`, part of `npm run check`, type-checks the
+  built declarations from ES2022 and ESNext consumer projects with
+  `skipLibCheck` off.
+
 ## [1.6.0] - 2026-10-17
 
 **Release Title:** Reactive Control and Equality
@@ -204,7 +224,8 @@ Release Title: Initial Reactive Primitives Foundation
 - **Tooling**: Added TypeScript build output with `tsup`, Vitest coverage for reactive semantics, and CI validation for build, test, and type-check workflows.
 - **Documentation**: Added package README, contribution guidance, and repository metadata aligned to the scoped package and its narrow reactivity-only ownership.
 
-[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.6.0...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.6.1...HEAD
+[1.6.1]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/phcdevworks/spectre-shell-signals/compare/v1.3.0...v1.4.0
